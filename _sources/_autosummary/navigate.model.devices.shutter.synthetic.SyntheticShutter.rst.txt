@@ -30,5 +30,8 @@ navigate.model.devices.shutter.synthetic.SyntheticShutter
    
       ~SyntheticShutter.state
       ~SyntheticShutter.shutter_state
+      ~SyntheticShutter.microscope_name
+      ~SyntheticShutter.device_connection
+      ~SyntheticShutter.configuration
    
    

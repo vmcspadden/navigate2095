@@ -160,13 +160,13 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.auto_redial.html#navigate.model.device_startup_functions.auto_redial" title="navigate.model.device_startup_functions.auto_redial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">auto_redial</span></code></a>(func, args[, n_tries, exception])</p></td>
-<td><p>Retries connections to a startup device defined by func n_tries times.</p></td>
+<td><p>Retries connections to a startup device defined by <cite>func</cite> for a specified number of attempts.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.device_not_found.html#navigate.model.device_startup_functions.device_not_found" title="navigate.model.device_startup_functions.device_not_found"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_not_found</span></code></a>(*args)</p></td>
-<td><p>Display error message if device not found.</p></td>
+<td><p>Display an error message and raise an exception if the device is not found.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.load_camera_connection.html#navigate.model.device_startup_functions.load_camera_connection" title="navigate.model.device_startup_functions.load_camera_connection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_camera_connection</span></code></a>(configuration[, ...])</p></td>
-<td><p>Initializes the camera api class.</p></td>
+<td><p>Initialize the camera API class.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.load_devices.html#navigate.model.device_startup_functions.load_devices" title="navigate.model.device_startup_functions.load_devices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_devices</span></code></a>(configuration[, is_synthetic, ...])</p></td>
 <td><p>Load devices from configuration.</p></td>
@@ -175,22 +175,22 @@
 <td><p>Initializes the Filter Wheel class on a dedicated thread.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.load_mirror.html#navigate.model.device_startup_functions.load_mirror" title="navigate.model.device_startup_functions.load_mirror"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_mirror</span></code></a>(configuration[, is_synthetic])</p></td>
-<td><p>Initializes the deformable mirror class on a dedicated thread.</p></td>
+<td><p>Initializes the deformable mirror API.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.load_stages.html#navigate.model.device_startup_functions.load_stages" title="navigate.model.device_startup_functions.load_stages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_stages</span></code></a>(configuration[, is_synthetic, ...])</p></td>
-<td><p>Initializes the stage class on a dedicated thread.</p></td>
+<td><p>Initialize the stage API.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.load_zoom_connection.html#navigate.model.device_startup_functions.load_zoom_connection" title="navigate.model.device_startup_functions.load_zoom_connection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_zoom_connection</span></code></a>(configuration[, ...])</p></td>
 <td><p>Initializes the Zoom class on a dedicated thread.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_camera.html#navigate.model.device_startup_functions.start_camera" title="navigate.model.device_startup_functions.start_camera"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_camera</span></code></a>(microscope_name, ...[, ...])</p></td>
-<td><p>Initializes the camera class.</p></td>
+<td><p>Initialize the camera class.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_daq.html#navigate.model.device_startup_functions.start_daq" title="navigate.model.device_startup_functions.start_daq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_daq</span></code></a>(configuration[, is_synthetic])</p></td>
 <td><p>Initializes the data acquisition (DAQ) class on a dedicated thread.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_filter_wheel.html#navigate.model.device_startup_functions.start_filter_wheel" title="navigate.model.device_startup_functions.start_filter_wheel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_filter_wheel</span></code></a>(microscope_name, ...[, ...])</p></td>
-<td><p>Initializes the filter wheel class on a dedicated thread.</p></td>
+<td><p>Initialize the filter wheel class.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_galvo.html#navigate.model.device_startup_functions.start_galvo" title="navigate.model.device_startup_functions.start_galvo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_galvo</span></code></a>(microscope_name, ...[, id, ...])</p></td>
 <td><p>Initializes the Galvo class.</p></td>
@@ -199,7 +199,7 @@
 <td><p>Initializes the lasers.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_mirror.html#navigate.model.device_startup_functions.start_mirror" title="navigate.model.device_startup_functions.start_mirror"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_mirror</span></code></a>(microscope_name, ...[, ...])</p></td>
-<td><p>Initializes the mirror class.</p></td>
+<td><p>Initialize the mirror class.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_remote_focus_device.html#navigate.model.device_startup_functions.start_remote_focus_device" title="navigate.model.device_startup_functions.start_remote_focus_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_remote_focus_device</span></code></a>(microscope_name, ...)</p></td>
 <td><p>Initializes the remote focus class.</p></td>
@@ -208,7 +208,7 @@
 <td><p>Initializes the shutter class on a dedicated thread.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_stage.html#navigate.model.device_startup_functions.start_stage" title="navigate.model.device_startup_functions.start_stage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_stage</span></code></a>(microscope_name, ...[, id, ...])</p></td>
-<td><p>Initializes the Stage class.</p></td>
+<td><p>Initialize the Stage class.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="navigate.model.device_startup_functions.start_zoom.html#navigate.model.device_startup_functions.start_zoom" title="navigate.model.device_startup_functions.start_zoom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_zoom</span></code></a>(microscope_name, ...[, ...])</p></td>
 <td><p>Initializes the zoom class on a dedicated thread.</p></td>

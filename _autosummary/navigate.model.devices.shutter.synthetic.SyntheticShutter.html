@@ -153,19 +153,19 @@
 <h1>navigate.model.devices.shutter.synthetic.SyntheticShutter<a class="headerlink" href="#navigate-model-devices-shutter-synthetic-syntheticshutter" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.shutter.synthetic.</span></span><span class="sig-name descname"><span class="pre">SyntheticShutter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.shutter.synthetic.</span></span><span class="sig-name descname"><span class="pre">SyntheticShutter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="navigate.model.devices.shutter.base.ShutterBase.html#navigate.model.devices.shutter.base.ShutterBase" title="navigate.model.devices.shutter.base.ShutterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShutterBase</span></code></a></p>
 <p>SyntheticShutter Class - Triggering for shutters delivered from synthetically.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the SyntheticShutter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of microscope in configuration</p></li>
-<li><p><strong>device_connection</strong> (<em>object</em>) – Hardware device to connect to</p></li>
-<li><p><strong>configuration</strong> (<em>multiprocessing.managers.DictProxy</em>) – Global configuration of the microscope</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Hardware device to connect to</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Global configuration of the microscope</p></li>
 </ul>
 </dd>
 </dl>
@@ -195,14 +195,47 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter.close_shutter">
-<span class="sig-name descname"><span class="pre">close_shutter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.close_shutter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close_shutter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.close_shutter" title="Permalink to this definition"></a></dt>
 <dd><p>Close the Shutter.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter.open_shutter">
-<span class="sig-name descname"><span class="pre">open_shutter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.open_shutter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">open_shutter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.open_shutter" title="Permalink to this definition"></a></dt>
 <dd><p>Open the Shutter.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter.configuration">
+<span class="sig-name descname"><span class="pre">configuration</span></span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.configuration" title="Permalink to this definition"></a></dt>
+<dd><p>Global configuration of the microscope</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Hardware device to connect to</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter.microscope_name">
+<span class="sig-name descname"><span class="pre">microscope_name</span></span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.microscope_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the microscope</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -218,11 +251,11 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="navigate.model.devices.shutter.synthetic.SyntheticShutter.state">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#navigate.model.devices.shutter.synthetic.SyntheticShutter.state" title="Permalink to this definition"></a></dt>
 <dd><p>Get the Shutter state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Shutter state</p>
+<dd class="field-odd"><p>Shutter state. True if open, False if closed.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>

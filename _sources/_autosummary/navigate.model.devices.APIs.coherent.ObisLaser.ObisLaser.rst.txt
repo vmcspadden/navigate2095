@@ -41,6 +41,10 @@ navigate.model.devices.APIs.coherent.ObisLaser.ObisLaser
 
    .. autosummary::
    
+      ~ObisLaser.timeout
+      ~ObisLaser.end_of_line
+      ~ObisLaser.laser
+      ~ObisLaser.device_connection
       ~ObisLaser.configuration
       ~ObisLaser.microscope_name
       ~ObisLaser.device_config

@@ -145,7 +145,7 @@
 <p>Plugins manager in the model side</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.plugins_model.PluginsModel.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize plugins manager class</p>
 </dd></dl>
 
@@ -172,19 +172,37 @@
 </tr>
 </tbody>
 </table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.plugins_model.PluginsModel.devices_dict" title="navigate.model.plugins_model.PluginsModel.devices_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">devices_dict</span></code></a></p></td>
+<td><p>devices dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.plugins_model.PluginsModel.plugin_acquisition_modes" title="navigate.model.plugins_model.PluginsModel.plugin_acquisition_modes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plugin_acquisition_modes</span></code></a></p></td>
+<td><p>plugin acquisition modes dictionary</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.plugins_model.PluginsModel.feature_lists_path" title="navigate.model.plugins_model.PluginsModel.feature_lists_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_lists_path</span></code></a></p></td>
+<td><p>feature lists path</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.plugins_model.PluginsModel.load_plugins">
-<span class="sig-name descname"><span class="pre">load_plugins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.load_plugins" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_plugins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.load_plugins" title="Permalink to this definition"></a></dt>
 <dd><p>Load plugins</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.plugins_model.PluginsModel.load_plugins_through_manager">
-<span class="sig-name descname"><span class="pre">load_plugins_through_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin_manager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.load_plugins_through_manager" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_plugins_through_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">PluginFileManager</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PluginPackageManager</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.load_plugins_through_manager" title="Permalink to this definition"></a></dt>
 <dd><p>Load plugins through plugin manager</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>plugin_manager</strong> (<em>object</em>) – PluginManager object</p>
+<dd class="field-odd"><p><strong>plugin_manager</strong> (<em>PluginFileManager</em><em> or </em><em>PluginPackageManager</em>) – <ul class="simple">
+<li><p>PluginFileManager</p></li>
+<li><p>PluginPackageManager</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -227,6 +245,39 @@
 <li><p><strong>plugin_feature_list</strong> (<em>str</em>) – plugin_feature_list path string</p></li>
 <li><p><strong>module</strong> (<em>module</em>) – feature list module</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.plugins_model.PluginsModel.devices_dict">
+<span class="sig-name descname"><span class="pre">devices_dict</span></span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.devices_dict" title="Permalink to this definition"></a></dt>
+<dd><p>devices dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.plugins_model.PluginsModel.feature_lists_path">
+<span class="sig-name descname"><span class="pre">feature_lists_path</span></span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.feature_lists_path" title="Permalink to this definition"></a></dt>
+<dd><p>feature lists path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.plugins_model.PluginsModel.plugin_acquisition_modes">
+<span class="sig-name descname"><span class="pre">plugin_acquisition_modes</span></span><a class="headerlink" href="#navigate.model.plugins_model.PluginsModel.plugin_acquisition_modes" title="Permalink to this definition"></a></dt>
+<dd><p>plugin acquisition modes dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>

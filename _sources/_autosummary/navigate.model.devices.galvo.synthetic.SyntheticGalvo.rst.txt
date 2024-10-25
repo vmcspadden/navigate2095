@@ -28,8 +28,10 @@ navigate.model.devices.galvo.synthetic.SyntheticGalvo
 
    .. autosummary::
    
-      ~SyntheticGalvo.configuration
       ~SyntheticGalvo.microscope_name
+      ~SyntheticGalvo.device_connection
+      ~SyntheticGalvo.configuration
+      ~SyntheticGalvo.galvo_id
       ~SyntheticGalvo.galvo_name
       ~SyntheticGalvo.device_config
       ~SyntheticGalvo.sample_rate

@@ -27,6 +27,7 @@ navigate.model.devices.remote\_focus.base.RemoteFocusBase
 
    .. autosummary::
    
+      ~RemoteFocusBase.device_connection
       ~RemoteFocusBase.configuration
       ~RemoteFocusBase.microscope_name
       ~RemoteFocusBase.device_config

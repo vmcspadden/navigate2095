@@ -46,11 +46,13 @@ navigate.model.microscope.Microscope
    .. autosummary::
    
       ~Microscope.microscope_name
+      ~Microscope.output_event_queue
       ~Microscope.configuration
       ~Microscope.data_buffer
       ~Microscope.stages
       ~Microscope.stages_list
       ~Microscope.ask_stage_for_position
+      ~Microscope.camera
       ~Microscope.lasers
       ~Microscope.galvo
       ~Microscope.filter_wheel

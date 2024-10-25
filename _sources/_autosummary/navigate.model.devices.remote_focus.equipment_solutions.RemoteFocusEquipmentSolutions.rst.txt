@@ -42,6 +42,7 @@ navigate.model.devices.remote\_focus.equipment\_solutions.RemoteFocusEquipmentSo
       ~RemoteFocusEquipmentSolutions.trigger_source
       ~RemoteFocusEquipmentSolutions.daq
       ~RemoteFocusEquipmentSolutions.board_name
+      ~RemoteFocusEquipmentSolutions.device_connection
       ~RemoteFocusEquipmentSolutions.configuration
       ~RemoteFocusEquipmentSolutions.microscope_name
       ~RemoteFocusEquipmentSolutions.device_config

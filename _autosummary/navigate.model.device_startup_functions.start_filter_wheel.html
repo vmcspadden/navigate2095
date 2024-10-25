@@ -159,25 +159,25 @@
 <h1>navigate.model.device_startup_functions.start_filter_wheel<a class="headerlink" href="#navigate-model-device-startup-functions-start-filter-wheel" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="navigate.model.device_startup_functions.start_filter_wheel">
-<span class="sig-prename descclassname"><span class="pre">navigate.model.device_startup_functions.</span></span><span class="sig-name descname"><span class="pre">start_filter_wheel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_synthetic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_devices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.device_startup_functions.start_filter_wheel" title="Permalink to this definition"></a></dt>
-<dd><p>Initializes the filter wheel class on a dedicated thread.</p>
+<span class="sig-prename descclassname"><span class="pre">navigate.model.device_startup_functions.</span></span><span class="sig-name descname"><span class="pre">start_filter_wheel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_synthetic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_devices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="navigate.model.devices.filter_wheel.base.FilterWheelBase.html#navigate.model.devices.filter_wheel.base.FilterWheelBase" title="navigate.model.devices.filter_wheel.base.FilterWheelBase"><span class="pre">FilterWheelBase</span></a></span></span><a class="headerlink" href="#navigate.model.device_startup_functions.start_filter_wheel" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the filter wheel class.</p>
 <p>Initializes the filter wheel: SutterFilterWheel, ASI, and SyntheticFilterWheel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of microscope in configuration</p></li>
-<li><p><strong>device_connection</strong> (<em>object</em>) – Hardware device to connect to</p></li>
-<li><p><strong>configuration</strong> (<em>multiprocesing.managers.DictProxy</em>) – Global configuration of the microscope</p></li>
-<li><p><strong>id</strong> (<em>int</em>) – Index of filter_wheel in the configuration dictionary</p></li>
-<li><p><strong>is_synthetic</strong> (<em>bool</em>) – Run synthetic version of hardware?</p></li>
-<li><p><strong>plugin_devices</strong> (<em>dict</em>) – Dictionary of plugin devices</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Device connection</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Global configuration of the microscope</p></li>
+<li><p><strong>id</strong> (<em>int</em>) – Index of filter_wheel in the configuration dictionary. Default is 0.</p></li>
+<li><p><strong>is_synthetic</strong> (<em>bool</em>) – Run synthetic version of hardware. Default is False.</p></li>
+<li><p><strong>plugin_devices</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Dictionary of plugin devices. Default is None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>FilterWheel</strong> – FilterWheel class.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>class</p>
+<dd class="field-odd"><p><a class="reference internal" href="navigate.model.devices.filter_wheel.base.FilterWheelBase.html#navigate.model.devices.filter_wheel.base.FilterWheelBase" title="navigate.model.devices.filter_wheel.base.FilterWheelBase">FilterWheelBase</a></p>
 </dd>
 </dl>
 </dd></dl>

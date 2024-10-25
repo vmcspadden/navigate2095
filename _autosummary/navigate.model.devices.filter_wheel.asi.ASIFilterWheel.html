@@ -201,17 +201,20 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.filter_wheel" title="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.filter_wheel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_wheel</span></code></a></p></td>
 <td><p>ASI Tiger Controller object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.wait_until_done_delay" title="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.wait_until_done_delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_until_done_delay</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.device_config" title="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.device_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_config</span></code></a></p></td>
+<td><p>Configuration dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.wait_until_done_delay" title="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.wait_until_done_delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_until_done_delay</span></code></a></p></td>
 <td><p>Delay for filter wheel to change positions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.filter_wheel_position" title="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.filter_wheel_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_wheel_position</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.filter_wheel_position" title="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.filter_wheel_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_wheel_position</span></code></a></p></td>
 <td><p>Filter wheel position.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.check_if_filter_in_filter_dictionary">
-<span class="sig-name descname"><span class="pre">check_if_filter_in_filter_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.check_if_filter_in_filter_dictionary" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_if_filter_in_filter_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.check_if_filter_in_filter_dictionary" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if the filter designation (string) given exists in the
 filter dictionary</p>
 <dl class="field-list simple">
@@ -261,6 +264,28 @@ position argument.</p>
 <li><p><strong>filter_name</strong> (<em>str</em>) – Name of filter to move to.</p></li>
 <li><p><strong>wait_until_done</strong> (<em>bool</em>) – Waits duration of time necessary for filter wheel to change positions.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.device_config">
+<span class="sig-name descname"><span class="pre">device_config</span></span><a class="headerlink" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.device_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.filter_wheel.asi.ASIFilterWheel.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.filter_wheel.asi.ASIFilterWheel.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
 </dd>
 </dl>
 </dd></dl>

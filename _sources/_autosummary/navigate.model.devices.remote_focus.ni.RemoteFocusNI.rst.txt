@@ -31,6 +31,7 @@ navigate.model.devices.remote\_focus.ni.RemoteFocusNI
       ~RemoteFocusNI.trigger_source
       ~RemoteFocusNI.daq
       ~RemoteFocusNI.board_name
+      ~RemoteFocusNI.device_connection
       ~RemoteFocusNI.configuration
       ~RemoteFocusNI.microscope_name
       ~RemoteFocusNI.device_config

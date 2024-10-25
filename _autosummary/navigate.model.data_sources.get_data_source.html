@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="navigate.model.data_sources.bdv_data_source" href="navigate.model.data_sources.bdv_data_source.html" />
-    <link rel="prev" title="navigate.model.data_sources" href="navigate.model.data_sources.html" /> 
+    <link rel="prev" title="navigate.model.data_sources.logger" href="navigate.model.data_sources.logger.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -90,6 +90,7 @@
 <li class="toctree-l3"><a class="reference internal" href="navigate.model.analysis.html">navigate.model.analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="navigate.model.concurrency.html">navigate.model.concurrency</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="navigate.model.data_sources.html">navigate.model.data_sources</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="navigate.model.data_sources.logger.html">navigate.model.data_sources.logger</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">navigate.model.data_sources.get_data_source</a></li>
 <li class="toctree-l4"><a class="reference internal" href="navigate.model.data_sources.bdv_data_source.html">navigate.model.data_sources.bdv_data_source</a></li>
 <li class="toctree-l4"><a class="reference internal" href="navigate.model.data_sources.data_source.html">navigate.model.data_sources.data_source</a></li>
@@ -145,7 +146,7 @@
 <h1>navigate.model.data_sources.get_data_source<a class="headerlink" href="#navigate-model-data-sources-get-data-source" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="navigate.model.data_sources.get_data_source">
-<span class="sig-prename descclassname"><span class="pre">navigate.model.data_sources.</span></span><span class="sig-name descname"><span class="pre">get_data_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.data_sources.get_data_source" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">navigate.model.data_sources.</span></span><span class="sig-name descname"><span class="pre">get_data_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.data_sources.get_data_source" title="Permalink to this definition"></a></dt>
 <dd><p>Get the data source class for the given file type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -158,11 +159,6 @@
 <dd class="field-odd"><p><a class="reference internal" href="navigate.model.data_sources.data_source.DataSource.html#navigate.model.data_sources.data_source.DataSource" title="navigate.model.data_sources.data_source.DataSource">DataSource</a></p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_data_source</span><span class="p">(</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
-<span class="go">&lt;class &#39;navigate.model.data_sources.tif.TifDataSource&#39;&gt;</span>
-</pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -171,7 +167,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="navigate.model.data_sources.html" class="btn btn-neutral float-left" title="navigate.model.data_sources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="navigate.model.data_sources.logger.html" class="btn btn-neutral float-left" title="navigate.model.data_sources.logger" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="navigate.model.data_sources.bdv_data_source.html" class="btn btn-neutral float-right" title="navigate.model.data_sources.bdv_data_source" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

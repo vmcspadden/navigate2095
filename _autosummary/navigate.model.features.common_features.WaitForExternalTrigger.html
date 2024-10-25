@@ -145,7 +145,7 @@
 <dt class="sig sig-object py" id="navigate.model.features.common_features.WaitForExternalTrigger">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.features.common_features.</span></span><span class="sig-name descname"><span class="pre">WaitForExternalTrigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trigger_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/PCIe-6738/PFI4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.features.common_features.WaitForExternalTrigger" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>WaitForExternalTrigger class to time parts of the feature list using external input.</p>
+<p>WaitForExternalTrigger class to time features using external input.</p>
 <p>This class waits for either an external trigger (or the timeout) before continuing
 on to the next feature block in the list. Useful when combined with LoopByCounts
 when each iteration may depend on some external event happening.</p>

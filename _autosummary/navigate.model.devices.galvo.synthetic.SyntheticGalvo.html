@@ -153,20 +153,20 @@
 <h1>navigate.model.devices.galvo.synthetic.SyntheticGalvo<a class="headerlink" href="#navigate-model-devices-galvo-synthetic-syntheticgalvo" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.galvo.synthetic.SyntheticGalvo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.galvo.synthetic.</span></span><span class="sig-name descname"><span class="pre">SyntheticGalvo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galvo_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.galvo.synthetic.</span></span><span class="sig-name descname"><span class="pre">SyntheticGalvo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galvo_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="navigate.model.devices.galvo.base.GalvoBase.html#navigate.model.devices.galvo.base.GalvoBase" title="navigate.model.devices.galvo.base.GalvoBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">GalvoBase</span></code></a></p>
 <p>SyntheticGalvo Class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.galvo.synthetic.SyntheticGalvo.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galvo_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galvo_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the SyntheticGalvo class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of the microscope.</p></li>
-<li><p><strong>device_connection</strong> (<em>dict</em>) – Dictionary of device connections.</p></li>
-<li><p><strong>configuration</strong> (<em>dict</em>) – Dictionary of configuration parameters.</p></li>
-<li><p><strong>galvo_id</strong> (<em>int</em>) – Galvo ID.</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Device connection.</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Dictionary of configuration parameters.</p></li>
+<li><p><strong>galvo_id</strong> (<em>int</em>) – Galvo ID. Default is 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -189,6 +189,18 @@
 <p class="rubric">Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.microscope_name" title="navigate.model.devices.galvo.synthetic.SyntheticGalvo.microscope_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">microscope_name</span></code></a></p></td>
+<td><p>Name of the microscope.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.device_connection" title="navigate.model.devices.galvo.synthetic.SyntheticGalvo.device_connection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_connection</span></code></a></p></td>
+<td><p>Device connection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.configuration" title="navigate.model.devices.galvo.synthetic.SyntheticGalvo.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
+<td><p>Configuration parameters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.galvo_id" title="navigate.model.devices.galvo.synthetic.SyntheticGalvo.galvo_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">galvo_id</span></code></a></p></td>
+<td><p>Galvo ID.</p></td>
+</tr>
 </tbody>
 </table>
 <dl class="py method">
@@ -233,7 +245,7 @@ e.g., sweep_times = {“channel_1”: 0.1, “channel_2”: 0.2}</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="navigate.model.devices.galvo.synthetic.SyntheticGalvo.configuration">
 <span class="sig-name descname"><span class="pre">configuration</span></span><a class="headerlink" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.configuration" title="Permalink to this definition"></a></dt>
-<dd><p>Dictionary of microscope configuration parameters.</p>
+<dd><p>Configuration parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
@@ -248,6 +260,28 @@ e.g., sweep_times = {“channel_1”: 0.1, “channel_2”: 0.2}</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.galvo.synthetic.SyntheticGalvo.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.galvo.synthetic.SyntheticGalvo.galvo_id">
+<span class="sig-name descname"><span class="pre">galvo_id</span></span><a class="headerlink" href="#navigate.model.devices.galvo.synthetic.SyntheticGalvo.galvo_id" title="Permalink to this definition"></a></dt>
+<dd><p>Galvo ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
 </dd></dl>

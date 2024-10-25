@@ -42,6 +42,7 @@ navigate.model.devices.stages.sutter.SutterStage
       ~SutterStage.stage_x_pos
       ~SutterStage.stage_y_pos
       ~SutterStage.stage_z_pos
+      ~SutterStage.device_connection
       ~SutterStage.axes
       ~SutterStage.stage_feedback
       ~SutterStage.stage_limits

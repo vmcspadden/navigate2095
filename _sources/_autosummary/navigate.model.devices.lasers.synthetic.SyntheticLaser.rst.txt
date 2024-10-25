@@ -31,6 +31,7 @@ navigate.model.devices.lasers.synthetic.SyntheticLaser
 
    .. autosummary::
    
+      ~SyntheticLaser.device_connection
       ~SyntheticLaser.configuration
       ~SyntheticLaser.microscope_name
       ~SyntheticLaser.device_config

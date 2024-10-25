@@ -90,6 +90,7 @@
 <li class="toctree-l3"><a class="reference internal" href="navigate.model.analysis.html">navigate.model.analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="navigate.model.concurrency.html">navigate.model.concurrency</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="navigate.model.data_sources.html">navigate.model.data_sources</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="navigate.model.data_sources.logger.html">navigate.model.data_sources.logger</a></li>
 <li class="toctree-l4"><a class="reference internal" href="navigate.model.data_sources.get_data_source.html">navigate.model.data_sources.get_data_source</a></li>
 <li class="toctree-l4"><a class="reference internal" href="navigate.model.data_sources.bdv_data_source.html">navigate.model.data_sources.bdv_data_source</a></li>
 <li class="toctree-l4"><a class="reference internal" href="navigate.model.data_sources.data_source.html">navigate.model.data_sources.data_source</a></li>
@@ -215,7 +216,7 @@
 <td><p>Getter for the mode of the data source.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.nbytes" title="navigate.model.data_sources.tiff_data_source.TiffDataSource.nbytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nbytes</span></code></a></p></td>
-<td><p>Getter for the size of this data source in bytes.&quot;</p></td>
+<td><p>Getter for the size of this data source in bytes.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.shape" title="navigate.model.data_sources.tiff_data_source.TiffDataSource.shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape</span></code></a></p></td>
 <td><p>Getter for the shape as XYCZT.</p></td>
@@ -301,12 +302,12 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.data_sources.tiff_data_source.TiffDataSource.set_metadata_from_configuration_experiment">
-<span class="sig-name descname"><span class="pre">set_metadata_from_configuration_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DictProxy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.set_metadata_from_configuration_experiment" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_metadata_from_configuration_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.set_metadata_from_configuration_experiment" title="Permalink to this definition"></a></dt>
 <dd><p>Sets the metadata from according to the microscope configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configuration</strong> (<em>DictProxy</em>) – Configuration experiment.</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration experiment.</p></li>
 <li><p><strong>microscope_name</strong> (<em>str</em>) – The microscope name</p></li>
 </ul>
 </dd>
@@ -511,12 +512,12 @@ float: Pixel size in z dimension (microns).</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="navigate.model.data_sources.tiff_data_source.TiffDataSource.nbytes">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nbytes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.nbytes" title="Permalink to this definition"></a></dt>
-<dd><p>Getter for the size of this data source in bytes.”</p>
+<dd><p>Getter for the size of this data source in bytes.</p>
 <p>Does not account for pyramidal data sources. That process is handled by the
 bdv_data_source class, which is a child of this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Size of this data source in bytes.</p>
+<dd class="field-odd"><p><strong>total_bytes</strong> – Size of this data source in bytes.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
@@ -563,11 +564,7 @@ bdv_data_source class, which is a child of this class.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_c">
 <span class="sig-name descname"><span class="pre">shape_c</span></span><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_c" title="Permalink to this definition"></a></dt>
-<dd><p>Size of the data source in x dimension.
-int: Size of the data source in y dimension.
-int: Size of the data source in z dimension.
-int: Size of the data source in t dimension.
-int: Size of the data source in c dimension.</p>
+<dd><p>Size of the data source in c dimension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
@@ -578,11 +575,7 @@ int: Size of the data source in c dimension.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_t">
 <span class="sig-name descname"><span class="pre">shape_t</span></span><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_t" title="Permalink to this definition"></a></dt>
-<dd><p>Size of the data source in x dimension.
-int: Size of the data source in y dimension.
-int: Size of the data source in z dimension.
-int: Size of the data source in t dimension.
-int: Size of the data source in c dimension.</p>
+<dd><p>Size of the data source in t dimension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
@@ -593,11 +586,7 @@ int: Size of the data source in c dimension.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_x">
 <span class="sig-name descname"><span class="pre">shape_x</span></span><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_x" title="Permalink to this definition"></a></dt>
-<dd><p>Size of the data source in x dimension.
-int: Size of the data source in y dimension.
-int: Size of the data source in z dimension.
-int: Size of the data source in t dimension.
-int: Size of the data source in c dimension.</p>
+<dd><p>Size of the data source in x dimension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
@@ -608,11 +597,7 @@ int: Size of the data source in c dimension.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_y">
 <span class="sig-name descname"><span class="pre">shape_y</span></span><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_y" title="Permalink to this definition"></a></dt>
-<dd><p>Size of the data source in x dimension.
-int: Size of the data source in y dimension.
-int: Size of the data source in z dimension.
-int: Size of the data source in t dimension.
-int: Size of the data source in c dimension.</p>
+<dd><p>Size of the data source in y dimension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
@@ -623,11 +608,7 @@ int: Size of the data source in c dimension.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_z">
 <span class="sig-name descname"><span class="pre">shape_z</span></span><a class="headerlink" href="#navigate.model.data_sources.tiff_data_source.TiffDataSource.shape_z" title="Permalink to this definition"></a></dt>
-<dd><p>Size of the data source in x dimension.
-int: Size of the data source in y dimension.
-int: Size of the data source in z dimension.
-int: Size of the data source in t dimension.
-int: Size of the data source in c dimension.</p>
+<dd><p>Size of the data source in z dimension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>

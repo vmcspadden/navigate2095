@@ -159,21 +159,24 @@
 <h1>navigate.model.device_startup_functions.device_not_found<a class="headerlink" href="#navigate-model-device-startup-functions-device-not-found" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="navigate.model.device_startup_functions.device_not_found">
-<span class="sig-prename descclassname"><span class="pre">navigate.model.device_startup_functions.</span></span><span class="sig-name descname"><span class="pre">device_not_found</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.device_startup_functions.device_not_found" title="Permalink to this definition"></a></dt>
-<dd><p>Display error message if device not found.</p>
-<p>Raises error if the configuration is incorrect and/or the device is not found.</p>
+<span class="sig-prename descclassname"><span class="pre">navigate.model.device_startup_functions.</span></span><span class="sig-name descname"><span class="pre">device_not_found</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.device_startup_functions.device_not_found" title="Permalink to this definition"></a></dt>
+<dd><p>Display an error message and raise an exception if the device is not found.</p>
+<p>This function logs an error message and raises a <cite>RuntimeError</cite> when the
+specified device cannot be found in the configuration or the configuration is
+incorrect.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*args</strong> – microscope_name
-device
-device id
-device type</p>
+<dd class="field-odd"><p><strong>args</strong> (<em>tuple</em>) – <p>A list of arguments representing the device details. These are typically:</p>
+<ul class="simple">
+<li><p>microscope_name (str): The name of the microscope.</p></li>
+<li><p>device (str): The name of the device.</p></li>
+<li><p>device id (int): The ID of the device.</p></li>
+<li><p>device type (str): The type of the device.</p></li>
+</ul>
+</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>devices</strong> – Device class.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>class</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – If the device cannot be found or the configuration is incorrect.</p>
 </dd>
 </dl>
 </dd></dl>

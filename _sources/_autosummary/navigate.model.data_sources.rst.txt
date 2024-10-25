@@ -5,6 +5,13 @@ navigate.model.data\_sources
 
    
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+   
+      logger
+   
    
 
    

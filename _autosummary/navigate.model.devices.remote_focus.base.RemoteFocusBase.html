@@ -153,19 +153,19 @@
 <h1>navigate.model.devices.remote_focus.base.RemoteFocusBase<a class="headerlink" href="#navigate-model-devices-remote-focus-base-remotefocusbase" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.base.RemoteFocusBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.remote_focus.base.</span></span><span class="sig-name descname"><span class="pre">RemoteFocusBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.remote_focus.base.</span></span><span class="sig-name descname"><span class="pre">RemoteFocusBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>RemoteFocusBase Class - Parent class for Remote Focusing Device.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.base.RemoteFocusBase.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initializes the RemoteFocusBase Class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of the microscope.</p></li>
-<li><p><strong>device_connection</strong> (<em>str</em>) – Connection string for the remote focus device.</p></li>
-<li><p><strong>configuration</strong> (<em>dict</em>) – Configuration dictionary.</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Device connection object.</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary.</p></li>
 </ul>
 </dd>
 </dl>
@@ -185,31 +185,34 @@
 <p class="rubric">Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.configuration" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.device_connection" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.device_connection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_connection</span></code></a></p></td>
+<td><p>Device connection object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.configuration" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
 <td><p>Configuration dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.microscope_name" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.microscope_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">microscope_name</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.microscope_name" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.microscope_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">microscope_name</span></code></a></p></td>
 <td><p>Name of the microscope.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.device_config" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.device_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_config</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.device_config" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.device_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_config</span></code></a></p></td>
 <td><p>Remote focus device parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.sample_rate" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.sample_rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_rate</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.sample_rate" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.sample_rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_rate</span></code></a></p></td>
 <td><p>Sample rate of the DAQ.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.sweep_time" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.sweep_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sweep_time</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.sweep_time" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.sweep_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sweep_time</span></code></a></p></td>
 <td><p>Sweep time of the DAQ.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.camera_delay" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.camera_delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera_delay</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.camera_delay" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.camera_delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera_delay</span></code></a></p></td>
 <td><p>Camera delay percent.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_max_voltage" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_max_voltage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remote_focus_max_voltage</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_max_voltage" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_max_voltage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remote_focus_max_voltage</span></code></a></p></td>
 <td><p>Remote focus max voltage.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_min_voltage" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_min_voltage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remote_focus_min_voltage</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_min_voltage" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.remote_focus_min_voltage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remote_focus_min_voltage</span></code></a></p></td>
 <td><p>Remote focus min voltage.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.waveform_dict" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.waveform_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waveform_dict</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.waveform_dict" title="navigate.model.devices.remote_focus.base.RemoteFocusBase.waveform_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waveform_dict</span></code></a></p></td>
 <td><p>Waveform dictionary.</p></td>
 </tr>
 </tbody>
@@ -223,6 +226,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>exposure_times</strong> (<em>dict</em>) – Dictionary of exposure times for each selected channel</p></li>
 <li><p><strong>sweep_times</strong> (<em>dict</em>) – Dictionary of sweep times for each selected channel</p></li>
+<li><p><strong>offset</strong> (<em>float</em><em>, </em><em>optional</em>) – Offset value for the remote focus waveform, by default None</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -263,6 +267,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.remote_focus.base.RemoteFocusBase.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.remote_focus.base.RemoteFocusBase.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>

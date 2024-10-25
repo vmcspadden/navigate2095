@@ -153,19 +153,19 @@
 <h1>navigate.model.devices.remote_focus.ni.RemoteFocusNI<a class="headerlink" href="#navigate-model-devices-remote-focus-ni-remotefocusni" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.ni.RemoteFocusNI">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.remote_focus.ni.</span></span><span class="sig-name descname"><span class="pre">RemoteFocusNI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.ni.RemoteFocusNI" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.remote_focus.ni.</span></span><span class="sig-name descname"><span class="pre">RemoteFocusNI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.ni.RemoteFocusNI" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="navigate.model.devices.remote_focus.base.RemoteFocusBase.html#navigate.model.devices.remote_focus.base.RemoteFocusBase" title="navigate.model.devices.remote_focus.base.RemoteFocusBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemoteFocusBase</span></code></a></p>
 <p>RemoteFocusNI Class - Analog control of the remote focus device.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.ni.RemoteFocusNI.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.ni.RemoteFocusNI.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.remote_focus.ni.RemoteFocusNI.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the RemoteFocusNI class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – The microscope name.</p></li>
-<li><p><strong>device_connection</strong> (<em>object</em>) – The device connection object.</p></li>
-<li><p><strong>configuration</strong> (<em>dict</em>) – The configuration dictionary.</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – The device connection object.</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The configuration dictionary.</p></li>
 </ul>
 </dd>
 </dl>
@@ -288,6 +288,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.remote_focus.ni.RemoteFocusNI.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.remote_focus.ni.RemoteFocusNI.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>

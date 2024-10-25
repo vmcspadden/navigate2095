@@ -30,5 +30,8 @@ navigate.model.devices.shutter.base.ShutterBase
    
       ~ShutterBase.state
       ~ShutterBase.shutter_state
+      ~ShutterBase.microscope_name
+      ~ShutterBase.device_connection
+      ~ShutterBase.configuration
    
    

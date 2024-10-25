@@ -153,19 +153,19 @@
 <h1>navigate.model.devices.camera.base.CameraBase<a class="headerlink" href="#navigate-model-devices-camera-base-camerabase" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.base.CameraBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.camera.base.</span></span><span class="sig-name descname"><span class="pre">CameraBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.camera.base.</span></span><span class="sig-name descname"><span class="pre">CameraBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>CameraBase - Parent camera class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.base.CameraBase.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize CameraBase class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of microscope in configuration</p></li>
-<li><p><strong>device_connection</strong> (<em>object</em>) – Hardware device to connect to</p></li>
-<li><p><strong>configuration</strong> (<em>multiprocesing.managers.DictProxy</em>) – Global configuration of the microscope</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Hardware device to connect to</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Global configuration of the microscope</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -206,37 +206,40 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.variance" title="navigate.model.devices.camera.base.CameraBase.variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variance</span></code></a></p></td>
 <td><p>Return variance map.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.configuration" title="navigate.model.devices.camera.base.CameraBase.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.microscope_name" title="navigate.model.devices.camera.base.CameraBase.microscope_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">microscope_name</span></code></a></p></td>
+<td><p>Name of microscope in configuration</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.configuration" title="navigate.model.devices.camera.base.CameraBase.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
 <td><p>Global configuration of the microscope</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.camera_controller" title="navigate.model.devices.camera.base.CameraBase.camera_controller"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera_controller</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.camera_controller" title="navigate.model.devices.camera.base.CameraBase.camera_controller"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera_controller</span></code></a></p></td>
 <td><p>Hardware device to connect to</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.camera_parameters" title="navigate.model.devices.camera.base.CameraBase.camera_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera_parameters</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.camera_parameters" title="navigate.model.devices.camera.base.CameraBase.camera_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera_parameters</span></code></a></p></td>
 <td><p>Camera parameters</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.is_acquiring" title="navigate.model.devices.camera.base.CameraBase.is_acquiring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_acquiring</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.is_acquiring" title="navigate.model.devices.camera.base.CameraBase.is_acquiring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_acquiring</span></code></a></p></td>
 <td><p>Whether the camera is currently acquiring</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.min_image_width" title="navigate.model.devices.camera.base.CameraBase.min_image_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_image_width</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.min_image_width" title="navigate.model.devices.camera.base.CameraBase.min_image_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_image_width</span></code></a></p></td>
 <td><p>Minimum image width</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.min_image_height" title="navigate.model.devices.camera.base.CameraBase.min_image_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_image_height</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.min_image_height" title="navigate.model.devices.camera.base.CameraBase.min_image_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_image_height</span></code></a></p></td>
 <td><p>Minimum image height</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.step_image_width" title="navigate.model.devices.camera.base.CameraBase.step_image_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step_image_width</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.step_image_width" title="navigate.model.devices.camera.base.CameraBase.step_image_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step_image_width</span></code></a></p></td>
 <td><p>Minimum step size for image width.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.step_image_height" title="navigate.model.devices.camera.base.CameraBase.step_image_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step_image_height</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.step_image_height" title="navigate.model.devices.camera.base.CameraBase.step_image_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step_image_height</span></code></a></p></td>
 <td><p>Minimum step size for image height.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.x_pixels" title="navigate.model.devices.camera.base.CameraBase.x_pixels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">x_pixels</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.x_pixels" title="navigate.model.devices.camera.base.CameraBase.x_pixels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">x_pixels</span></code></a></p></td>
 <td><p>Number of pixels in the x direction</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.y_pixels" title="navigate.model.devices.camera.base.CameraBase.y_pixels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">y_pixels</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.y_pixels" title="navigate.model.devices.camera.base.CameraBase.y_pixels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">y_pixels</span></code></a></p></td>
 <td><p>Number of pixels in the y direction</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.minimum_exposure_time" title="navigate.model.devices.camera.base.CameraBase.minimum_exposure_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum_exposure_time</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.base.CameraBase.minimum_exposure_time" title="navigate.model.devices.camera.base.CameraBase.minimum_exposure_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum_exposure_time</span></code></a></p></td>
 <td><p>minimum exposure time</p></td>
 </tr>
 </tbody>
@@ -266,13 +269,13 @@ Calculate the parameters for an acquisition</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.base.CameraBase.close_camera">
-<span class="sig-name descname"><span class="pre">close_camera</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.close_camera" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close_camera</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.close_camera" title="Permalink to this definition"></a></dt>
 <dd><p>Close camera.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.base.CameraBase.get_line_interval">
-<span class="sig-name descname"><span class="pre">get_line_interval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.get_line_interval" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_line_interval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.get_line_interval" title="Permalink to this definition"></a></dt>
 <dd><p>Return stored camera line interval.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -304,7 +307,7 @@ Calculate the parameters for an acquisition</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.base.CameraBase.set_readout_direction">
-<span class="sig-name descname"><span class="pre">set_readout_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.set_readout_direction" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_readout_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.set_readout_direction" title="Permalink to this definition"></a></dt>
 <dd><p>Set HamamatsuOrca readout direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -353,6 +356,17 @@ Calculate the parameters for an acquisition</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.camera.base.CameraBase.microscope_name">
+<span class="sig-name descname"><span class="pre">microscope_name</span></span><a class="headerlink" href="#navigate.model.devices.camera.base.CameraBase.microscope_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of microscope in configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

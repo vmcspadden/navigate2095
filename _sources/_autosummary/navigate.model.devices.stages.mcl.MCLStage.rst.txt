@@ -37,6 +37,7 @@ navigate.model.devices.stages.mcl.MCLStage
       ~MCLStage.mcl_controller
       ~MCLStage.handle
       ~MCLStage.axes_mapping
+      ~MCLStage.device_connection
       ~MCLStage.axes
       ~MCLStage.stage_feedback
       ~MCLStage.stage_limits

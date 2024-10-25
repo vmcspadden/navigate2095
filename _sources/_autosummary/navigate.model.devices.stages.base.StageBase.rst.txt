@@ -31,6 +31,7 @@ navigate.model.devices.stages.base.StageBase
 
    .. autosummary::
    
+      ~StageBase.device_connection
       ~StageBase.axes
       ~StageBase.stage_feedback
       ~StageBase.axes_mapping

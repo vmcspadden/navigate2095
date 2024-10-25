@@ -43,6 +43,7 @@ navigate.model.devices.stages.asi.ASIStage
 
    .. autosummary::
    
+      ~ASIStage.device_connection
       ~ASIStage.axes
       ~ASIStage.stage_feedback
       ~ASIStage.axes_mapping

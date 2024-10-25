@@ -41,12 +41,12 @@ navigate.model.devices.daq.synthetic.SyntheticDAQ
 
    .. autosummary::
    
+      ~SyntheticDAQ.configuration
       ~SyntheticDAQ.camera
       ~SyntheticDAQ.wait_to_run_lock
       ~SyntheticDAQ.analog_outputs
       ~SyntheticDAQ.is_updating_analog_task
       ~SyntheticDAQ.trigger_mode
-      ~SyntheticDAQ.configuration
       ~SyntheticDAQ.waveform_constants
       ~SyntheticDAQ.microscope_name
       ~SyntheticDAQ.daq_parameters

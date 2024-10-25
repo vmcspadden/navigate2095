@@ -38,6 +38,7 @@ navigate.model.devices.stages.tl\_kcube\_inertial.TLKIMStage
       ~TLKIMStage.kim_axes
       ~TLKIMStage.kim_controller
       ~TLKIMStage.serial_number
+      ~TLKIMStage.device_connection
       ~TLKIMStage.axes
       ~TLKIMStage.stage_feedback
       ~TLKIMStage.stage_limits

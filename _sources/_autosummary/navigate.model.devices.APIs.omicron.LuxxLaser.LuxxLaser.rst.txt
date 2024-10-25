@@ -44,6 +44,7 @@ navigate.model.devices.APIs.omicron.LuxxLaser.LuxxLaser
 
    .. autosummary::
    
+      ~LuxxLaser.device_connection
       ~LuxxLaser.configuration
       ~LuxxLaser.microscope_name
       ~LuxxLaser.device_config

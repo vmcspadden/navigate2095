@@ -28,6 +28,7 @@ navigate.model.devices.remote\_focus.synthetic.SyntheticRemoteFocus
 
    .. autosummary::
    
+      ~SyntheticRemoteFocus.device_connection
       ~SyntheticRemoteFocus.configuration
       ~SyntheticRemoteFocus.microscope_name
       ~SyntheticRemoteFocus.device_config

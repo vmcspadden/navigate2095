@@ -153,16 +153,16 @@
 <h1>navigate.model.devices.daq.synthetic.SyntheticDAQ<a class="headerlink" href="#navigate-model-devices-daq-synthetic-syntheticdaq" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.daq.synthetic.SyntheticDAQ">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.daq.synthetic.</span></span><span class="sig-name descname"><span class="pre">SyntheticDAQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.daq.synthetic.</span></span><span class="sig-name descname"><span class="pre">SyntheticDAQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="navigate.model.devices.daq.base.DAQBase.html#navigate.model.devices.daq.base.DAQBase" title="navigate.model.devices.daq.base.DAQBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">DAQBase</span></code></a></p>
 <p>SyntheticDAQ class for Data Acquisition (DAQ).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.daq.synthetic.SyntheticDAQ.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the Synthetic DAQ.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>configuration</strong> (<em>dict</em>) – Configuration dictionary.</p>
+<dd class="field-odd"><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -223,32 +223,35 @@
 <p class="rubric">Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.camera" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.camera"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.configuration" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
+<td><p>Configuration dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.camera" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.camera"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera</span></code></a></p></td>
 <td><p>Camera object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.wait_to_run_lock" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.wait_to_run_lock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_to_run_lock</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.wait_to_run_lock" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.wait_to_run_lock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_to_run_lock</span></code></a></p></td>
 <td><p>Lock for waiting to run.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.analog_outputs" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.analog_outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analog_outputs</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.analog_outputs" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.analog_outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analog_outputs</span></code></a></p></td>
 <td><p>Analog output tasks.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.is_updating_analog_task" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.is_updating_analog_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_updating_analog_task</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.is_updating_analog_task" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.is_updating_analog_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_updating_analog_task</span></code></a></p></td>
 <td><p>Flag for updating analog task.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.trigger_mode" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.trigger_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trigger_mode</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.trigger_mode" title="navigate.model.devices.daq.synthetic.SyntheticDAQ.trigger_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trigger_mode</span></code></a></p></td>
 <td><p>Trigger mode.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.daq.synthetic.SyntheticDAQ.add_camera">
-<span class="sig-name descname"><span class="pre">add_camera</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">camera</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.add_camera" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_camera</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">camera</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.add_camera" title="Permalink to this definition"></a></dt>
 <dd><p>Connect camera with daq: only in syntheticDAQ.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of microscope.</p></li>
-<li><p><strong>camera</strong> (<em>Camera</em>) – Camera object.</p></li>
+<li><p><strong>camera</strong> (<a class="reference internal" href="navigate.model.devices.camera.base.CameraBase.html#navigate.model.devices.camera.base.CameraBase" title="navigate.model.devices.camera.base.CameraBase"><em>navigate.model.devices.camera.base.CameraBase</em></a>) – Camera object.</p></li>
 </ul>
 </dd>
 </dl>
@@ -303,7 +306,7 @@ display purposes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.daq.synthetic.SyntheticDAQ.enable_microscope">
-<span class="sig-name descname"><span class="pre">enable_microscope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.enable_microscope" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">enable_microscope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.enable_microscope" title="Permalink to this definition"></a></dt>
 <dd><p>Enables the microscope.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -314,7 +317,7 @@ display purposes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.daq.synthetic.SyntheticDAQ.prepare_acquisition">
-<span class="sig-name descname"><span class="pre">prepare_acquisition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.prepare_acquisition" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">prepare_acquisition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.prepare_acquisition" title="Permalink to this definition"></a></dt>
 <dd><p>Prepare the acquisition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -417,7 +420,7 @@ run_tasks() is called.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="navigate.model.devices.daq.synthetic.SyntheticDAQ.configuration">
 <span class="sig-name descname"><span class="pre">configuration</span></span><a class="headerlink" href="#navigate.model.devices.daq.synthetic.SyntheticDAQ.configuration" title="Permalink to this definition"></a></dt>
-<dd><p>Dictionary of configuration parameters</p>
+<dd><p>Configuration dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>

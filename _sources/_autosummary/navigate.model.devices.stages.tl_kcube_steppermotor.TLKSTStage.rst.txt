@@ -40,6 +40,7 @@ navigate.model.devices.stages.tl\_kcube\_steppermotor.TLKSTStage
       ~TLKSTStage.serial_number
       ~TLKSTStage.device_unit_scale
       ~TLKSTStage.kst_controller
+      ~TLKSTStage.device_connection
       ~TLKSTStage.axes
       ~TLKSTStage.stage_feedback
       ~TLKSTStage.axes_mapping

@@ -153,18 +153,18 @@
 <h1>navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire<a class="headerlink" href="#navigate-model-devices-camera-hamamatsu-hamamatsuorcafire" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.camera.hamamatsu.</span></span><span class="sig-name descname"><span class="pre">HamamatsuOrcaFire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.camera.hamamatsu.</span></span><span class="sig-name descname"><span class="pre">HamamatsuOrcaFire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="navigate.model.devices.camera.hamamatsu.HamamatsuBase.html#navigate.model.devices.camera.hamamatsu.HamamatsuBase" title="navigate.model.devices.camera.hamamatsu.HamamatsuBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">HamamatsuBase</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize HamamatsuOrcaFire class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of microscope in configuration</p></li>
-<li><p><strong>device_connection</strong> (<em>object</em>) – Hardware device to connect to</p></li>
-<li><p><strong>configuration</strong> (<em>multiprocessing.managers.DictProxy</em>) – Global configuration of the microscope</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Hardware device to connect to</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Global configuration of the microscope</p></li>
 </ul>
 </dd>
 </dl>
@@ -180,7 +180,7 @@
 <td><p>Convert normal mode exposure time to light-sheet mode exposure time.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.calculate_readout_time" title="navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.calculate_readout_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_readout_time</span></code></a>()</p></td>
-<td><p>Calculate duration of time needed to readout an image.</p></td>
+<td><p>Get the duration of time needed to read out an image.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.close_camera" title="navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.close_camera"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close_camera</span></code></a>()</p></td>
 <td><p>Close HamamatsuOrca Camera</p></td>
@@ -263,14 +263,10 @@ Calculate the parameters for an acquisition</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.calculate_readout_time">
 <span class="sig-name descname"><span class="pre">calculate_readout_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.camera.hamamatsu.HamamatsuOrcaFire.calculate_readout_time" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate duration of time needed to readout an image.</p>
-<p>Calculates the readout time and maximum frame rate according to the camera
-configuration settings.
-Assumes model C13440 with Camera Link communication from Hamamatsu.
-Currently pulling values directly from the camera.</p>
+<dd><p>Get the duration of time needed to read out an image.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>readout_time</strong> – Duration of time needed to readout an image.</p>
+<dd class="field-odd"><p><strong>readout_time</strong> – Duration of time needed to read out an image.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>

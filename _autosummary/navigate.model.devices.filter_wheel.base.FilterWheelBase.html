@@ -184,6 +184,12 @@
 <p class="rubric">Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.base.FilterWheelBase.device_connection" title="navigate.model.devices.filter_wheel.base.FilterWheelBase.device_connection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_connection</span></code></a></p></td>
+<td><p>Device connection object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.base.FilterWheelBase.device_config" title="navigate.model.devices.filter_wheel.base.FilterWheelBase.device_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_config</span></code></a></p></td>
+<td><p>Dictionary of device configuration parameters.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.filter_wheel.base.FilterWheelBase.filter_dictionary" title="navigate.model.devices.filter_wheel.base.FilterWheelBase.filter_dictionary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_dictionary</span></code></a></p></td>
 <td><p>Dictionary of filters available on the filter wheel.</p></td>
 </tr>
@@ -197,7 +203,7 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.filter_wheel.base.FilterWheelBase.check_if_filter_in_filter_dictionary">
-<span class="sig-name descname"><span class="pre">check_if_filter_in_filter_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.filter_wheel.base.FilterWheelBase.check_if_filter_in_filter_dictionary" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_if_filter_in_filter_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#navigate.model.devices.filter_wheel.base.FilterWheelBase.check_if_filter_in_filter_dictionary" title="Permalink to this definition"></a></dt>
 <dd><p>Checks if the filter designation (string) given exists in the
 filter dictionary</p>
 <dl class="field-list simple">
@@ -212,6 +218,28 @@ filter dictionary</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If filter name is not in the filter dictionary.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.filter_wheel.base.FilterWheelBase.device_config">
+<span class="sig-name descname"><span class="pre">device_config</span></span><a class="headerlink" href="#navigate.model.devices.filter_wheel.base.FilterWheelBase.device_config" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary of device configuration parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.filter_wheel.base.FilterWheelBase.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.filter_wheel.base.FilterWheelBase.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
 </dd>
 </dl>
 </dd></dl>

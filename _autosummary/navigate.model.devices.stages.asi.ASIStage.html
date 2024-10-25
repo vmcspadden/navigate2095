@@ -153,11 +153,11 @@
 <h1>navigate.model.devices.stages.asi.ASIStage<a class="headerlink" href="#navigate-model-devices-stages-asi-asistage" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.stages.asi.ASIStage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.stages.asi.</span></span><span class="sig-name descname"><span class="pre">ASIStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.stages.asi.ASIStage" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.stages.asi.</span></span><span class="sig-name descname"><span class="pre">ASIStage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.stages.asi.ASIStage" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="navigate.model.devices.stages.base.StageBase.html#navigate.model.devices.stages.base.StageBase" title="navigate.model.devices.stages.base.StageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">StageBase</span></code></a></p>
 <p>Applied Scientific Instrumentation (ASI) Stage Class</p>
-<p>ASI Documentation: <a class="reference external" href="http://asiimaging.com/docs/products/serial_commands">http://asiimaging.com/docs/products/serial_commands</a></p>
-<p>ASI Quick Start Guide: <a class="reference external" href="http://asiimaging.com/docs/command_quick_start">http://asiimaging.com/docs/command_quick_start</a></p>
+<p>ASI Documentation: <a class="reference external" href="https://asiimaging.com/docs/products/serial_commands">https://asiimaging.com/docs/products/serial_commands</a></p>
+<p>ASI Quick Start Guide: <a class="reference external" href="https://asiimaging.com/docs/command_quick_start">https://asiimaging.com/docs/command_quick_start</a></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>ASI firmware requires all distances to be in a 10th of a micron.</p>
@@ -170,14 +170,15 @@ change both stilt positions simultaneously.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.stages.asi.ASIStage.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.stages.asi.ASIStage.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.stages.asi.ASIStage.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the ASI Stage connection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of microscope in configuration</p></li>
-<li><p><strong>device_connection</strong> (<em>object</em>) – Hardware device to connect to</p></li>
-<li><p><strong>configuration</strong> (<em>multiprocessing.managers.DictProxy</em>) – Global configuration of the microscope</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Hardware device to connect to</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Global configuration of the microscope</p></li>
+<li><p><strong>device_id</strong> (<em>int</em>) – Device ID for the stage, defaults to 0</p></li>
 </ul>
 </dd>
 </dl>
@@ -406,7 +407,7 @@ position dictionary.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>start_position_mm</strong> (<em>float</em>) – scan start position</p></li>
 <li><p><strong>end_position_mm</strong> (<em>float</em>) – scan end position</p></li>
-<li><p><strong>lines</strong> (<em>number of</em>) – number of steps.</p></li>
+<li><p><strong>number_of_lines</strong> (<em>int</em>) – number of steps.</p></li>
 <li><p><strong>overshoot</strong> (<em>float</em>) – overshoot_time ms</p></li>
 <li><p><strong>axis</strong> (<em>str</em>) – fast axis name</p></li>
 </ul>
@@ -531,6 +532,17 @@ in degrees.</p>
 <dd><p>Initial setting for all positions
 self.x_pos, self.y_pos etc are the true axis positions, no matter whether
 the stages are zeroed or not. All units are in microns.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.stages.asi.ASIStage.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.stages.asi.ASIStage.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">

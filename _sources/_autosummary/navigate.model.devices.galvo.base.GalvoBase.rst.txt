@@ -28,6 +28,7 @@ navigate.model.devices.galvo.base.GalvoBase
 
    .. autosummary::
    
+      ~GalvoBase.device_connection
       ~GalvoBase.configuration
       ~GalvoBase.microscope_name
       ~GalvoBase.galvo_name

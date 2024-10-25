@@ -45,6 +45,7 @@ navigate.model.devices.stages.synthetic.SyntheticStage
    
       ~SyntheticStage.default_speed
       ~SyntheticStage.axes_mapping
+      ~SyntheticStage.device_connection
       ~SyntheticStage.axes
       ~SyntheticStage.stage_feedback
       ~SyntheticStage.stage_limits

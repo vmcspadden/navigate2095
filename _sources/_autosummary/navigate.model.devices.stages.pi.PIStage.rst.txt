@@ -38,6 +38,7 @@ navigate.model.devices.stages.pi.PIStage
       ~PIStage.pi_tools
       ~PIStage.pi_device
       ~PIStage.pi_axes
+      ~PIStage.device_connection
       ~PIStage.axes
       ~PIStage.stage_feedback
       ~PIStage.axes_mapping

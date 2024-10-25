@@ -181,23 +181,28 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.device_startup_functions.SerialConnectionFactory.build_connection">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_connection_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception=&lt;class</span> <span class="pre">'Exception'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.device_startup_functions.SerialConnectionFactory.build_connection" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">build_connection_function:</span> <span class="pre">~typing.Callable[[...],</span> <span class="pre">~typing.Any],</span> <span class="pre">args:</span> <span class="pre">~typing.Tuple[~typing.Any,</span> <span class="pre">...],</span> <span class="pre">exception:</span> <span class="pre">~typing.Type[Exception]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'Exception'&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#navigate.model.device_startup_functions.SerialConnectionFactory.build_connection" title="Permalink to this definition"></a></dt>
 <dd><p>Builds a serial connection to a device.</p>
+<p>This method establishes a connection to a device using the provided
+connection-building function and arguments. If the connection does not exist,
+it will be created and stored.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>build_connection_function</strong> (<em>function</em>) – Function that builds the connection to the device.</p></li>
-<li><p><strong>args</strong> (<em>tuple</em>) – Arguments to the build_connection_function</p></li>
-<li><p><strong>exception</strong> (<em>Exception</em>) – Exception to catch when building the connection</p></li>
+<li><p><strong>build_connection_function</strong> (<em>Callable</em>) – Function that builds the connection to the device.</p></li>
+<li><p><strong>args</strong> (<em>Tuple</em>) – Arguments to the build_connection_function</p></li>
+<li><p><strong>exception</strong> (<em>Type</em><em>[</em><em>Exception</em><em>]</em>) – Exception to catch when building the connection</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>connection</strong> – Connection to the device</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>object</p>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
+<p>:raises exception : Exception: If the connection building process fails, the specified <cite>exception</cite> is
+    raised.</p>
 </dd></dl>
 
 </dd></dl>

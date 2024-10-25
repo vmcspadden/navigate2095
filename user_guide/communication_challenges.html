@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multiple Cameras &mdash; navigate 0.0.8 documentation</title>
+  <title>Hardware Troubleshooting &mdash; navigate 0.0.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
 
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Hardware Troubleshooting" href="communication_challenges.html" />
-    <link rel="prev" title="Configuration Overview" href="software_configuration.html" /> 
+    <link rel="next" title="Acquiring Data" href="acquiring_home.html" />
+    <link rel="prev" title="Multiple Cameras" href="multiple_cameras.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,12 +59,18 @@
 <li class="toctree-l1"><a class="reference internal" href="gui_walkthrough.html">User Interface Walkthrough</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="setup_microscope.html">Setting Up A Microscope</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="software_configuration.html">Configuration Overview</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Multiple Cameras</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#enabling-multi-camera-operation">Enabling Multi-Camera Operation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#disabling-multi-camera-operation">Disabling Multi-Camera Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiple_cameras.html">Multiple Cameras</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hardware Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#intermittent-usb-connectivity">Intermittent USB Connectivity</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reported-issues">Reported Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#suspected-cause">Suspected Cause</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#solution-and-verification">Solution and Verification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#results">Results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="communication_challenges.html">Hardware Troubleshooting</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="acquiring_home.html">Acquiring Data</a></li>
@@ -109,9 +115,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="setup_microscope.html">Setting Up A Microscope</a></li>
-      <li class="breadcrumb-item active">Multiple Cameras</li>
+      <li class="breadcrumb-item active">Hardware Troubleshooting</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/user_guide/multiple_cameras.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/user_guide/communication_challenges.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -119,46 +125,64 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="multiple-cameras">
-<h1>Multiple Cameras<a class="headerlink" href="#multiple-cameras" title="Permalink to this heading"></a></h1>
-<p><strong>navigate</strong> is crafted for extensibility to enable the virtualization of multiple microscopes using the same and/or
-different devices, including cameras.</p>
+  <section id="hardware-troubleshooting">
+<h1>Hardware Troubleshooting<a class="headerlink" href="#hardware-troubleshooting" title="Permalink to this heading"></a></h1>
+<p>In this section, we outline some common challenges encountered in setting up a
+microscope system and provide solutions to address these issues effectively.</p>
 <hr class="docutils" />
-<section id="enabling-multi-camera-operation">
-<h2>Enabling Multi-Camera Operation<a class="headerlink" href="#enabling-multi-camera-operation" title="Permalink to this heading"></a></h2>
-<p><strong>navigate</strong> gives users the flexibility to capture images with multiple cameras. Prior
-to launching <strong>navigate</strong>, it is important that both cameras are functioning with
-the computer, and that they share the same external trigger signal from the data acquisition
-card. See <a class="reference internal" href="hardware/camera.html#camera-configuration"><span class="std std-ref">Cameras</span></a> for more information.</p>
-<ol class="arabic">
-<li><p>Select and click menu <span class="menuselection">Microscope Configuration ‣ Configure Microscope</span>.</p>
-<img alt="../_images/multi_cams_1.png" src="../_images/multi_cams_1.png" />
-<p>There will be a pop-up window displaying a list of all available microscopes with its hardware details.</p>
-<a class="reference internal image-reference" href="../_images/multi_cams_2.png"><img alt="../_images/multi_cams_2.png" class="align-center" src="../_images/multi_cams_2.png" style="width: 400px;" /></a>
-<p>There are three settings options for each microscope.</p>
-<a class="reference internal image-reference" href="../_images/multi_cams_3.png"><img alt="../_images/multi_cams_3.png" class="align-center" src="../_images/multi_cams_3.png" style="width: 400px;" /></a>
-</li>
-<li><p>Set <cite>Primary Microscope</cite> and <cite>Additional Microscope</cite>, then click <cite>Confirm</cite>.</p>
-<a class="reference internal image-reference" href="../_images/multi_cams_4.png"><img alt="../_images/multi_cams_4.png" class="align-center" src="../_images/multi_cams_4.png" style="width: 400px;" /></a>
-</li>
-<li><p>Then set <cite>Acquisition mode</cite> and click <cite>Acquiring</cite> the same way as using one camera.
-There will be a pop-up window displaying images obtained from an additional camera.</p>
-<img alt="../_images/multi_cams_5.png" src="../_images/multi_cams_5.png" />
-</li>
+<section id="intermittent-usb-connectivity">
+<span id="obis-tiger-connection"></span><h2>Intermittent USB Connectivity<a class="headerlink" href="#intermittent-usb-connectivity" title="Permalink to this heading"></a></h2>
+<section id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h3>
+<p>For setups that include <strong>Coherent OBIS lasers</strong> and an <strong>ASI Tiger Controller</strong>, some
+users have reported intermittent connection issues. These errors
+were first observed at CU Boulder, where the Coherent OBIS laser and the ASI
+Tiger controller appeared to experience conflicts over COM port assignments.</p>
+</section>
+<section id="reported-issues">
+<h3>Reported Issues<a class="headerlink" href="#reported-issues" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Connection Failure with the ASI Stage</strong>:
+- The ASI stage intermittently fails to connect, with an error message reading:
+“Unable to connect to the serial port: Access to the port ‘COM13’ is denied.”
+- This error has occurred in both the Tiger control software and <em>navigate</em>.</p></li>
+<li><p><strong>Error Logs in Navigate</strong>:
+- In the navigate software, the error is logged as:
+<cite>“model - ERROR - asi: ASI stage connection failed”</cite>.</p></li>
+<li><p><strong>Stage Malfunction During Imaging</strong>:
+- When a connection was achieved, the ASI stages exhibited sporadic movements during
+image acquisition.</p></li>
 </ol>
 </section>
-<hr class="docutils" />
-<section id="disabling-multi-camera-operation">
-<h2>Disabling Multi-Camera Operation<a class="headerlink" href="#disabling-multi-camera-operation" title="Permalink to this heading"></a></h2>
-<p>Once you’re finished acquiring images with multiple cameras, remember to reset to the single-camera mode.</p>
-<ol class="arabic">
-<li><p>Select and click menu <span class="menuselection">Microscope Configuration ‣ Configure Microscope</span>.</p>
-<img alt="../_images/multi_cams_1.png" src="../_images/multi_cams_1.png" />
-</li>
-<li><p>Set <cite>Primary Microscope</cite> and set the “additional microscope” as <cite>Not Use</cite>. Then click <cite>Confirm</cite>.</p>
-<a class="reference internal image-reference" href="../_images/multi_cams_9.png"><img alt="../_images/multi_cams_9.png" class="align-center" src="../_images/multi_cams_9.png" style="width: 400px;" /></a>
-</li>
+<section id="suspected-cause">
+<h3>Suspected Cause<a class="headerlink" href="#suspected-cause" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>Upon investigation, the issue appeared to stem from <strong>port competition</strong> between the Coherent OBIS laser and the ASI Tiger controller. In this setup:</dt><dd><ul class="simple">
+<li><p>The ASI Tiger controller was assigned to <strong>COM port 13</strong>.</p></li>
+<li><p>The Coherent OBIS 561 nm laser was initially assigned to <strong>COM port 14</strong>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Despite this configuration, the Coherent OBIS laser intermittently attempted to connect through COM port 13, effectively displacing the ASI Tiger controller’s access to the port and causing a conflict.</p>
+</section>
+<section id="solution-and-verification">
+<h3>Solution and Verification<a class="headerlink" href="#solution-and-verification" title="Permalink to this heading"></a></h3>
+<p>To address this issue, the following corrective actions were implemented:</p>
+<ol class="arabic simple">
+<li><p><strong>Reassigning the Coherent OBIS Laser</strong>:
+- The Coherent OBIS laser was reassigned from COM port 14 to <strong>COM port 9</strong> to
+prevent interference with the ASI Tiger controller. This port was chosen since it was
+in close proximity to the other Coherent OBIS laser instances.</p></li>
+<li><p><strong>System Reboot</strong>:
+- Following the reassignment, both the computer and hardware were rebooted to ensure the new COM port configurations took effect.</p></li>
 </ol>
+</section>
+<section id="results">
+<h3>Results<a class="headerlink" href="#results" title="Permalink to this heading"></a></h3>
+<p>Since reassigning the Coherent OBIS laser to COM port 9, the ASI stage has maintained
+a stable connection on COM port 13 without interruptions and uncontrolled stage
+movements are no longer occurring.</p>
+</section>
 </section>
 </section>
 
@@ -166,8 +190,8 @@ There will be a pop-up window displaying images obtained from an additional came
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="software_configuration.html" class="btn btn-neutral float-left" title="Configuration Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="communication_challenges.html" class="btn btn-neutral float-right" title="Hardware Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="multiple_cameras.html" class="btn btn-neutral float-left" title="Multiple Cameras" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="acquiring_home.html" class="btn btn-neutral float-right" title="Acquiring Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

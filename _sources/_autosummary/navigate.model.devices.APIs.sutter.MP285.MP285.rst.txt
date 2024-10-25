@@ -22,19 +22,40 @@ navigate.model.devices.APIs.sutter.MP285.MP285
       ~MP285.convert_microns_to_microsteps
       ~MP285.convert_microsteps_to_microns
       ~MP285.disconnect_from_serial
-      ~MP285.flush_buffers
       ~MP285.get_controller_status
       ~MP285.get_current_position
       ~MP285.interrupt_move
       ~MP285.move_to_specified_position
+      ~MP285.read_response
       ~MP285.refresh_display
       ~MP285.reset_controller
-      ~MP285.safe_write
+      ~MP285.send_command
       ~MP285.set_absolute_mode
       ~MP285.set_resolution_and_velocity
    
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MP285.serial
+      ~MP285.speed
+      ~MP285.resolution
+      ~MP285.wait_until_done
+      ~MP285.wait_time
+      ~MP285.n_waits
+      ~MP285.safe_to_write
+      ~MP285.write_done_flag
+      ~MP285.is_moving
+      ~MP285.last_write_time
+      ~MP285.commands_num
+      ~MP285.top_command_idx
+      ~MP285.last_command_idx
+      ~MP285.is_interrupted
+      ~MP285.unreceived_bytes
+      ~MP285.commands_buffer
    
    

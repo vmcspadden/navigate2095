@@ -30,6 +30,7 @@ navigate.model.features.image\_writer.ImageWriter
 
    .. autosummary::
    
+      ~ImageWriter.microscope_name
       ~ImageWriter.data_buffer
       ~ImageWriter.number_of_frames
       ~ImageWriter.saving_flags

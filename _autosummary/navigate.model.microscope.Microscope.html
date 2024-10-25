@@ -140,18 +140,18 @@
 <h1>navigate.model.microscope.Microscope<a class="headerlink" href="#navigate-model-microscope-microscope" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.microscope.</span></span><span class="sig-name descname"><span class="pre">Microscope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">devices_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_synthetic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_virtual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.microscope.</span></span><span class="sig-name descname"><span class="pre">Microscope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">devices_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_synthetic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_virtual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Microscope Class - Used to control the microscope.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">devices_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_synthetic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_virtual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">devices_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_synthetic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_virtual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the microscope.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the microscope.</p></li>
-<li><p><strong>configuration</strong> (<em>dict</em>) – Configuration dictionary.</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary.</p></li>
 <li><p><strong>devices_dict</strong> (<em>dict</em>) – Dictionary of devices.</p></li>
 <li><p><strong>is_synthetic</strong> (<em>bool</em><em>, </em><em>optional</em>) – Is synthetic, by default False</p></li>
 <li><p><strong>is_virtual</strong> (<em>bool</em><em>, </em><em>optional</em>) – Is virtual, by default False</p></li>
@@ -202,8 +202,8 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.prepare_next_channel" title="navigate.model.microscope.Microscope.prepare_next_channel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_next_channel</span></code></a>([update_daq_task_flag])</p></td>
 <td><p>Prepare the next channel.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_command</span></code>(command, *args)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.run_command" title="navigate.model.microscope.Microscope.run_command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_command</span></code></a>(command, *args)</p></td>
+<td><p>Run command.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.stop_stage" title="navigate.model.microscope.Microscope.stop_stage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop_stage</span></code></a>()</p></td>
 <td><p>Stop stage.</p></td>
@@ -231,20 +231,26 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.microscope_name" title="navigate.model.microscope.Microscope.microscope_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">microscope_name</span></code></a></p></td>
 <td><p>Name of the microscope.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.configuration" title="navigate.model.microscope.Microscope.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.output_event_queue" title="navigate.model.microscope.Microscope.output_event_queue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_event_queue</span></code></a></p></td>
+<td><p>Output event queue.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.configuration" title="navigate.model.microscope.Microscope.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
 <td><p>Configuration dictionary.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.data_buffer" title="navigate.model.microscope.Microscope.data_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_buffer</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.data_buffer" title="navigate.model.microscope.Microscope.data_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_buffer</span></code></a></p></td>
 <td><p>Buffer for image data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.stages" title="navigate.model.microscope.Microscope.stages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stages</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.stages" title="navigate.model.microscope.Microscope.stages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stages</span></code></a></p></td>
 <td><p>Dictionary of stages.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.stages_list" title="navigate.model.microscope.Microscope.stages_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stages_list</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.stages_list" title="navigate.model.microscope.Microscope.stages_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stages_list</span></code></a></p></td>
 <td><p>List of stages.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.ask_stage_for_position" title="navigate.model.microscope.Microscope.ask_stage_for_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ask_stage_for_position</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.ask_stage_for_position" title="navigate.model.microscope.Microscope.ask_stage_for_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ask_stage_for_position</span></code></a></p></td>
 <td><p>Ask stage for position.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.camera" title="navigate.model.microscope.Microscope.camera"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camera</span></code></a></p></td>
+<td><p>Camera object.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.microscope.Microscope.lasers" title="navigate.model.microscope.Microscope.lasers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lasers</span></code></a></p></td>
 <td><p>Dictionary of lasers.</p></td>
@@ -298,7 +304,7 @@
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.assemble_device_config_lists">
-<span class="sig-name descname"><span class="pre">assemble_device_config_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.assemble_device_config_lists" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">assemble_device_config_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.assemble_device_config_lists" title="Permalink to this definition"></a></dt>
 <dd><p>Assemble device config lists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -311,6 +317,7 @@
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>device_config_list</strong> (<em>list</em>) – Device configuration list.</p></li>
 <li><p><strong>device_name_list</strong> (<em>list</em>) – Device name list.</p></li>
+<li><p><strong>is_list</strong> (<em>bool</em>) – Is list.</p></li>
 </ul>
 </p>
 </dd>
@@ -376,7 +383,7 @@ for each channel.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.get_stage_position">
-<span class="sig-name descname"><span class="pre">get_stage_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.get_stage_position" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_stage_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.get_stage_position" title="Permalink to this definition"></a></dt>
 <dd><p>Get stage position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -390,7 +397,7 @@ for each channel.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.load_and_start_devices">
-<span class="sig-name descname"><span class="pre">load_and_start_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_ref_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_devices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.load_and_start_devices" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_and_start_devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_ref_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_devices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.load_and_start_devices" title="Permalink to this definition"></a></dt>
 <dd><p>Load and start devices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -403,6 +410,7 @@ for each channel.</p>
 <li><p><strong>name</strong> (<em>str</em>) – Name.</p></li>
 <li><p><strong>i</strong> (<em>int</em>) – Index.</p></li>
 <li><p><strong>plugin_devices</strong> (<em>dict</em>) – Plugin Devices</p></li>
+<li><p><strong>TODO</strong> (<em>Remove uncalled parameters</em><em> (</em><em>device_connection</em><em>, </em><em>name</em><em>, </em><em>plugin_devices</em><em>)</em><em>?</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -410,7 +418,7 @@ for each channel.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.move_remote_focus">
-<span class="sig-name descname"><span class="pre">move_remote_focus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.move_remote_focus" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">move_remote_focus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.move_remote_focus" title="Permalink to this definition"></a></dt>
 <dd><p>Move remote focus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -421,7 +429,7 @@ for each channel.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.move_stage">
-<span class="sig-name descname"><span class="pre">move_stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_until_done</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_focus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.move_stage" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">move_stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_until_done</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_focus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.move_stage" title="Permalink to this definition"></a></dt>
 <dd><p>Move stage to a position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -484,14 +492,28 @@ necessary, ensuring the hardware is ready for imaging the selected channel.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="navigate.model.microscope.Microscope.run_command">
+<span class="sig-name descname"><span class="pre">run_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.run_command" title="Permalink to this definition"></a></dt>
+<dd><p>Run command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – Command.</p></li>
+<li><p><strong>*args</strong> (<em>list</em>) – Variable input arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.stop_stage">
-<span class="sig-name descname"><span class="pre">stop_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.stop_stage" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stop_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.stop_stage" title="Permalink to this definition"></a></dt>
 <dd><p>Stop stage.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.terminate">
-<span class="sig-name descname"><span class="pre">terminate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.terminate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">terminate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.terminate" title="Permalink to this definition"></a></dt>
 <dd><p>Close hardware explicitly.</p>
 </dd></dl>
 
@@ -523,7 +545,7 @@ necessary, ensuring the hardware is ready for imaging the selected channel.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.microscope.Microscope.update_stage_limits">
-<span class="sig-name descname"><span class="pre">update_stage_limits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limits_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.microscope.Microscope.update_stage_limits" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_stage_limits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limits_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.update_stage_limits" title="Permalink to this definition"></a></dt>
 <dd><p>Update stage limits.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -550,6 +572,17 @@ necessary, ensuring the hardware is ready for imaging the selected channel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.microscope.Microscope.camera">
+<span class="sig-name descname"><span class="pre">camera</span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.camera" title="Permalink to this definition"></a></dt>
+<dd><p>Camera object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>obj</p>
 </dd>
 </dl>
 </dd></dl>
@@ -726,6 +759,17 @@ necessary, ensuring the hardware is ready for imaging the selected channel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.microscope.Microscope.output_event_queue">
+<span class="sig-name descname"><span class="pre">output_event_queue</span></span><a class="headerlink" href="#navigate.model.microscope.Microscope.output_event_queue" title="Permalink to this definition"></a></dt>
+<dd><p>Output event queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Queue</p>
 </dd>
 </dl>
 </dd></dl>

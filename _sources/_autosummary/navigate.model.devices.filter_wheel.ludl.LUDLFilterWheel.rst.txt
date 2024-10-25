@@ -30,8 +30,10 @@ navigate.model.devices.filter\_wheel.ludl.LUDLFilterWheel
    .. autosummary::
    
       ~LUDLFilterWheel.serial
+      ~LUDLFilterWheel.device_config
       ~LUDLFilterWheel.sio
       ~LUDLFilterWheel.wait_until_done_delay
+      ~LUDLFilterWheel.device_connection
       ~LUDLFilterWheel.filter_dictionary
       ~LUDLFilterWheel.wheel_position
       ~LUDLFilterWheel.filter_wheel_number

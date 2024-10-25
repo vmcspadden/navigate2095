@@ -33,6 +33,7 @@ navigate.model.devices.camera.base.CameraBase
    
       ~CameraBase.offset
       ~CameraBase.variance
+      ~CameraBase.microscope_name
       ~CameraBase.configuration
       ~CameraBase.camera_controller
       ~CameraBase.camera_parameters

@@ -34,6 +34,8 @@ navigate.model.devices.filter\_wheel.asi.ASICubeSlider
       ~ASICubeSlider.wait_until_done_delay
       ~ASICubeSlider.dichroic_id
       ~ASICubeSlider.dichroic_position
+      ~ASICubeSlider.device_connection
+      ~ASICubeSlider.device_config
       ~ASICubeSlider.filter_dictionary
       ~ASICubeSlider.wheel_position
       ~ASICubeSlider.filter_wheel_number

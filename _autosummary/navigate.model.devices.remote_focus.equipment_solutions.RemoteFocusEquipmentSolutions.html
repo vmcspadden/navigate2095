@@ -153,7 +153,7 @@
 <h1>navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions<a class="headerlink" href="#navigate-model-devices-remote-focus-equipment-solutions-remotefocusequipmentsolutions" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.remote_focus.equipment_solutions.</span></span><span class="sig-name descname"><span class="pre">RemoteFocusEquipmentSolutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.remote_focus.equipment_solutions.</span></span><span class="sig-name descname"><span class="pre">RemoteFocusEquipmentSolutions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="navigate.model.devices.remote_focus.ni.RemoteFocusNI.html#navigate.model.devices.remote_focus.ni.RemoteFocusNI" title="navigate.model.devices.remote_focus.ni.RemoteFocusNI"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemoteFocusNI</span></code></a></p>
 <p>RemoteFocusEquipmentSolutions Class</p>
 <div class="admonition note">
@@ -167,14 +167,14 @@ sent. Once the character is received the next character can be processed.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the RemoteFocusEquipmentSolutions Class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of the microscope</p></li>
-<li><p><strong>device_connection</strong> (<em>str</em>) – Name of the device connection</p></li>
-<li><p><strong>configuration</strong> (<em>dict</em>) – Configuration dictionary</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Connection to the device</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary</p></li>
 </ul>
 </dd>
 </dl>
@@ -278,7 +278,7 @@ sent. Once the character is received the next character can be processed.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.read_bytes">
-<span class="sig-name descname"><span class="pre">read_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.read_bytes" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">read_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_bytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.read_bytes" title="Permalink to this definition"></a></dt>
 <dd><p>Read the specified number of bytes from RemoteFocusEquipmentSolutions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -288,7 +288,7 @@ sent. Once the character is received the next character can be processed.</p>
 <dd class="field-even"><p><strong>received_bytes</strong> – Number of bytes received from the RemoteFocusEquipmentSolutions device.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bytearray</p>
+<dd class="field-odd"><p>bytes</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>UserWarning</strong> – If the serial port to the RemoteFocusEquipmentSolutions is connected, but it
@@ -299,7 +299,7 @@ sent. Once the character is received the next character can be processed.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.send_command">
-<span class="sig-name descname"><span class="pre">send_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.send_command" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">send_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.send_command" title="Permalink to this definition"></a></dt>
 <dd><p>Send write command to the RemoteFocusEquipmentSolutions device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -408,6 +408,17 @@ sent. Once the character is received the next character can be processed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.remote_focus.equipment_solutions.RemoteFocusEquipmentSolutions.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>

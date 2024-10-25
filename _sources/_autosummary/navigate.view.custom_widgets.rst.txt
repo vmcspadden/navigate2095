@@ -32,6 +32,7 @@ navigate.view.custom\_widgets
    navigate.view.custom_widgets.CollapsibleFrame
    navigate.view.custom_widgets.DockableNotebook
    navigate.view.custom_widgets.LabelInputWidgetFactory
+   navigate.view.custom_widgets.common
    navigate.view.custom_widgets.hover
    navigate.view.custom_widgets.popup
    navigate.view.custom_widgets.scrollbars

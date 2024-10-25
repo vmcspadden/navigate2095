@@ -375,8 +375,11 @@ Supported in version 2.4 and later.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.APIs.asi.asi_MFC_controller.MFCTwoThousand.get_default_motor_axis_sequence">
-<span class="sig-name descname"><span class="pre">get_default_motor_axis_sequence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.APIs.asi.asi_MFC_controller.MFCTwoThousand.get_default_motor_axis_sequence" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_default_motor_axis_sequence</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#navigate.model.devices.APIs.asi.asi_MFC_controller.MFCTwoThousand.get_default_motor_axis_sequence" title="Permalink to this definition"></a></dt>
 <dd><p>Get the default motor axis sequence from the ASI device</p>
+<p>Only returns stage types XYMotor, ZMotor, Theta. Avoids problems associated
+with other tiger controller cards, which could include piezos, filter wheels,
+logic cards, etc.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Default motor axis sequence</p>
@@ -690,11 +693,11 @@ the wheel is not ready for any reason, the response ERR is returned. Example:</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.APIs.asi.asi_MFC_controller.MFCTwoThousand.send_command">
-<span class="sig-name descname"><span class="pre">send_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.APIs.asi.asi_MFC_controller.MFCTwoThousand.send_command" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">send_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.APIs.asi.asi_MFC_controller.MFCTwoThousand.send_command" title="Permalink to this definition"></a></dt>
 <dd><p>Send a serial command to the device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cmd</strong> (<em>bytes</em>) – Serial command to send to the device</p>
+<dd class="field-odd"><p><strong>cmd</strong> (<em>str</em>) – Serial command to send to the device</p>
 </dd>
 </dl>
 </dd></dl>

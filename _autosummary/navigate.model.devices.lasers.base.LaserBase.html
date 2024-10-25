@@ -153,19 +153,19 @@
 <h1>navigate.model.devices.lasers.base.LaserBase<a class="headerlink" href="#navigate-model-devices-lasers-base-laserbase" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.lasers.base.</span></span><span class="sig-name descname"><span class="pre">LaserBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.lasers.base.</span></span><span class="sig-name descname"><span class="pre">LaserBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Laser Base Class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize Laser Base Class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of the microscope</p></li>
-<li><p><strong>device_connection</strong> (<em>str</em>) – Connection string for the device</p></li>
-<li><p><strong>configuration</strong> (<em>dict</em>) – Configuration dictionary</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Communication instance with the device.</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Configuration dictionary</p></li>
 <li><p><strong>laser_id</strong> (<em>int</em>) – Laser ID</p></li>
 </ul>
 </dd>
@@ -198,32 +198,35 @@
 <p class="rubric">Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.lasers.base.LaserBase.configuration" title="navigate.model.devices.lasers.base.LaserBase.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.lasers.base.LaserBase.device_connection" title="navigate.model.devices.lasers.base.LaserBase.device_connection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_connection</span></code></a></p></td>
+<td><p>Communication instance with the device</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.lasers.base.LaserBase.configuration" title="navigate.model.devices.lasers.base.LaserBase.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
 <td><p>Configuration dictionary</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.lasers.base.LaserBase.microscope_name" title="navigate.model.devices.lasers.base.LaserBase.microscope_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">microscope_name</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.lasers.base.LaserBase.microscope_name" title="navigate.model.devices.lasers.base.LaserBase.microscope_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">microscope_name</span></code></a></p></td>
 <td><p>Name of the microscope</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.lasers.base.LaserBase.device_config" title="navigate.model.devices.lasers.base.LaserBase.device_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_config</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.lasers.base.LaserBase.device_config" title="navigate.model.devices.lasers.base.LaserBase.device_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_config</span></code></a></p></td>
 <td><p>Laser ID</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.close" title="Permalink to this definition"></a></dt>
 <dd><p>Close the laser before exit.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase.initialize_laser">
-<span class="sig-name descname"><span class="pre">initialize_laser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.initialize_laser" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">initialize_laser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.initialize_laser" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize lasers.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase.set_power">
-<span class="sig-name descname"><span class="pre">set_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">laser_intensity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.set_power" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_power</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">laser_intensity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.set_power" title="Permalink to this definition"></a></dt>
 <dd><p>Set laser power</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -234,13 +237,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase.turn_off">
-<span class="sig-name descname"><span class="pre">turn_off</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.turn_off" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">turn_off</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.turn_off" title="Permalink to this definition"></a></dt>
 <dd><p>Turn off the laser</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase.turn_on">
-<span class="sig-name descname"><span class="pre">turn_on</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.turn_on" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">turn_on</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.turn_on" title="Permalink to this definition"></a></dt>
 <dd><p>Turn on the laser</p>
 </dd></dl>
 
@@ -262,6 +265,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.lasers.base.LaserBase.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.lasers.base.LaserBase.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Communication instance with the device</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>

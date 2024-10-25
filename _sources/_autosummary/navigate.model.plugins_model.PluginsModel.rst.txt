@@ -27,4 +27,12 @@ navigate.model.plugins\_model.PluginsModel
 
    
    
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PluginsModel.devices_dict
+      ~PluginsModel.plugin_acquisition_modes
+      ~PluginsModel.feature_lists_path
+   
    

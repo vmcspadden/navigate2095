@@ -153,20 +153,20 @@
 <h1>navigate.model.devices.stages.base.StageBase<a class="headerlink" href="#navigate-model-devices-stages-base-stagebase" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="navigate.model.devices.stages.base.StageBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.stages.base.</span></span><span class="sig-name descname"><span class="pre">StageBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.stages.base.StageBase" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">navigate.model.devices.stages.base.</span></span><span class="sig-name descname"><span class="pre">StageBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.stages.base.StageBase" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stage Parent Class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="navigate.model.devices.stages.base.StageBase.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#navigate.model.devices.stages.base.StageBase.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">microscope_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#navigate.model.devices.stages.base.StageBase.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialize the stage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>microscope_name</strong> (<em>str</em>) – Name of microscope in configuration</p></li>
-<li><p><strong>device_connection</strong> (<em>object</em>) – Hardware device to connect to</p></li>
-<li><p><strong>configuration</strong> (<em>multiprocessing.managers.DictProxy</em>) – Global configuration of the microscope</p></li>
-<li><p><strong>device_id</strong> (<em>int</em><em>, </em><em>optional</em>) – Device ID, by default 0</p></li>
+<li><p><strong>device_connection</strong> (<em>Any</em>) – Hardware device to connect to</p></li>
+<li><p><strong>configuration</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Global configuration of the microscope</p></li>
+<li><p><strong>device_id</strong> (<em>int</em>) – Device ID. Default is 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -198,16 +198,19 @@
 <p class="rubric">Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.axes" title="navigate.model.devices.stages.base.StageBase.axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">axes</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.device_connection" title="navigate.model.devices.stages.base.StageBase.device_connection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">device_connection</span></code></a></p></td>
+<td><p>Device connection object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.axes" title="navigate.model.devices.stages.base.StageBase.axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">axes</span></code></a></p></td>
 <td><p>List of stage axes available.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.stage_feedback" title="navigate.model.devices.stages.base.StageBase.stage_feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stage_feedback</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.stage_feedback" title="navigate.model.devices.stages.base.StageBase.stage_feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stage_feedback</span></code></a></p></td>
 <td><p>Feedback alignment value for the stage.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.axes_mapping" title="navigate.model.devices.stages.base.StageBase.axes_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">axes_mapping</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.axes_mapping" title="navigate.model.devices.stages.base.StageBase.axes_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">axes_mapping</span></code></a></p></td>
 <td><p>Initial setting for all positions self.x_pos, self.y_pos etc are the true axis positions, no matter whether the stages are zeroed or not.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.stage_limits" title="navigate.model.devices.stages.base.StageBase.stage_limits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stage_limits</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#navigate.model.devices.stages.base.StageBase.stage_limits" title="navigate.model.devices.stages.base.StageBase.stage_limits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stage_limits</span></code></a></p></td>
 <td><p>Whether the stage has limits enabled or not.</p></td>
 </tr>
 </tbody>
@@ -297,6 +300,17 @@ Expect values in micrometers, except for theta, which is in degrees.</p></li>
 <dd><p>Initial setting for all positions
 self.x_pos, self.y_pos etc are the true axis positions, no matter whether
 the stages are zeroed or not. All units are in microns.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="navigate.model.devices.stages.base.StageBase.device_connection">
+<span class="sig-name descname"><span class="pre">device_connection</span></span><a class="headerlink" href="#navigate.model.devices.stages.base.StageBase.device_connection" title="Permalink to this definition"></a></dt>
+<dd><p>Device connection object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
