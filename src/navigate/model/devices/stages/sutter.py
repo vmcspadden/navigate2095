@@ -32,6 +32,11 @@
 # Standard Imports
 import logging
 import time
+
+# from idlelib.debugger_r import DictProxy
+from typing import Any, Dict
+
+# Third-Party Imports
 from serial import SerialException
 
 # Local Imports
@@ -44,7 +49,7 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_MP285_connection(com_port, baud_rate, timeout=0.25):
+def build_MP285_connection(com_port: str, baud_rate: int, timeout=0.25) -> MP285:
     """Build Sutter Stage Serial Port connection
 
     Parameters
@@ -59,7 +64,7 @@ def build_MP285_connection(com_port, baud_rate, timeout=0.25):
     Returns
     -------
     MP285
-        MP285 SutterStage.
+        Serial connection to the MP285.
     """
     try:
         mp285_stage = MP285(com_port, baud_rate, timeout)
@@ -76,17 +81,25 @@ def build_MP285_connection(com_port, baud_rate, timeout=0.25):
 class SutterStage(StageBase):
     """SutterStage Class for MP-285."""
 
-    def __init__(self, microscope_name, device_connection, configuration, device_id=0):
+    def __init__(
+        self,
+        microscope_name: str,
+        device_connection: Any,
+        configuration: Dict[str, Any],
+        device_id: int = 0,
+    ) -> None:
         """Initialize the SutterStage.
 
         Parameters
         ----------
         microscope_name : str
             Name of the microscope.
-        device_connection : MP285
-            MP285 stage.
-        configuration : dict
+        device_connection : Any
+            MP285 stage connection.
+        configuration : Dict[str, Any]
             Configuration dictionary for the SutterStage.
+        device_id : int
+            Device ID for the SutterStage.
 
         Raises
         ------
@@ -125,13 +138,17 @@ class SutterStage(StageBase):
         #: str: Resolution of the stage.
         self.resolution = "low"  # "high"
 
-        #: int: Speed of the stage.
-        self.speed = 3000  # 1300  # in units microns/s.
+        #: int: Speed of the stage in units microns/s.
+        self.speed = 3000
 
         #: float: Position of the stage along the x-axis.
+        self.stage_x_pos = 0
+
         #: float: Position of the stage along the y-axis.
+        self.stage_y_pos = 0
+
         #: float: Position of the stage along the z-axis.
-        self.stage_x_pos, self.stage_y_pos, self.stage_z_pos = None, None, None
+        self.stage_z_pos = 0
 
         # Set the resolution and velocity of the stage
         try:
@@ -151,7 +168,7 @@ class SutterStage(StageBase):
 
         self.report_position()
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Delete SutterStage Serial Port.
 
         Raises
@@ -161,7 +178,7 @@ class SutterStage(StageBase):
         """
         self.close()
 
-    def report_position(self):
+    def report_position(self) -> dict:
         """Reports the position for all axes, and creates a position dictionary.
 
         Positions from the MP-285 are converted to microns.
@@ -174,13 +191,21 @@ class SutterStage(StageBase):
         position = {}
         try:
             (
-                self.stage_x_pos,
-                self.stage_y_pos,
-                self.stage_z_pos,
+                stage_x_pos,
+                stage_y_pos,
+                stage_z_pos,
             ) = self.stage.get_current_position()
-            for axis, hardware_axis in self.axes_mapping.items():
-                hardware_position = getattr(self, f"stage_{hardware_axis}_pos")
-                self.__setattr__(f"{axis}_pos", hardware_position)
+            if stage_x_pos is not None:
+                self.stage_x_pos = stage_x_pos
+                self.stage_y_pos = stage_y_pos
+                self.stage_z_pos = stage_z_pos
+                for axis, hardware_axis in self.axes_mapping.items():
+                    hardware_position = getattr(self, f"stage_{hardware_axis}_pos")
+                    self.__setattr__(f"{axis}_pos", hardware_position)
+            else:
+                logger.debug(
+                    "MP-285 didn't return current position, using previous position!"
+                )
 
             position = self.get_position_dict()
             logger.debug(f"MP-285 - Position: {position}")
@@ -191,7 +216,9 @@ class SutterStage(StageBase):
 
         return position
 
-    def move_axis_absolute(self, axis, abs_pos, wait_until_done=False):
+    def move_axis_absolute(
+        self, axis: str, abs_pos: float, wait_until_done=False
+    ) -> bool:
         """Implement movement logic along a single axis.
 
         Parameters
@@ -211,7 +238,7 @@ class SutterStage(StageBase):
         move_dictionary = {f"{axis}_abs": abs_pos}
         return self.move_absolute(move_dictionary, wait_until_done)
 
-    def move_absolute(self, move_dictionary, wait_until_done=True):
+    def move_absolute(self, move_dictionary: dict, wait_until_done=True) -> bool:
         """Move stage along a single axis.
 
         Parameters
@@ -266,14 +293,14 @@ class SutterStage(StageBase):
 
         return True
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop all stage movement abruptly."""
         try:
             self.stage.interrupt_move()
         except SerialException as error:
             logger.exception(f"MP-285 - Stage stop failed: {error}")
 
-    def close(self):
+    def close(self) -> None:
         """Close the stage."""
 
         try:

@@ -126,7 +126,7 @@ def single_pulse(
     samples = int(np.floor(np.multiply(sample_rate, sweep_time)))
 
     # create an array just containing the offset voltage:
-    array = np.zeros((samples)) + offset
+    array = np.zeros(samples) + offset
 
     # convert pulse width and delay in % into number of samples
     pulsedelay_samples = int(samples * delay / 100)
@@ -469,18 +469,13 @@ def smooth_waveform(waveform, percent_smoothing=10):
     ----------
     waveform : np.array
         The waveform to be smoothed
-    percent_smoothing : int
+    percent_smoothing : float
         The percentage of the waveform to be smoothed
 
     Returns
     -------
     smoothed_waveform : np.array
         The smoothed waveform
-
-    Examples
-    --------
-    >>> smoothed_waveform = smooth_waveform(waveform, percent_smoothing)
-
     """
     waveform_length = np.size(waveform)
     window_length = int(np.ceil(waveform_length * percent_smoothing / 100))
