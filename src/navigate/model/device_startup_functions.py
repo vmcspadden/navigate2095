@@ -1201,6 +1201,8 @@ def start_shutter(
         device_not_found(microscope_name, "shutter", device_type)
 
 
+'Fix it so it loads asi.pi'
+
 def start_lasers(
     microscope_name: str,
     device_connection: Any,
