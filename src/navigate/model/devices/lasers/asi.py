@@ -45,7 +45,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class LaserNI(LaserBase):
+class LaserASI(LaserBase):
     """LaserNI Class
 
     This class is used to control a laser connected to a National Instruments DAQ.
@@ -78,5 +78,10 @@ class LaserNI(LaserBase):
 
         #: str: The modulation type of the laser - Analog, Digital, or Mixed.
         self.modulation_type = modulation_type
+
+    def __str__(self):
+        return f"{self.microscope_name}\n{self.device_connection}\n{self.configuration}\n{self.modulation_type}"
+
+    
 
 
