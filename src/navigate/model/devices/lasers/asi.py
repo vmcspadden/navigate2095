@@ -79,4 +79,7 @@ class LaserNI(LaserBase):
         #: str: The modulation type of the laser - Analog, Digital, or Mixed.
         self.modulation_type = modulation_type
 
+    def __str__(self):
+        return f"{self.microscope_name}\n{self.device_connection}\n{self.configuration}\n{self.modulation_type}"
+
 
