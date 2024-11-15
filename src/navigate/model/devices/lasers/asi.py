@@ -86,24 +86,7 @@ class LaserASI(LaserBase):
         #: float: Current laser intensity.
         self._current_intensity = 0
 
-    def set_power(self, laser_intensity: float) -> None:
-        """Sets the analog laser power.
 
-        Parameters
-        ----------
-        laser_intensity : float
-            The laser intensity.
-        """
-        if self.laser_ao_task is None:
-            return
-        try:
-            scaled_laser_voltage = (int(laser_intensity) / 100) * self.laser_max_ao
-            self.laser_ao_task.write(scaled_laser_voltage, auto_start=True)
-            self._current_intensity = laser_intensity
-        except DaqError as e:
-            logger.exception(e)
-
-    def print_laser_info(self) -> None:
         print("Laser Information: ")
         print("Microscope Name:", self.microscope_name)
         print("Device Connection:", self.device_connection)
