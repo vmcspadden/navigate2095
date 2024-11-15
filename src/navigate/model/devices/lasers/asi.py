@@ -45,7 +45,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class LaserNI(LaserBase):
+class LaserASI(LaserBase):
     """LaserNI Class
 
     This class is used to control a laser connected to a National Instruments DAQ.
