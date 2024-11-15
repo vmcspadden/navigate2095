@@ -569,7 +569,7 @@ mirror_hardware_widgets = {
     "n_modes": ["Number of Modes", "Input", "int", None, "Example: 32", 32],
 }
 
-laser_device_types = {"Analog Device": "NI", "Virtual Device": "synthetic"}
+laser_device_types = {"Analog Device": "NI", "Analog Device": "ASI", "Virtual Device": "synthetic"}
 
 laser_hardware_widgets = {
     "wavelength": ["Wavelength", "Input", "int", None, "Example: 488", 488],
