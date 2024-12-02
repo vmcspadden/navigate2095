@@ -56,6 +56,7 @@ def get_git_revision_hash() -> str:
     file_directory = os.path.abspath(os.path.dirname(__file__))
     os.chdir(file_directory)
 
+    commit_hash = None
     try:
         is_git_repo = (
             subprocess.check_output(
@@ -70,10 +71,12 @@ def get_git_revision_hash() -> str:
                 .decode("ascii")
                 .strip()
             )
-        else:
-            commit_hash = None
     except subprocess.CalledProcessError:
-        commit_hash = None
+        # CalledProcessError: Command '['git', 'rev-parse', 'HEAD']' returned non-zero exit status.
+        pass
+    except FileNotFoundError:
+        # FileNotFoundError: [WinError 2] The system cannot find the file specified.
+        pass
 
     os.chdir(working_directory)
     return commit_hash

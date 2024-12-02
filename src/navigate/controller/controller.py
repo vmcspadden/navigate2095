@@ -75,6 +75,7 @@ from navigate.model.model import Model
 from navigate.model.concurrency.concurrency_tools import ObjectInSubprocess
 
 # Misc. Local Imports
+from navigate._commit import get_git_revision_hash, get_version_from_file
 from navigate.config.config import (
     load_configs,
     update_config_dict,
@@ -146,6 +147,9 @@ class Controller:
             Command line input arguments for non-default
             file paths or using synthetic hardware modes.
         """
+        logger.info(f"Navigate GIT Hash: {get_git_revision_hash()}")
+        logger.info(f"Navigate Version: {get_version_from_file()}")
+
         #: Tk top-level widget: Tk.tk GUI instance.
         self.root = root
 
