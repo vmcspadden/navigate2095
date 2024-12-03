@@ -31,6 +31,10 @@
 #
 
 from queue import Queue
+import numpy as np
+from tifffile import imwrite
+from os import path
+
 from navigate.model.analysis.boundary_detect import (
     find_tissue_boundary_2d,
     binary_detect,
@@ -38,9 +42,9 @@ from navigate.model.analysis.boundary_detect import (
     find_cell_boundary_3d,
     map_labels,
 )
-import numpy as np
-from tifffile import imwrite
-from os import path
+from navigate.tools.multipos_table_tools import(
+    write_to_csv_file
+)
 
 
 def draw_box(img, xl, yl, xu, yu, fill=65535):
@@ -648,7 +652,7 @@ class VolumeSearch3D:
             "CameraParameters"
         ][self.target_resolution]["img_y_pixels"]
 
-        z_range, positions = map_labels(
+        z_range, positions, target_labels = map_labels(
             labeled_image,
             position,
             z_start,
@@ -664,6 +668,20 @@ class VolumeSearch3D:
             overlap=self.overlap,
             filter_pixel_number=self.filter_pixel_number,
         )
+
+        # save positions
+        write_to_csv_file(positions, path.join(
+            self.model.configuration["experiment"]["Saving"]["save_directory"],
+            "positions.csv",
+        ),)
+        # save target label index sequences
+        target_labels_file = path.join(
+            self.model.configuration["experiment"]["Saving"]["save_directory"],
+            "target_labels.txt"
+        )
+        with open(target_labels_file, "w") as f:
+            for idx in target_labels:
+                f.write(f"{idx}\n")
 
         self.model.event_queue.put(("multiposition", positions))
         self.model.configuration["multi_positions"] = positions
