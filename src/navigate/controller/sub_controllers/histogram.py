@@ -31,6 +31,7 @@
 
 # Standard Library Imports
 import platform
+import threading
 import tkinter as tk
 from typing import Any
 
@@ -120,6 +121,12 @@ class HistogramController:
         #: bool: Logarithmic Y-axis
         self.log_y = True
 
+        #: threading.Thread: Histogram thread
+        self.histogram_thread = None
+
+        #: threading.Lock: Lock
+        self.lock = threading.Lock()
+
     def update_scale(self) -> None:
         """Update the scale of the histogram"""
         self.log_x = self.x_axis_var.get() == "log"
@@ -139,18 +146,34 @@ class HistogramController:
             self.menu.grab_release()
 
     def populate_histogram(self, image: SharedNDArray) -> None:
-        """Populate the histogram.
+        """Populate the histogram in a dedicated thread.
 
         Parameters
         ----------
         image : SharedNDArray
             Image data
         """
+
+        if self.histogram_thread and self.histogram_thread.is_alive():
+            return
+
+        self.histogram_thread = threading.Thread(target=self._populate_histogram, args=(image,))
+        self.histogram_thread.start()
+
+    def _populate_histogram(self, image: SharedNDArray) -> None:
+        """Populate the histogram
+
+        Parameters
+        ----------
+        image : SharedNDArray
+            Image Data
+        """
         down_sampling_constant = 8
         data = image.flatten()
         data = data[::down_sampling_constant]
         self.ax.cla()
-        counts, _, _ = self.ax.hist(data, bins=20, color="black", rwidth=1)
+        counts, bins = np.histogram(data, bins=20)
+        self.ax.bar(bins[:-1], counts, width=np.diff(bins), color="black", align="edge")
 
         x_maximum = np.max(data) + np.std(data)
         x_minimum = np.min(data) - np.std(data)
@@ -171,5 +194,4 @@ class HistogramController:
                 lambda val, pos: f"$10^{{{int(np.log10(val))}}}$" if val > 0 else ""
             )
         )
-
         self.histogram.figure_canvas.draw()
