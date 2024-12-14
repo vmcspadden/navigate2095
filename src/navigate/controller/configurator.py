@@ -245,7 +245,7 @@ class Configurator:
                     for list_item in config_dict[k]:
                         f.write(f"{prefix}{list_prefix}-\n")
                         write_func(prefix + list_prefix * 2, list_item, f)
-                else:
+                elif k != "":
                     f.write(f"{prefix}{k}: {config_dict[k]}\n")
 
         with open(filename, "w") as f:
