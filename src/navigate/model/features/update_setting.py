@@ -33,6 +33,7 @@
 # Standard library imports
 import logging
 from functools import reduce
+import time
 
 # Third party imports
 
@@ -345,7 +346,15 @@ class UpdateExperimentSetting:
         # end active microscope
         self.model.active_microscope.end_acquisition()
 
+        state = self.model.configuration["experiment"]["MicroscopeState"]
+        pre_z_steps = state["number_z_steps"]
+        pre_channels = sum(
+            [v["is_selected"] is True for k, v in state["channels"].items()]
+        )
+        pre_timepoints = state["timepoints"]
+
         # update experiment values
+        # check if any parameter about x, y, c, z, t changed
         for k, v in self.experiment_parameters.items():
             try:
                 parameters = k.split(".")
@@ -362,6 +371,13 @@ class UpdateExperimentSetting:
         self.model.active_microscope.prepare_next_channel()
         # update image writer
         if self.model.image_writer:
+            z_steps = state["number_z_steps"]
+            channels = sum(
+                [v["is_selected"] is True for k, v in state["channels"].items()]
+            )
+            timepoints = state["timepoints"]
+            if pre_z_steps != z_steps or pre_channels != channels or pre_timepoints != timepoints:
+                self.model.image_writer.initialize_saving(sub_dir=time.strftime("%H%M%S"))
             try:
                 self.model.image_writer.data_source.set_metadata_from_configuration_experiment(
                     self.model.configuration
