@@ -180,11 +180,17 @@ class BigDataViewerDataSource(PyramidalDataSource):
                 # print(z, dz, dataset_name, self.image[dataset_name].shape,
                 #       data[::dx, ::dy].shape)
                 zs = min(z // dz, self.shapes[i, 0] - 1)  # TODO: Is this necessary?
+                try:
+                    # Down-sample in X and Y.
+                    self.image[dataset_name][zs, ...] = data[::dy, ::dx].astype(self.dtype)
+                    if is_kw and (i == 0):
+                        self._views.append(kw)
+                except OSError as e:
+                    if e.errno == 28:
+                        logger.error("No disk space left on device. Closing the file.")
+                        self.close()
+                        raise "No disk space left on device."
 
-                # Down-sample in X and Y.
-                self.image[dataset_name][zs, ...] = data[::dy, ::dx].astype(self.dtype)
-                if is_kw and (i == 0):
-                    self._views.append(kw)
         self._current_frame += 1
 
         # Check if this was the last frame to write

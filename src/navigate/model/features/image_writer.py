@@ -147,6 +147,12 @@ class ImageWriter:
             "y": camera_config.get("flip_y", False),
         }
 
+        #: int: Disk space check interval in seconds.
+        self.disk_space_check_interval = 60
+
+        #: int: Minimum disk space required in bytes.
+        self.min_disk_space = 10 * 1024 * 1024 * 1024 # 10 GB
+
         # initialize saving
         self.initialize_saving(sub_dir, image_name)
 
@@ -159,7 +165,23 @@ class ImageWriter:
             Index into self.model.data_buffer.
         """
 
+        last_disk_space_check = time.time()
+
         for idx in frame_ids:
+
+            # Check disk space at regular intervals to prevent running out of space
+            if time.time() - last_disk_space_check > self.disk_space_check_interval:
+                _, _, free = shutil.disk_usage(self.save_directory)
+                logger.info(f"Free Disk Space: {free / 1024 / 1024 / 1024} GB")
+                if free < self.min_disk_space:
+                    logger.warning("Insufficient Disk Space. Acquisition Terminated")
+                    self.close()
+                    self.model.stop_acquisition = True
+                    self.model.event_queue.put(
+                        ("warning", "Insufficient Disk Space. Acquisition Terminated")
+                    )
+                    return
+                last_disk_space_check = time.time()
 
             if (idx < 0) or (idx > (self.number_of_frames - 1)):
                 msg = f"Received invalid index {idx}. Skipping this frame."
