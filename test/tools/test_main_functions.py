@@ -23,12 +23,12 @@ class TestEvaluateParserInputArguments(unittest.TestCase):
             configurator=False,
             config_file=None,
             experiment_file=None,
-            waveform_constants_path=None,
+            waveform_constants_file=None,
             rest_api_file=None,
             waveform_templates_file=None,
             gui_config_file=None,
             multi_positions_file=None,
-            logging_config=None
+            logging_config=None,
         )
 
         result = evaluate_parser_input_arguments(args)

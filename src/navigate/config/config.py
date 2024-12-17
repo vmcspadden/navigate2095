@@ -91,6 +91,8 @@ def get_configuration_paths():
         Path to file containing waveform templates
     gui_configuration_path : str
         Path to file containing GUI configuration
+    multi_positions_path : str
+        Path to file containing multi-positions
     """
     # Create the navigate home directory if it doesn't exist
     navigate_directory = get_navigate_path()
