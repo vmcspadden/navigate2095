@@ -967,21 +967,22 @@ class Controller:
         elif command == "exit":
             """Exit the program.
 
-            Saves the current GUI settings to .navigate/config/experiment.yml file.
+            Saves the current settings to .navigate/config/*.yml files.
             """
             self.sloppy_stop()
             self.update_experiment_setting()
             file_directory = os.path.join(get_navigate_path(), "config")
-            save_yaml_file(
-                file_directory=file_directory,
-                content_dict=self.configuration["experiment"],
-                filename="experiment.yml",
-            )
-            save_yaml_file(
-                file_directory=file_directory,
-                content_dict=self.configuration["multi_positions"],
-                filename="multi_positions.yml",
-            )
+            for config_name, filename in [("experiment", "experiment.yml"),
+                                          ("multi_positions", "multi_positions.yml"),
+                                          ("gui", "gui_configuration.yml"),
+                                          ("waveform_constants", "waveform_constants.yml"),
+                                          ("rest_api_config", "rest_api_config.yml"),
+                                          ("waveform_templates", "waveform_templates.yml")]:
+                save_yaml_file(
+                    file_directory=file_directory,
+                    content_dict=self.configuration[config_name],
+                    filename=filename,
+                )
 
             if hasattr(self, "waveform_popup_controller"):
                 self.waveform_popup_controller.save_waveform_constants()
