@@ -189,7 +189,7 @@ class BigDataViewerDataSource(PyramidalDataSource):
                     if e.errno == 28:
                         logger.error("No disk space left on device. Closing the file.")
                         self.close()
-                        raise "No disk space left on device."
+                        raise Exception("No disk space left on device.")
 
         self._current_frame += 1
 
