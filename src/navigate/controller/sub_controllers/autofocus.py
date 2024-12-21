@@ -76,12 +76,10 @@ class AutofocusPopupController(GUIController):
         #: object: The autofocus coarse plot.
         self.coarse_plot = None
 
-        # add saving function to the function closing the window
-        exit_func = combine_funcs(
-            self.view.popup.dismiss,
-            lambda: delattr(self.parent_controller, "af_popup_controller"),
-        )
-        self.view.popup.protocol("WM_DELETE_WINDOW", exit_func)
+        # Dismiss popup.
+        self.view.popup.protocol("WM_DELETE_WINDOW", self.close_popup)
+        self.view.popup.bind("<Escape>", self.close_popup)
+
         self.view.autofocus_btn.configure(command=self.start_autofocus)
         self.view.inputs["device"].get_variable().trace_add(
             "write", self.update_device_ref
@@ -91,6 +89,13 @@ class AutofocusPopupController(GUIController):
         )
         for k in self.view.setting_vars:
             self.view.setting_vars[k].trace_add("write", self.update_setting_dict(k))
+
+    def close_popup(self, *args) -> None:
+        """Closes the popup window"""
+        # We should add saving function to the function closing the window
+
+        self.view.popup.dismiss()
+        delattr(self.parent_controller, "af_popup_controller")
 
     def populate_experiment_values(self):
         """Populate Experiment Values

@@ -531,6 +531,13 @@ class PositionFrame(ttk.Labelframe):
             self.inputs[entry_names[i]].grid(row=i, column=0)
             self.frame_back_list[i].lower()
 
+        # Add a divider
+        ttk.Separator(self, orient="horizontal").grid(row=5, column=0, sticky="ew")
+
+        self.stack_shortcuts = StackShortcuts(self)
+        self.stack_shortcuts.grid(row=6, column=0, sticky="ew")
+
+
     def get_widgets(self) -> dict:
         """Get all widgets in the position frame
 
@@ -591,6 +598,29 @@ class PositionFrame(ttk.Labelframe):
                     pass
             frame_back_counter += 1
 
+
+class StackShortcuts(ttk.LabelFrame):
+    def __init__(self, position_frame: PositionFrame, *args: Iterable, **kwargs: dict) -> None:
+        """Initialize the stack shortcuts frame.
+
+        Parameters
+        ----------
+        position_frame : PositionFrame
+            The position frame that the stack shortcuts frame is in
+        *args : Iterable
+            Positional arguments for the ttk.Labelframe
+        **kwargs : Iterable
+            Keyword arguments for the ttk.Labelframe
+        """
+        ttk.Labelframe.__init__(
+            self, position_frame, text="Z-Stack Start/Stop", *args, **kwargs
+        )
+
+        # Add two buttons
+        self.set_start_button = tk.Button(self, text="Set Start Pos/Foc")
+        self.set_start_button.grid(row=0, column=0, sticky="ew")
+        self.set_end_button = tk.Button(self, text="Set End Pos/Foc")
+        self.set_end_button.grid(row=1, column=0, sticky="ew")
 
 class XYFrame(ttk.Labelframe):
     """Frame for the x and y movement buttons.
