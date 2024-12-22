@@ -118,56 +118,44 @@ class CameraMode(ttk.Labelframe):
             Keyword arguments for ttk.LabelFrame
         """
         # Init Frame
-        text_label = "Camera Modes"
+        text_label = "Camera Mode"
         ttk.Labelframe.__init__(self, settings_tab, text=text_label, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-        # Holds dropdowns, this is done in case more widgets are to be added in a
-        # different frame, these can be grouped together
-        #: ttk.Frame: The parent frame for any widgets you add.
-        content_frame = ttk.Frame(self)
-        content_frame.grid(row=0, column=0, sticky=tk.NSEW, pady=5)
-
-        # Formatting
-        tk.Grid.columnconfigure(content_frame, "all", weight=1)
-        tk.Grid.rowconfigure(content_frame, "all", weight=1)
-
-        # Dictionary for all the variables, this will be used by the controller
         #: dict: Dictionary of all the widgets in the frame.
         self.inputs = {}
+
         #: list: List of all the labels for the widgets.
         self.labels = ["Sensor Mode", "Readout Direction", "Number of Pixels"]
+
         #: list: List of all the names for the widgets.
         self.names = ["Sensor", "Readout", "Pixels"]
 
+        for i in range(len(self.labels)):
+            self.rowconfigure(i, weight=1, uniform="1")
+        for i in range(2):
+            self.columnconfigure(i, weight=1, uniform="1")
+
         # Dropdown loop
         for i in range(len(self.labels)):
+            label = ttk.Label(self, text=self.labels[i])
+            label.grid(row=i, column=0, pady=3, padx=5, sticky=tk.W)
+
             if i < len(self.labels) - 1:
                 self.inputs[self.names[i]] = LabelInput(
-                    parent=content_frame,
-                    label=self.labels[i],
+                    parent=self,
                     input_class=ttk.Combobox,
                     input_var=tk.StringVar(),
                     input_args={"width": 12},
                 )
-                self.inputs[self.names[i]].grid(row=i, column=0, pady=3, padx=5)
             else:
                 self.inputs[self.names[i]] = LabelInput(
-                    parent=content_frame,
-                    label=self.labels[i],
+                    parent=self,
                     input_class=ValidatedSpinbox,
                     input_var=tk.StringVar(),
                     input_args={"from_": 0, "to": 10000, "increment": 1, "width": 5},
                 )
-                self.inputs[self.names[i]].grid(row=i, column=0, pady=3, padx=5)
-
-        # Additional widget settings
-        self.inputs["Sensor"].label.grid(padx=(0, 36))
-        self.inputs["Readout"].label.grid(padx=(0, 10))
-        self.inputs["Pixels"].label.grid(padx=(0, 15))
+            self.inputs[self.names[i]].grid(
+                row=i, column=1, pady=3, padx=5, sticky=tk.W)
 
     def get_variables(self):
         """Get Variables.
@@ -229,20 +217,9 @@ class FramerateInfo(ttk.LabelFrame):
         text_label = "Framerate Info"
         ttk.LabelFrame.__init__(self, settings_tab, text=text_label, *args, **kwargs)
 
-        #  Holds widgets, this is done in case more widgets are to be
-        #  added in a different frame, these can be grouped together
-        content_frame = ttk.Frame(self)
-        content_frame.grid(row=0, column=0, sticky=tk.NSEW, pady=5, padx=5)
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-        tk.Grid.columnconfigure(content_frame, "all", weight=1)
-        tk.Grid.rowconfigure(content_frame, "all", weight=1)
-
-        #  Dictionary for all the variables, this will be used by the controller
         #: dict: Dictionary of all the widgets in the frame.
         self.inputs = {}
+
         #: list: List of all the labels for the widgets.
         self.labels = [
             "Exposure Time (ms)",
@@ -250,6 +227,7 @@ class FramerateInfo(ttk.LabelFrame):
             "Framerate (Hz)",
             "Images to Average",
         ]
+
         #: list: List of all the names for the widget values.
         self.names = [
             "exposure_time",
@@ -257,35 +235,37 @@ class FramerateInfo(ttk.LabelFrame):
             "max_framerate",
             "frames_to_average",
         ]
+
+        for i in range(len(self.labels)):
+            self.rowconfigure(i, weight=1, uniform="1")
+        for i in range(2):
+            self.columnconfigure(i, weight=1, uniform="1")
+
         #: list: List of all the read only values for the widgets.
         self.read_only = [True, True, True, False]
 
         #  Dropdown loop
         for i in range(len(self.labels)):
+            label = ttk.Label(self, text=self.labels[i])
+            label.grid(row=i, column=0, pady=1, padx=5, sticky=tk.W)
+
             if self.read_only[i]:
                 self.inputs[self.names[i]] = LabelInput(
-                    parent=content_frame,
-                    label=self.labels[i],
+                    parent=self,
                     input_class=ValidatedEntry,
                     input_var=tk.DoubleVar(),
                     input_args={"width": 6},
                 )
                 self.inputs[self.names[i]].widget["state"] = "readonly"
-                self.inputs[self.names[i]].grid(row=i, column=0, pady=1)
             else:
                 self.inputs[self.names[i]] = LabelInput(
-                    parent=content_frame,
-                    label=self.labels[i],
+                    parent=self,
                     input_class=ValidatedSpinbox,
                     input_var=tk.DoubleVar(),
                     input_args={"from_": 1, "to": 1000, "increment": 1.0, "width": 6},
                 )
-                self.inputs[self.names[i]].grid(row=i, column=0, pady=1)
+            self.inputs[self.names[i]].grid(row=i, column=1, pady=1, padx=5, sticky=tk.W)
 
-        self.inputs["exposure_time"].label.grid(padx=(0, 10))
-        self.inputs["readout_time"].label.grid(padx=(0, 14))
-        self.inputs["max_framerate"].label.grid(padx=(0, 10))
-        self.inputs["frames_to_average"].label.grid(padx=(0, 16))
 
     def get_variables(self):
         """Get Variables
