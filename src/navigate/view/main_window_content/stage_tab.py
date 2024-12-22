@@ -156,29 +156,33 @@ class StageControlTab(tk.Frame):
 
         #: PositionFrame: Position frame.
         self.position_frame = PositionFrame(self)
-        self.position_frame.grid(row=0, column=0, sticky=tk.NSEW, padx=3, pady=3)
+        self.position_frame.grid(row=0, column=0, rowspan=1, sticky=tk.NSEW, padx=3, pady=3)
+
+        #: StackShortcuts: Stack shortcuts.
+        self.stack_shortcuts = StackShortcuts(self)
+        self.stack_shortcuts.grid(row=1, column=0, rowspan=1, sticky=tk.NSEW)
 
         #: XYFrame: XY frame.
         self.xy_frame = XYFrame(self)
-        self.xy_frame.grid(row=0, column=1, sticky=tk.NSEW, padx=3, pady=3)
+        self.xy_frame.grid(row=0, column=1, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         #: OtherAxisFrame: Z frame.
         self.z_frame = OtherAxisFrame(stage_control_tab=self, name="Z")
-        self.z_frame.grid(row=0, column=2, sticky=tk.NSEW, padx=3, pady=3)
+        self.z_frame.grid(row=0, column=2, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         #: OtherAxisFrame: Theta frame.
         self.theta_frame = OtherAxisFrame(stage_control_tab=self, name="Theta")
-        self.theta_frame.grid(row=1, column=2, sticky=tk.NSEW, padx=3, pady=3)
+        self.theta_frame.grid(row=2, column=2, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         # OtherAxisFrame: Focus frame.
         self.f_frame = OtherAxisFrame(stage_control_tab=self, name="Focus")
-        self.f_frame.grid(row=1, column=0, sticky=tk.NSEW, padx=3, pady=3)
+        self.f_frame.grid(row=2, column=0, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         #: StopFrame: Stop frame.
         self.stop_frame = StopFrame(
             stage_control_tab=self, name="Stage Movement Interrupt"
         )
-        self.stop_frame.grid(row=1, column=1, sticky=tk.NSEW, padx=3, pady=3)
+        self.stop_frame.grid(row=2, column=1, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
     def load_images(self) -> None:
         """Load images for the stage control tab."""
@@ -531,13 +535,6 @@ class PositionFrame(ttk.Labelframe):
             self.inputs[entry_names[i]].grid(row=i, column=0)
             self.frame_back_list[i].lower()
 
-        # Add a divider
-        ttk.Separator(self, orient="horizontal").grid(row=5, column=0, sticky="ew")
-
-        self.stack_shortcuts = StackShortcuts(self)
-        self.stack_shortcuts.grid(row=6, column=0, sticky="ew")
-
-
     def get_widgets(self) -> dict:
         """Get all widgets in the position frame
 
@@ -617,10 +614,12 @@ class StackShortcuts(ttk.LabelFrame):
         )
 
         # Add two buttons
-        self.set_start_button = tk.Button(self, text="Set Start Pos/Foc")
+        self.set_start_button = HoverTkButton(self, text="Set Start Pos/Foc")
         self.set_start_button.grid(row=0, column=0, sticky="ew")
-        self.set_end_button = tk.Button(self, text="Set End Pos/Foc")
+
+        self.set_end_button = HoverTkButton(self, text="Set End Pos/Foc")
         self.set_end_button.grid(row=1, column=0, sticky="ew")
+
 
 class XYFrame(ttk.Labelframe):
     """Frame for the x and y movement buttons.
