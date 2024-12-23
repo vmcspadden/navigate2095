@@ -144,7 +144,7 @@ class TilingWizardPopup:
             self.inputs[dist_var].widget.state(["disabled"])
 
             # FOV width for this particular axis (e.g. for X it is the number
-            # of vertical pixels on the camera multipled by the effective
+            # of vertical pixels on the camera multiplied by the effective
             # pixel size)
             fov_var = f"{ax.lower()}_fov"
             self.inputs[fov_var] = LabelInput(

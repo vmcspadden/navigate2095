@@ -157,6 +157,16 @@ class StageController(GUIController):
         self.initialize()
         self.set_hover_descriptions()
 
+        # Bind the buttons for the z-stack start and stop.
+        self.view.stack_shortcuts.set_start_button.configure(
+            command=self.parent_controller.channels_tab_controller.update_start_position
+        )
+        self.view.stack_shortcuts.set_end_button.configure(
+            command=self.parent_controller.channels_tab_controller.update_end_position
+        )
+
+
+
     def stage_key_press(self, event: tk.Event) -> None:
         """The stage key press.
 
@@ -659,6 +669,13 @@ class StageController(GUIController):
         )
         self.view.position_frame.inputs["theta"].widget.hover.setdescription(
             "Theta stage position in degrees."
+        )
+
+        self.view.stack_shortcuts.set_start_button.hover.setdescription(
+            "Sets the start positions for Z and F for a Z-Stack."
+        )
+        self.view.stack_shortcuts.set_end_button.hover.setdescription(
+            "Sets the end positions for Z and F for a Z-Stack."
         )
 
         # Stop button.

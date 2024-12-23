@@ -234,11 +234,19 @@ class TilingWizardController(GUIController):
         # Properly Closing Popup with parent controller
         self.view.popup.protocol(
             "WM_DELETE_WINDOW",
-            combine_funcs(
-                self.view.popup.dismiss,
-                lambda: delattr(self.parent_controller, "tiling_wizard_controller"),
-            ),
+            self.close_window,
         )
+
+        self.view.popup.bind("<Escape>", self.close_window)
+
+
+    def close_window(self, *args) -> None:
+        """Close the tiling wizard popup
+
+        Closes the tiling wizard popup and deletes the controller
+        """
+        self.view.popup.dismiss()
+        delattr(self.parent_controller, "tiling_wizard_controller")
 
     def set_table(self):
         """Set the multipoint table to the values in the tiling wizard

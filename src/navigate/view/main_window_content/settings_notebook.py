@@ -58,7 +58,7 @@ class SettingsNotebook(DockableNotebook):
     - Channels
     - Camera Settings
     - Stage Control
-    - Multiposition Table
+    - Multi-position Table
     """
 
     def __init__(self,

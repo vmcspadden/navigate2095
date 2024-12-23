@@ -199,20 +199,12 @@ class WaveformPopupController(GUIController):
         )
 
         # Save waveform constants upon closing the popup window
-        self.view.popup.protocol(
-            "WM_DELETE_WINDOW",
-            combine_funcs(
-                self.restore_amplitude,
-                self.save_waveform_constants,
-                self.view.popup.dismiss,
-                lambda: delattr(self.parent_controller, "waveform_popup_controller"),
-            ),
-        )
+        self.view.popup.protocol("WM_DELETE_WINDOW", self.close_window)
+        self.view.popup.bind("<Escape>", self.close_window)
+
 
         # All channels use the same galvo parameters
-        self.widgets["all_channels"].widget.configure(
-            command=self.set_galvo_to_all_channels
-        )
+        self.widgets["all_channels"].widget.configure(command=self.set_galvo_to_all_channels)
 
         # Populate widgets
         self.widgets["Mode"].widget["values"] = list(
@@ -220,6 +212,13 @@ class WaveformPopupController(GUIController):
         )
         self.widgets["Mode"].widget["state"] = "readonly"
         self.widgets["Mag"].widget["state"] = "readonly"
+
+    def close_window(self, *args) -> None:
+        """Close the window."""
+        self.restore_amplitude()
+        self.save_waveform_constants()
+        self.view.popup.dismiss()
+        delattr(self.parent_controller, "waveform_popup_controller")
 
     def configure_widget_range(self):
         """Update widget ranges and precisions based on the current resolution mode.
