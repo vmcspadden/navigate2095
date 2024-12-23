@@ -39,6 +39,7 @@ from typing import Any
 import numpy as np
 from matplotlib.ticker import FuncFormatter
 
+from navigate.config import update_config_dict
 # Local Imports
 from navigate.model.concurrency.concurrency_tools import SharedNDArray
 from navigate.view.main_window_content.display_notebook import HistogramFrame
@@ -87,6 +88,16 @@ class HistogramController:
         self.x_axis_var = tk.StringVar(value="linear")
         self.y_axis_var = tk.StringVar(value="log")
 
+        #: bool: Histogram enabled
+        self.histogram_enabled = tk.BooleanVar()
+        # self.histogram_enabled = tk.BooleanVar(value=True)
+
+        #: bool: Logarithmic X-axis
+        self.log_x = False
+
+        #: bool: Logarithmic Y-axis
+        self.log_y = True
+
         #: tk.Menu: Histogram popup menu
         self.menu = tk.Menu(widget, tearoff=0)
         self.menu.add_radiobutton(
@@ -114,18 +125,35 @@ class HistogramController:
             value="linear",
             command=self.update_scale,
         )
-
-        #: bool: Logarithmic X-axis
-        self.log_x = False
-
-        #: bool: Logarithmic Y-axis
-        self.log_y = True
+        self.menu.add_separator()
+        self.menu.add_checkbutton(
+            label="Enable Histogram",
+            variable=self.histogram_enabled,
+            onvalue=True,
+            offvalue=False,
+            command=self.update_experiment,
+        )
 
         #: threading.Thread: Histogram thread
         self.histogram_thread = None
 
         #: threading.Lock: Lock
         self.lock = threading.Lock()
+
+        # Default location for communicating with the plugin in the model.
+        if "histogram" not in self.parent_controller.configuration["gui"].keys():
+            update_config_dict(manager=self.parent_controller.manager,
+                               parent_dict=self.parent_controller.configuration["gui"],
+                               config_name="histogram",
+                               new_config={"enabled": True}
+                               )
+
+        # Set histogram according to the experiment.yaml file. If disabled, stays disabled upon restart.
+        self.histogram_enabled.set(self.parent_controller.configuration["gui"]["histogram"].get("enabled", True))
+
+    def update_experiment(self) -> None:
+        """Update the experiment.yaml file"""
+        self.parent_controller.configuration["gui"]["histogram"]["enabled"] = self.histogram_enabled.get()
 
     def update_scale(self) -> None:
         """Update the scale of the histogram"""
@@ -153,6 +181,8 @@ class HistogramController:
         image : SharedNDArray
             Image data
         """
+        if not self.histogram_enabled.get():
+            return
 
         if self.histogram_thread and self.histogram_thread.is_alive():
             return

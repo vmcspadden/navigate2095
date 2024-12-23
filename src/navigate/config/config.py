@@ -353,7 +353,7 @@ def verify_experiment_config(manager, configuration):
         if k not in saving_setting_dict:
             saving_setting_dict[k] = saving_dict_sample[k]
 
-    # if root directory/saving direcotry doesn't exist
+    # if root directory/saving directory doesn't exist
     if not os.path.exists(saving_setting_dict["root_directory"]):
         saving_setting_dict["root_directory"] = saving_dict_sample["root_directory"]
     if not os.path.exists(saving_setting_dict["save_directory"]):
