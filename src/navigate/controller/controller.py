@@ -984,9 +984,6 @@ class Controller:
                     filename=filename,
                 )
 
-            if hasattr(self, "waveform_popup_controller"):
-                self.waveform_popup_controller.save_waveform_constants()
-
             self.model.run_command("terminate")
             self.model = None
             self.event_queue.put(("stop", ""))
