@@ -42,6 +42,7 @@ from nidaqmx.constants import LineGrouping
 
 # Local Imports
 from navigate.model.devices.filter_wheel.base import FilterWheelBase
+from navigate.model.devices.device_types import NIDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -49,46 +50,29 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_filter_wheel_connection():
-    """Build DAQFilterwheel connection.
-
-    The NI DAQ task is created within the DAQFIlterWheel Instance, so a shared
-    device connection is not needed. Accordingly, this function returns None.
-
-    Returns
-    -------
-    daq_fw_controller : None
-        No device is returned.
-    """
-    daq_fw_controller = None
-    return daq_fw_controller
-
-
 @log_initialization
-class DAQFilterWheel(FilterWheelBase):
+class NIFilterWheel(FilterWheelBase, NIDevice):
     """DAQFilterWheel - Class for controlling filter wheels with a DAQ."""
 
-    def __init__(self, device_connection, device_config):
+    def __init__(self, microscope_name, device_connection, configuration, device_id):
         """Initialize the DAQFilterWheel class.
 
         Parameters
         ----------
-        device_connection : object
-            Connection to the NIDAQ Instance. Imported but not used.
-        device_config : dict
-            Dictionary of device configuration parameters.
+        microscope_name : str
+            Name of the microscope.
+        device_connection : Any
+            The communication instance with the device.
+        configuration : Dict[str, Any]
+            Global configuration dictionary.
+        device_id : int
+            The ID of the device. Default is 0.
         """
 
-        super().__init__(device_connection, device_config)
-
-        #: object: Dummy device connection.
-        self.device_connection = device_connection
-
-        #: dict: Dictionary of filter names and corresponding digital port.
-        self.device_config = device_config
+        super().__init__(microscope_name, device_connection, configuration)
 
         #: float: Delay for filter wheel to change positions.
-        self.wait_until_done_delay = device_config["filter_wheel_delay"]
+        self.wait_until_done_delay = self.device_config["filter_wheel_delay"]
 
         self.filter_wheel_task = None
 

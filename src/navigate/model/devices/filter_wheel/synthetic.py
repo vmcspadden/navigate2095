@@ -47,23 +47,22 @@ logger = logging.getLogger(p)
 class SyntheticFilterWheel(FilterWheelBase):
     """SyntheticFilterWheel Class"""
 
-    def __init__(self, device_connection, device_config):
+    def __init__(self, microscope_name, device_connection, configuration, device_id):
         """Initialize the SyntheticFilterWheel.
 
         Parameters
         ----------
-        device_connection : dict
-            Device connection information.
-        device_config : dict
-            Device configuration information.
+        microscope_name : str
+            Name of the microscope.
+        device_connection : Any
+            The communication instance with the device.
+        configuration : Dict[str, Any]
+            Global configuration dictionary.
+        device_id : int
+            The ID of the device. Default is 0.
         """
-        super().__init__(device_connection, device_config)
+        super().__init__(microscope_name, device_connection, configuration)
 
-        #: dict: Dummy device connection.
-        self.device_connection = device_connection
-
-        #: dict: Device configuration information.
-        self.device_config = device_config
 
     def __str__(self):
         """Return string representation of the SyntheticFilterWheel."""

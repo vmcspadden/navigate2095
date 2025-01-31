@@ -38,6 +38,7 @@ import time
 
 # Local Imports
 from navigate.model.devices.filter_wheel.base import FilterWheelBase
+from navigate.model.devices.device_types import SerialDevice
 from navigate.model.devices.APIs.asi.asi_tiger_controller import TigerController
 from navigate.tools.decorators import log_initialization
 
@@ -46,34 +47,8 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_filter_wheel_connection(comport, baudrate=115200, timeout=0.25):
-    """Build ASIFilterWheel Serial Port connection
-
-    Parameters
-    ----------
-    comport : str
-        Comport for communicating with the filter wheel, e.g., COM1.
-    baudrate : int
-        Baud rate for communicating with the filter wheel, default is 115200.
-    timeout : float
-        Timeout for communicating with the filter wheel, default is 0.25.
-
-    Returns
-    -------
-    tiger_controller : TigerController
-        ASI Tiger Controller object.
-    """
-    # wait until ASI device is ready
-    tiger_controller = TigerController(comport, baudrate)
-    tiger_controller.connect_to_serial()
-    if not tiger_controller.is_open():
-        logger.error("ASI stage connection failed.")
-        raise Exception("ASI stage connection failed.")
-    return tiger_controller
-
-
 @log_initialization
-class ASIFilterWheel(FilterWheelBase):
+class ASIFilterWheel(FilterWheelBase, SerialDevice):
     """ASIFilterWheel - Class for controlling ASI Filter Wheels
 
     Note
@@ -82,27 +57,25 @@ class ASIFilterWheel(FilterWheelBase):
         https://asiimaging.com/docs/fw_1000#fw-1000_ascii_command_set
     """
 
-    def __init__(self, device_connection, device_config):
+    def __init__(self, microscope_name, device_connection, configuration, devcie_id):
         """Initialize the ASIFilterWheel class.
 
         Parameters
         ----------
+        microscope_name : str
+            Name of the microscope.
         device_connection : TigerController
             Communication object for the ASI Filter Wheel.
-        device_config : dict
-            Dictionary of device configuration parameters.
+        configuration : dict
+            Global configuration of the microscope.
+        device_id : int
+            The ID of the device. Default is 0.
         """
 
-        super().__init__(device_connection, device_config)
-
-        #: TigerController: ASI Tiger Controller object.
-        self.filter_wheel = device_connection
-
-        #: dict: Configuration dictionary.
-        self.device_config = device_config
+        super().__init__(microscope_name, device_connection, configuration)
 
         #: float: Delay for filter wheel to change positions.
-        self.wait_until_done_delay = device_config["filter_wheel_delay"]
+        self.wait_until_done_delay = self.device_config["filter_wheel_delay"]
 
         # Send Filter Wheel/Wheels to Zeroth Position
         self.filter_wheel.select_filter_wheel(
@@ -117,6 +90,32 @@ class ASIFilterWheel(FilterWheelBase):
     def __str__(self):
         """String representation of the class."""
         return "ASIFilterWheel"
+
+    @classmethod
+    def connect(cls, port, baudrate=115200, timeout=0.25):
+        """Build ASIFilterWheel Serial Port connection
+
+        Parameters
+        ----------
+        port : str
+            Port for communicating with the filter wheel, e.g., COM1.
+        baudrate : int
+            Baud rate for communicating with the filter wheel, default is 115200.
+        timeout : float
+            Timeout for communicating with the filter wheel, default is 0.25.
+
+        Returns
+        -------
+        tiger_controller : TigerController
+            ASI Tiger Controller object.
+        """
+        # wait until ASI device is ready
+        tiger_controller = TigerController(comport, baudrate)
+        tiger_controller.connect_to_serial()
+        if not tiger_controller.is_open():
+            logger.error("ASI stage connection failed.")
+            raise Exception("ASI stage connection failed.")
+        return tiger_controller
 
     def filter_change_delay(self, filter_name):
         """Estimate duration of time necessary to move the filter wheel
@@ -176,7 +175,7 @@ class ASIFilterWheel(FilterWheelBase):
 
 
 @log_initialization
-class ASICubeSlider(FilterWheelBase):
+class ASICubeSliderFilterWheel(FilterWheelBase, SerialDevice):
     """ASICubeSlider - Class for controlling the C60 Cube Slider from ASI.
 
     Note
@@ -189,24 +188,28 @@ class ASICubeSlider(FilterWheelBase):
         Typical switch time between adjacent positions is < 250 ms.
     """
 
-    def __init__(self, device_connection, device_config):
+    def __init__(self, microscope_name, device_connection, configuration, devcie_id):
         """Initialize the ASICubeSlider class.
 
         Parameters
         ----------
-        device_connection : dict
-            Dictionary of device connections.
-        device_config : dict
-            Dictionary of device configuration parameters.
+        microscope_name : str
+            Name of the microscope.
+        device_connection : TigerController
+            Communication object for the ASI Filter Wheel.
+        configuration : dict
+            Global configuration of the microscope.
+        device_id : int
+            The ID of the device. Default is 0.
         """
 
-        super().__init__(device_connection, device_config)
+        super().__init__(microscope_name, device_connection, configuration)
 
         #: obj: ASI Tiger Controller object.
         self.dichroic = device_connection
 
         #: float: Delay for filter wheel to change positions.
-        self.wait_until_done_delay = device_config["filter_wheel_delay"]
+        self.wait_until_done_delay = self.device_config["filter_wheel_delay"]
 
         #: str: The ID of the dichroic in the Tiger Controller. e.g., "T"
         self.dichroic_id = self.filter_wheel_number
@@ -215,6 +218,32 @@ class ASICubeSlider(FilterWheelBase):
 
         #: int: Filter wheel position.
         self.dichroic_position = 0
+
+        @classmethod
+    def connect(cls, port, baudrate=115200, timeout=0.25):
+        """Build ASIFilterWheel Serial Port connection
+
+        Parameters
+        ----------
+        port : str
+            Port for communicating with the filter wheel, e.g., COM1.
+        baudrate : int
+            Baud rate for communicating with the filter wheel, default is 115200.
+        timeout : float
+            Timeout for communicating with the filter wheel, default is 0.25.
+
+        Returns
+        -------
+        tiger_controller : TigerController
+            ASI Tiger Controller object.
+        """
+        # wait until ASI device is ready
+        tiger_controller = TigerController(comport, baudrate)
+        tiger_controller.connect_to_serial()
+        if not tiger_controller.is_open():
+            logger.error("ASI stage connection failed.")
+            raise Exception("ASI stage connection failed.")
+        return tiger_controller
 
     def filter_change_delay(self, filter_name):
         """Estimate duration of time necessary to move the dichroic
