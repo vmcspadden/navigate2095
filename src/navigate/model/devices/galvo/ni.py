@@ -40,6 +40,7 @@ import nidaqmx
 
 # Local Imports
 from navigate.model.devices.galvo.base import GalvoBase
+from navigate.model.devices.device_types import NIDevice
 from navigate.tools.decorators import log_initialization
 
 # # Logger Setup
@@ -48,7 +49,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class GalvoNI(GalvoBase):
+class NIGalvo(GalvoBase, NIDevice):
     """GalvoNI Class - NI DAQ Control of Galvanometers"""
 
     def __init__(
