@@ -49,7 +49,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class ShutterTTL(ShutterBase):
+class NIShutter(ShutterBase):
     """ShutterTTL Class
 
     Triggering for shutters delivered from DAQ using digital outputs.

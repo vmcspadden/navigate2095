@@ -55,6 +55,8 @@ class SyntheticShutter(ShutterBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args,
+        **kwargs,
     ) -> None:
         """Initialize the SyntheticShutter.
 
