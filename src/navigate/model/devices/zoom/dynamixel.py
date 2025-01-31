@@ -38,6 +38,7 @@ import time
 # Local Imports
 from navigate.model.devices.APIs.dynamixel import dynamixel_functions as dynamixel
 from navigate.model.devices.zoom.base import ZoomBase
+from navigate.model.devices.device_types import SerialDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -45,41 +46,11 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_dynamixel_zoom_connection(configuration):
-    """Connect to the DynamixelZoom Servo.
-
-    Parameters
-    ----------
-    configuration : dict
-        Configuration dictionary for the device.
-
-    Returns
-    -------
-    port_num : int
-        DynamixelZoom port number.
-    """
-    # id = configuration["configuration"]["hardware"]["zoom"]["servo_id"]
-    comport = configuration["configuration"]["hardware"]["zoom"]["port"]
-    devicename = comport.encode("utf-8")
-    baudrate = configuration["configuration"]["hardware"]["zoom"]["baudrate"]
-
-    port_num = dynamixel.portHandler(devicename)
-    dynamixel.packetHandler()
-
-    # Open port and set baud rate
-    if not dynamixel.openPort(port_num):
-        logger.error(f"Communication Error with Port {port_num}")
-        raise RuntimeError(f"Unable to open port {port_num}.")
-
-    dynamixel.setBaudRate(port_num, baudrate)
-    return port_num
-
-
 @log_initialization
-class DynamixelZoom(ZoomBase):
+class DynamixelZoom(ZoomBase, SerialDevice):
     """DynamixelZoom Class - Controls the Dynamixel Servo."""
 
-    def __init__(self, microscope_name, device_connection, configuration):
+    def __init__(self, microscope_name, device_connection, configuration, *args, **kwargs):
         """Initialize the DynamixelZoom Servo.
 
         Parameters
@@ -147,6 +118,38 @@ class DynamixelZoom(ZoomBase):
             self.dynamixel.closePort(self.port_num)
         except Exception as e:
             logger.exception(e)
+
+    @classmethod
+    def connect(cls, comport: str, baudrate: int = 115200, timeout: float = 0.25):
+        """Connect to the DynamixelZoom Servo.
+
+        Parameters
+        ----------
+        comport : str
+            Port name.
+        baudrate : int
+            Baud rate.
+        timeout : float
+            Timeout duration.
+
+        Returns
+        -------
+        port_num : int
+            DynamixelZoom port number.
+        """
+        # id = configuration["configuration"]["hardware"]["zoom"]["servo_id"]
+        devicename = comport.encode("utf-8")
+
+        port_num = dynamixel.portHandler(devicename)
+        dynamixel.packetHandler()
+
+        # Open port and set baud rate
+        if not dynamixel.openPort(port_num):
+            logger.error(f"Communication Error with Port {port_num}")
+            raise RuntimeError(f"Unable to open port {port_num}.")
+
+        dynamixel.setBaudRate(port_num, baudrate)
+        return port_num
 
     def set_zoom(self, zoom, wait_until_done=False):
         """Change the DynamixelZoom Servo.
