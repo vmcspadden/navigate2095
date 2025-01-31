@@ -39,7 +39,8 @@ from typing import Any, Dict
 from pipython import GCSDevice, pitools, GCSError
 
 # Local Imports
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
+from navigate.model.devices.device_types import IntegratedDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -47,48 +48,8 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_PIStage_connection(controller_name, serial_number, stages, reference_modes):
-    """Connect to the Physik Instrumente (PI) Stage
-
-    Parameters
-    ----------
-    controller_name : str
-        Name of the controller, e.g., "C-863.11"
-    serial_number : str
-        Serial number of the controller, e.g., "0112345678"
-    stages : str
-        Stages to connect to, e.g., "M-111.1DG"
-    reference_modes : str
-        Reference modes for the stages, e.g., "FRF"
-
-    Returns
-    -------
-    stage_connection : dict
-        Dictionary containing the pi_tools and pi_device objects
-    """
-    pi_stages = stages.split()
-    pi_reference_modes = reference_modes.split()
-    pi_tools = pitools
-    pi_device = GCSDevice(controller_name)
-    pi_device.ConnectUSB(serialnum=serial_number)
-    pi_tools.startup(
-        pi_device, stages=list(pi_stages), refmodes=list(pi_reference_modes)
-    )
-
-    # wait until pi_device is ready
-    block_flag = True
-    while block_flag:
-        if pi_device.IsControllerReady():
-            block_flag = False
-        else:
-            time.sleep(0.1)
-
-    stage_connection = {"pi_tools": pi_tools, "pi_device": pi_device}
-    return stage_connection
-
-
 @log_initialization
-class PIStage(StageBase):
+class PIStage(StageBase, IntegratedDevice):
     """Physik Instrumente (PI) Stage Class"""
 
     def __init__(
@@ -153,6 +114,57 @@ class PIStage(StageBase):
             print("Error while disconnecting the PI stage")
             logger.exception(f"Error while disconnecting the PI stage - {e}")
             raise e
+    
+    @classmethod
+    def get_connect_params(cls):
+        """Register the parameters required to connect to the stage.
+
+        Returns
+        -------
+        list
+            List of parameters required to connect to the stage.
+        """
+        return ["controllername", "serial_number", "stages", "refmode"]
+
+    @classmethod
+    def connect(cls, controller_name, serial_number, stages, reference_modes):
+        """Connect to the Physik Instrumente (PI) Stage
+
+        Parameters
+        ----------
+        controller_name : str
+            Name of the controller, e.g., "C-863.11"
+        serial_number : str
+            Serial number of the controller, e.g., "0112345678"
+        stages : str
+            Stages to connect to, e.g., "M-111.1DG"
+        reference_modes : str
+            Reference modes for the stages, e.g., "FRF"
+
+        Returns
+        -------
+        stage_connection : dict
+            Dictionary containing the pi_tools and pi_device objects
+        """
+        pi_stages = stages.split()
+        pi_reference_modes = reference_modes.split()
+        pi_tools = pitools
+        pi_device = GCSDevice(controller_name)
+        pi_device.ConnectUSB(serialnum=serial_number)
+        pi_tools.startup(
+            pi_device, stages=list(pi_stages), refmodes=list(pi_reference_modes)
+        )
+
+        # wait until pi_device is ready
+        block_flag = True
+        while block_flag:
+            if pi_device.IsControllerReady():
+                block_flag = False
+            else:
+                time.sleep(0.1)
+
+        stage_connection = {"pi_tools": pi_tools, "pi_device": pi_device}
+        return stage_connection
 
     def report_position(self):
         """Reports the position for all axes, and create position dictionary.

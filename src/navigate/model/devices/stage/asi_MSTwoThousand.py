@@ -37,7 +37,7 @@ from typing import Any, Dict
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
 from navigate.model.devices.APIs.asi.asi_MS2000_controller import (
     MS2000Controller,
     MS2000Exception,

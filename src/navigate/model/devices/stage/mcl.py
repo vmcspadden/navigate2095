@@ -38,40 +38,18 @@ import time
 
 # Local Imports
 from navigate.tools.decorators import log_initialization
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
+from navigate.model.devices.device_types import IntegratedDevice
+from navigate.model.devices.APIs.mcl.madlib import MadlibError
 
 # Logger Setup
 p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_MCLStage_connection(serialnum):
-    """Build a connection to the Mad City Lab stage.
-
-    Parameters
-    ----------
-    serialnum : int
-        Serial number of the stage.
-
-    Returns
-    -------
-    stage_connection : dict
-        Dictionary containing the connection information for the stage.
-    """
-    mcl_controller = importlib.import_module("navigate.model.devices.APIs.mcl.madlib")
-
-    # Initialize
-    mcl_controller.MCL_GrabAllHandles()
-
-    handle = mcl_controller.MCL_GetHandleBySerial(int(serialnum))
-
-    stage_connection = {"handle": handle, "controller": mcl_controller}
-
-    return stage_connection
-
 
 @log_initialization
-class MCLStage(StageBase):
+class MCLStage(StageBase, IntegratedDevice):
     """Mad City Lab stage class."""
 
     def __init__(self, microscope_name, device_connection, configuration, device_id=0):
@@ -94,7 +72,6 @@ class MCLStage(StageBase):
 
         # Mapping from self.axes to corresponding MCL channels
         if device_connection is not None:
-
             #: mcl_controller: MCL controller object.
             self.mcl_controller = device_connection["controller"]
 
@@ -116,6 +93,42 @@ class MCLStage(StageBase):
             self.mcl_controller.MCL_ReleaseHandle(self.handle)
         except self.mcl_controller.MadlibError as e:
             logger.exception(f"{e}")
+
+    @classmethod
+    def get_connect_params(cls):
+        """Register the parameters required to connect to the stage.
+
+        Returns
+        -------
+        list
+            List of parameters required to connect to the stage.
+        """
+        return ["serial_number"]
+
+    @classmethod
+    def connect(cls, serial_number: int):
+        """Build a connection to the Mad City Lab stage.
+
+        Parameters
+        ----------
+        serial_number : int
+            Serial number of the stage.
+
+        Returns
+        -------
+        stage_connection : dict
+            Dictionary containing the connection information for the stage.
+        """
+        mcl_controller = importlib.import_module("navigate.model.devices.APIs.mcl.madlib")
+
+        # Initialize
+        mcl_controller.MCL_GrabAllHandles()
+
+        handle = mcl_controller.MCL_GetHandleBySerial(int(serial_number))
+
+        stage_connection = {"handle": handle, "controller": mcl_controller}
+
+        return stage_connection
 
     def report_position(self):
         """Report the position of the stage.

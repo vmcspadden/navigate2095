@@ -37,7 +37,7 @@ from typing import Any, Dict
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
 from navigate.model.devices.APIs.asi.asi_tiger_controller import (
     TigerController,
     TigerException,
@@ -49,34 +49,8 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_ASI_Stage_connection(com_port, baud_rate=115200):
-    """Connect to the ASI Stage
-
-    Parameters
-    ----------
-    com_port : str
-        Communication port for ASI Tiger Controller - e.g., COM1
-    baud_rate : int
-        Baud rate for ASI Tiger Controller - e.g., 9600
-
-    Returns
-    -------
-    asi_stage : object
-        Successfully initialized stage object.
-    """
-
-    # wait until ASI device is ready
-    asi_stage = TigerController(com_port, baud_rate)
-    asi_stage.connect_to_serial()
-    if not asi_stage.is_open():
-        logger.error("ASI stage connection failed.")
-        raise Exception("ASI stage connection failed.")
-
-    return asi_stage
-
-
 @log_initialization
-class ASIStage(StageBase):
+class ASIStage(StageBase, SerialDevice):
     """Applied Scientific Instrumentation (ASI) Stage Class
 
     ASI Documentation: https://asiimaging.com/docs/products/serial_commands
@@ -188,6 +162,34 @@ class ASIStage(StageBase):
         except (AttributeError, BaseException) as e:
             logger.error("ASI Stage Exception", e)
             raise
+
+    @classmethod
+    def connect(self, port, baudrate=115200, timeout=0.25):
+        """Connect to the ASI Stage
+
+        Parameters
+        ----------
+        port : str
+            Communication port for ASI Tiger Controller - e.g., COM1
+        baudrate : int
+            Baud rate for ASI Tiger Controller - e.g., 9600
+        timeout : float
+            Timeout value.
+
+        Returns
+        -------
+        asi_stage : object
+            Successfully initialized stage object.
+        """
+
+        # wait until ASI device is ready
+        asi_stage = TigerController(port, baudrate)
+        asi_stage.connect_to_serial()
+        if not asi_stage.is_open():
+            logger.error("ASI stage connection failed.")
+            raise Exception("ASI stage connection failed.")
+
+        return asi_stage
 
     def get_axis_position(self, axis):
         """Get position of specific axis

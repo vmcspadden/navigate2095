@@ -58,6 +58,8 @@ class RemoteFocusBase:
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args,
+        **kwargs,
     ) -> None:
         """Initializes the RemoteFocusBase Class.
 
@@ -83,7 +85,7 @@ class RemoteFocusBase:
         #: dict: Remote focus device parameters.
         self.device_config = configuration["configuration"]["microscopes"][
             microscope_name
-        ]["remote_focus_device"]
+        ]["remote_focus"]
 
         #: int: Sample rate of the DAQ.
         self.sample_rate = configuration["configuration"]["microscopes"][

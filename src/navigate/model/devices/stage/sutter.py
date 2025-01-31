@@ -40,8 +40,9 @@ from typing import Any, Dict
 from serial import SerialException
 
 # Local Imports
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
 from navigate.model.devices.APIs.sutter.MP285 import MP285
+from navigate.model.devices.serial_devices import SerialDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -49,46 +50,21 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_MP285_connection(com_port: str, baud_rate: int, timeout=0.25) -> MP285:
-    """Build Sutter Stage Serial Port connection
-
-    Parameters
-    ----------
-    com_port : str
-        COM Port for the SutterStage.
-    baud_rate : int
-        Baud Rate for the SutterStage.
-    timeout : float
-        Duration of time for timeout to be triggered (s)
-
-    Returns
-    -------
-    MP285
-        Serial connection to the MP285.
-    """
-    try:
-        mp285_stage = MP285(com_port, baud_rate, timeout)
-        mp285_stage.connect_to_serial()
-        return mp285_stage
-    except SerialException as e:
-        logger.error(f"Communication Error: {e}")
-        raise UserWarning(
-            "Could not communicate with Sutter MP-285 via COMPORT", com_port
-        )
-
-
 @log_initialization
-class SutterStage(StageBase):
-    """SutterStage Class for MP-285."""
+class MP285Stage(StageBase, SerialDevice):
+    """MP285Stage Class for MP-285."""
 
     def __init__(
         self,
         microscope_name: str,
-        device_connection: Any,
-        configuration: Dict[str, Any],
-        device_id: int = 0,
+        axes: list,
+        stage_limits: dict,
+        axes_mapping=None: list,
+        feedback_alignment=None: list,
+        device_connection=None: Any,
+        **kwargs: Any,
     ) -> None:
-        """Initialize the SutterStage.
+        """Initialize the MP285Stage.
 
         Parameters
         ----------
@@ -97,14 +73,14 @@ class SutterStage(StageBase):
         device_connection : Any
             MP285 stage connection.
         configuration : Dict[str, Any]
-            Configuration dictionary for the SutterStage.
+            Configuration dictionary for the MP285Stage.
         device_id : int
-            Device ID for the SutterStage.
+            Device ID for the MP285Stage.
 
         Raises
         ------
         UserWarning
-            Error while connecting to the SutterStage.
+            Error while connecting to the MP285Stage.
         UserWarning
             Error while setting resolution and velocity.
         UserWarning
@@ -169,14 +145,29 @@ class SutterStage(StageBase):
         self.report_position()
 
     def __del__(self) -> None:
-        """Delete SutterStage Serial Port.
+        """Delete MP285Stage Serial Port.
 
         Raises
         ------
         UserWarning
-            Error while closing the SutterStage Serial Port.
+            Error while closing the MP285Stage Serial Port.
         """
         self.close()
+
+    @classmethod
+    def connect(cls, port: str, baud_rate=115200: int, timeout=0.25: float) -> None:
+        """Connect to the MP285Stage."""
+        try:
+            mp285_stage = MP285(port, baud_rate, timeout)
+            mp285_stage.connect_to_serial()
+            self.stage = mp285_stage
+            return mp285_stage
+        except SerialException as e:
+            logger.error(f"Communication Error: {e}")
+            raise UserWarning(
+                "Could not communicate with Sutter MP-285 via COMPORT", com_port
+            )
+        
 
     def report_position(self) -> dict:
         """Reports the position for all axes, and creates a position dictionary.
