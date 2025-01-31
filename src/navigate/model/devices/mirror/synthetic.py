@@ -36,7 +36,7 @@ import logging
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.mirrors.base import MirrorBase
+from navigate.model.devices.mirror.base import MirrorBase
 from navigate.tools.decorators import log_initialization
 
 # # Logger Setup

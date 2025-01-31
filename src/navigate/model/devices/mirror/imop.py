@@ -37,7 +37,8 @@ import logging
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.mirrors.base import MirrorBase
+from navigate.model.devices.mirror.base import MirrorBase
+from navigate.model.devices.APIs.imagineoptics.imop import IMOP_Mirror
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -49,7 +50,7 @@ logger = logging.getLogger(p)
 class ImagineOpticsMirror(MirrorBase):
     """ImageineOpticsMirror mirror class."""
 
-    def __init__(self, microscope_name, device_connection, configuration):
+    def __init__(self, microscope_name, device_connection, configuration, *args, **kwargs):
         """Initialize the ImagineOpticsMirror class.
 
         Parameters
@@ -62,6 +63,8 @@ class ImagineOpticsMirror(MirrorBase):
             Dictionary containing the configuration information.
         """
         super().__init__(microscope_name, device_connection, configuration)
+
+        self.mirror_controller = IMOP_Mirror()
 
         flat_path = configuration["configuration"]["microscopes"][microscope_name][
             "mirror"

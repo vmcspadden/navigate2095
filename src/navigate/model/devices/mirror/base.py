@@ -48,7 +48,7 @@ logger = logging.getLogger(p)
 class MirrorBase:
     """MirrorBase Parent camera class."""
 
-    def __init__(self, microscope_name, device_connection, configuration):
+    def __init__(self, microscope_name, device_connection, configuration, *args, **kwargs):
         """Initialize the MirrorBase class.
 
         Parameters
