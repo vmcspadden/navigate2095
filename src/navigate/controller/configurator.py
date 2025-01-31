@@ -200,6 +200,9 @@ class Configurator:
                         try:
                             if k in value_dict:
                                 v = value_dict[k][var.get()]
+                                # add more information such as file name of a device type
+                                if type(v) is tuple:
+                                    v = v[0]
                             else:
                                 v = var.get()
                         except tk._tkinter.TclError:

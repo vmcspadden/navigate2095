@@ -1,10 +1,10 @@
 camera_device_types = {
-    "Hamamatsu ORCA Lightning": "HamamatsuOrcaLightning",
-    "Hamamatsu ORCA Fire": "HamamatsuOrcaFire",
-    "Hamamatsu ORCA Fusion": "HamamatsuOrcaFusion",
-    "Hamamatsu Flash 4.0": "HamamatsuOrca",
-    "Photometrics Iris 15B": "Photometrics",
-    "Virtual Device": "synthetic",
+    "Hamamatsu ORCA Lightning": ("HamamatsuOrcaLightning", "hamamatsu"),
+    "Hamamatsu ORCA Fire": ("HamamatsuOrcaFire", "hamamatsu"),
+    "Hamamatsu ORCA Fusion": ("HamamatsuOrcaFusion", "hamamatsu"),
+    "Hamamatsu Flash 4.0": ("HamamatsuOrca", "hamamatsu"),
+    "Photometrics Iris 15B": ("Photometrics", "photometrics"),
+    "Virtual Device": ("Synthetic", "synthetic"),
 }
 
 camera_hardware_widgets = {
@@ -56,12 +56,12 @@ camera_hardware_widgets = {
 }
 
 filter_wheel_device_types = {
-    "Sutter Instruments": "SutterFilterWheel",
-    "ASI Filter Wheel": "ASI",
-    "ASI Dichroic Slider": "ASICubeSlider",
-    "Ludl Electronic Products": "LUDLFilterWheel",
-    "Analog/Digital Device": "NI",
-    "Virtual Device": "synthetic",
+    "Sutter Instruments": ("SutterFilterWheel", "sutter"),
+    "ASI Filter Wheel": ("ASI", "asi"),
+    "ASI Dichroic Slider": ("ASICubeSlider", "asi"),
+    "Ludl Electronic Products": ("LUDLFilterWheel", "ludl"),
+    "Analog/Digital Device": ("NI", "ni"),
+    "Virtual Device": ("Synthetic", "synthetic"),
 }
 
 filter_wheel_widgets = {
@@ -108,7 +108,7 @@ filter_wheel_hardware_widgets = {
 
 daq_device_types = {
     "National Instruments": "NI",
-    "Virtual Device": "synthetic",
+    "Virtual Device": "Synthetic",
 }
 
 daq_hardware_widgets = {
@@ -152,8 +152,8 @@ daq_hardware_widgets = {
 }
 
 shutter_device_types = {
-    "Analog/Digital Device": "NI",
-    "Virtual Device": "synthetic",
+    "Analog/Digital Device": ("NI", "ni"),
+    "Virtual Device": ("Synthetic", "synthetic"),
 }
 
 shutter_hardware_widgets = {
@@ -165,16 +165,16 @@ shutter_hardware_widgets = {
 }
 
 stage_device_types = {
-    "Applied Scientific Instrumentation": "ASI",
-    "ASI MFC2000": "MFC2000",
-    "ASI MS2000": "MS2000",
-    "Analog/Digital Device": "GalvoNIStage",
-    "Mad City Labs": "MCL",
-    "Physik Instrumente": "PI",
-    "Sutter Instruments": "MP285",
-    "ThorLabs KCube Inertial Device KIM001": "Thorlabs",
-    "ThorLabs KCube Inertial Device KST101": "KST101",
-    "Virtual Device": "synthetic",
+    "Applied Scientific Instrumentation": ("ASI", "asi"),
+    "ASI MFC2000": ("MFC2000", "asi_MFCTwoThousand"),
+    "ASI MS2000": ("MS2000", "asi_MSTTwoThousand"),
+    "Analog/Digital Device": ("NI", "ni"),
+    "Mad City Labs": ("MCL", "mcl"),
+    "Physik Instrumente": ("PI", "pi"),
+    "Sutter Instruments": ("MP285", "sutter"),
+    "ThorLabs KCube Inertial Device KIM001": ("KIM001", "thorlabs"),
+    "ThorLabs KCube Inertial Device KST101": ("KST101", "thorlabs"),
+    "Virtual Device": ("Synthetic", "synthetic"),
 }
 
 stage_hardware_widgets = {
@@ -430,9 +430,9 @@ stage_constants_widgets = {
 }
 
 remote_focus_device_types = {
-    "Equipment Solutions": "EquipmentSolutions",
-    "Analog Device": "NI",
-    "Virtual Device": "synthetic",
+    "Equipment Solutions": ("EquipmentSolutions", "equipment_solutions"),
+    "Analog Device": ("NI", "ni"),
+    "Virtual Device": ("Synthetic", "synthetic"),
 }
 
 remote_focus_hardware_widgets = {
@@ -463,7 +463,7 @@ remote_focus_hardware_widgets = {
     "frame_config": {"ref": "hardware"},
 }
 
-galvo_device_types = {"Analog Device": "NI", "Virtual Device": "synthetic"}
+galvo_device_types = {"Analog Device": ("NI", "ni"), "Virtual Device": ("Synthetic", "synthetic")}
 
 waveform_types = {
     "Sine": "sine",
@@ -520,7 +520,7 @@ galvo_top_widgets = {
     ],
 }
 
-zoom_device_types = {"Dynamixel": "DynamixelZoom", "Virtual Device": "synthetic"}
+zoom_device_types = {"Dynamixel": ("Dynamixel", "dynamixel"), "Virtual Device": ("Synthetic", "synthetic")}
 
 zoom_position_widgets = {
     "zoom_value": ["Zoom Value", "Input", "string", None, "Example: 16x"],
@@ -553,8 +553,8 @@ zoom_hardware_widgets = {
 }
 
 mirror_device_types = {
-    "Imagine Optics": "ImagineOpticsMirror",
-    "Virtual Device": "SyntheticMirror",
+    "Imagine Optics": ("ImagineOpticsMirror", "imop"),
+    "Virtual Device": ("Synthetic", "synthetic"),
 }
 
 mirror_hardware_widgets = {
@@ -569,7 +569,7 @@ mirror_hardware_widgets = {
     "n_modes": ["Number of Modes", "Input", "int", None, "Example: 32", 32],
 }
 
-laser_device_types = {"Analog Device": "NI", "Virtual Device": "synthetic"}
+laser_device_types = {"Analog Device": ("NI", "ni"), "Virtual Device": ("Synthetic", "synthetic")}
 
 laser_hardware_widgets = {
     "wavelength": ["Wavelength", "Input", "int", None, "Example: 488", 488],
@@ -654,10 +654,18 @@ hardwares_config_name_dict = {
     "Data Acquisition Card": "daq",
     "Filter Wheel": "filter_wheel",
     "Galvo": "galvo",
-    "Lasers": "lasers",
-    "Remote Focus Devices": "remote_focus_device",
+    "Lasers": "laser",
+    "Remote Focus Devices": "remote_focus",
     "Adaptive Optics": "mirror",
     "Shutters": "shutter",
     "Stages": "stage",
     "Zoom Device": "zoom",
+}
+
+deceased_device_type_names = {
+    "MS2000": "ASIMS2000",
+    "MFC2000": "ASIMFC2000",
+    "GalvoNIStage": "NI",
+    "Thorlabs": "KIM001",
+    "KST101": "KST101",
 }
