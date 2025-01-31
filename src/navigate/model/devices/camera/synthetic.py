@@ -98,6 +98,8 @@ class SyntheticCamera(CameraBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize SyntheticCamera class.
 

@@ -32,12 +32,14 @@
 
 # Standard Library Imports
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # Third Party Imports
 
 # Local Imports
 from navigate.model.devices.camera.base import CameraBase
+from navigate.model.devices.device_types import SequenceDevice
+from navigate.model.devices.APIs.hamamatsu.HamamatsuAPI import DCAM
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -46,7 +48,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class HamamatsuBase(CameraBase):
+class HamamatsuBase(CameraBase, SequenceDevice):
     """HamamatsuOrca camera class.
 
     This is the default parent class for Hamamatsu Cameras.
@@ -58,6 +60,8 @@ class HamamatsuBase(CameraBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize HamamatsuOrca class.
 
@@ -145,6 +149,23 @@ class HamamatsuBase(CameraBase):
         """Delete HamamatsuOrca class."""
         self.camera_controller.dev_close()
         # self.close_camera()
+
+    @classmethod
+    def connect(cls, camera_id):
+        """Connect to HamamatsuOrca camera.
+
+        Parameters
+        ----------
+        camera_id : int
+            Camera ID.
+
+        Returns
+        -------
+        camera_controller : object
+            Camera controller object.
+        """
+        camera_controller = DCAM(camera_id)
+        return camera_controller
 
     @property
     def serial_number(self):
@@ -444,7 +465,7 @@ class HamamatsuBase(CameraBase):
 
 
 @log_initialization
-class HamamatsuOrcaLightning(HamamatsuBase):
+class HamamatsuOrcaLightningCamera(HamamatsuBase):
     """HamamatsuOrcaLightning camera class."""
 
     def __init__(
@@ -452,6 +473,8 @@ class HamamatsuOrcaLightning(HamamatsuBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize HamamatsuOrcaLightning class.
 
@@ -519,12 +542,14 @@ class HamamatsuOrcaLightning(HamamatsuBase):
 
 
 @log_initialization
-class HamamatsuOrcaFire(HamamatsuBase):
+class HamamatsuOrcaFireCamera(HamamatsuBase):
     def __init__(
         self,
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize HamamatsuOrcaFire class.
 
@@ -607,12 +632,14 @@ class HamamatsuOrcaFire(HamamatsuBase):
 
 
 @log_initialization
-class HamamatsuOrca(HamamatsuBase):
+class HamamatsuOrcaCamera(HamamatsuBase):
     def __init__(
         self,
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize HamamatsuOrca class.
 
@@ -687,7 +714,7 @@ class HamamatsuOrca(HamamatsuBase):
 
 
 @log_initialization
-class HamamatsuOrcaFusion(HamamatsuBase):
+class HamamatsuOrcaFusionCamera(HamamatsuBase):
     """HamamatsuOrcaFusion camera class."""
 
     def __init__(
@@ -695,6 +722,8 @@ class HamamatsuOrcaFusion(HamamatsuBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize HamamatsuOrcaFusion class.
 
