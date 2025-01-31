@@ -38,7 +38,6 @@ from typing import Any, Dict
 
 # Local Imports
 from navigate.tools.decorators import log_initialization
-from navigate.model.devices.lasers.base import LaserBase
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -46,8 +45,8 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class SyntheticLaser(LaserBase):
-    """SyntheticLaser Class"""
+class LaserBase:
+    """Laser Base Class"""
 
     def __init__(
         self,
@@ -56,27 +55,61 @@ class SyntheticLaser(LaserBase):
         configuration: Dict[str, Any],
         laser_id: int,
     ) -> None:
-        """Initialize the SyntheticLaser class.
+        """Initialize Laser Base Class
 
         Parameters
         ----------
         microscope_name : str
-            The microscope name.
+            Name of the microscope
         device_connection : Any
-            The device connection object.
+            Communication instance with the device.
         configuration : Dict[str, Any]
-            The device configuration.
+            Configuration dictionary
         laser_id : int
-            The laser ID.
+            Laser ID
         """
-        super().__init__(microscope_name, device_connection, configuration, laser_id)
+        #: Any: Communication instance with the device
+        self.device_connection = device_connection
+
+        #: dict: Configuration dictionary
+        self.configuration = configuration
+
+        #: str: Name of the microscope
+        self.microscope_name = microscope_name
+
+        #: int: Laser ID
+        self.device_config = configuration["configuration"]["microscopes"][
+            microscope_name
+        ]["laser"][laser_id]
+
+    def __str__(self) -> str:
+        """Return string representation of the class"""
+        return "LaserBase"
+
+    def set_power(self, laser_intensity: int) -> None:
+        """Set laser power
+
+        Parameters
+        ----------
+        laser_intensity : int
+            Laser intensity
+        """
+        pass
+
+    def turn_on(self) -> None:
+        """Turn on the laser"""
+        pass
+
+    def turn_off(self) -> None:
+        """Turn off the laser"""
+        pass
 
     def close(self) -> None:
-        """Close the port before exit."""
+        """
+        Close the laser before exit.
+        """
         pass
 
     def initialize_laser(self) -> None:
-        """
-        Initialize lasers.
-        """
+        """Initialize lasers."""
         pass
