@@ -131,13 +131,13 @@ class PluginsModel:
             # core devices
             core_devices = [
                 "camera",
-                "remote_focus_device",
+                "remote_focus",
                 "galvo",
                 "filter_wheel",
                 "stage",
                 "zoom",
                 "shutter",
-                "lasers",
+                "laser",
             ]
             if device_type_name in core_devices:
                 if device_type_name not in self.devices_dict:
