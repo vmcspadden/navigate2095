@@ -33,6 +33,7 @@
 # Standard Library Imports
 import logging
 from typing import Any, Dict
+import time
 
 
 # Local Imports
@@ -45,12 +46,38 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
+def build_laser_connection(comport, baudrate=115200, timeout=0.25):
+    """Build ASIFilterWheel Serial Port connection
+
+    Parameters
+    ----------
+    comport : str
+        Comport for communicating with the filter wheel, e.g., COM1.
+    baudrate : int
+        Baud rate for communicating with the filter wheel, default is 115200.
+    timeout : float
+        Timeout for communicating with the filter wheel, default is 0.25.
+
+    Returns
+    -------
+    tiger_controller : TigerController
+        ASI Tiger Controller object.
+    """
+    # wait until ASI device is ready
+    tiger_controller = TigerController(comport, baudrate)
+    tiger_controller.connect_to_serial()
+    if not tiger_controller.is_open():
+        logger.error("ASI stage connection failed.")
+        raise Exception("ASI stage connection failed.")
+    return tiger_controller
+
 
 @log_initialization
-class LaserASI(LaserBase):
-    """LaserASI Class
+class ASILaser(LaserBase):
+    """ASILaser - Class for controlling ASI Lasers
 
-    This class is used to control a laser connected to a ASI Tiger Controller.
+    This class is used to control a laser connected to a ASI Tiger Controller with a TGDAC and PLC cards.
+    The PLC card will handle the digital outputs and TGDAC card will the analog outputs 
     """
 
     def __init__(
@@ -59,7 +86,7 @@ class LaserASI(LaserBase):
         device_connection: Any,
         configuration: Dict[str, Any],
         laser_id: int,
-        modulation_type="digital",
+        modulation_type="analog",
     ) -> None:
         """Initialize the LaserNI class.
 
@@ -77,13 +104,12 @@ class LaserASI(LaserBase):
             The modulation type of the laser - Analog, Digital, or Mixed.
         """
         super().__init__(microscope_name, device_connection, configuration, laser_id)
-        "Figure out how to load which axis(es) the laser is connected to"
+
+        #: TigerController: ASI Tiger Controller object.
+        self.laser = device_connection
 
         #: str: The modulation type of the laser - Analog, Digital, or Mixed.
         self.modulation_type = modulation_type
-
-        #: str: Modulation type of the laser - Analog or Digital.
-        self.digital_port_type = None
 
         #: float: The minimum digital modulation voltage.
         self.laser_min_do = None
@@ -114,11 +140,19 @@ class LaserASI(LaserBase):
             self.initialize_digital_modulation()
             logger.info(f"{str(self)} initialized with digital modulation.")
     
-    """def initialize_analog_modulation(self) -> None:
-        Initialize the analog modulation of the laser.
+    def __str__(self):
+        """String representation of the class."""
+        return "ASIFilterWheel"
+    
+    def initialize_analog_modulation(self) -> None:
+        """Initialize the analog modulation of the laser."""
 
-        "Figure out how to use this to set the axis"
-        laser_ao_port = self.device_config["power"]["hardware"]["channel"]
+        #: str: axis the laser input is connected to
+        self.axis = self.device_config["power"]["hardware"]["axis"]
+
+        "Set the voltage to zero, may put this in the initialization"
+        # Set voltage to zero, turns the laser off
+        self.laser.move_axis(self.axis, 0)
 
         #: float: The minimum analog modulation voltage.
         self.laser_min_ao = self.device_config["power"]["hardware"]["min"]
@@ -127,17 +161,11 @@ class LaserASI(LaserBase):
         self.laser_max_ao = self.device_config["power"]["hardware"]["max"]
 
         #: object: The laser analog modulation task.
-        Loads up waveforms
-            SAP [axis]=162
-            SAF [axis]=period
-            SAA [axis]=max_power - min_power
-            SAO [axis]=(max_power - min_power)/2 + min_power 
-            SAM [axis]=3
-
-            how do you retrigger the laser?
+        self.laser.laser_analog(self.axis, self.laser_min_ao, self.laser_max_ao)
+        self.laser.sam(self.axis, 1)
 
 
-        def initialize_digital_modulation(self) -> None:
+    """def initialize_digital_modulation(self) -> None:
         Initialize the digital modulation of the laser.
         laser_do_port = self.device_config["onoff"]["hardware"]["channel"]
 
@@ -174,18 +202,31 @@ class LaserASI(LaserBase):
             The laser intensity.
         """
         
-        scaled_laser_voltage = (int(laser_intensity) / 100) * self.laser_max_ao
-        TigerController.send_command(f"MOVE [axis] = {scaled_laser_voltage.f}" )
+        laser_voltage = (int(laser_intensity) / 100) * self.laser_max_ao
         self._current_intensity = laser_intensity 
 
+        if self.device_type == "analog":
+            # TGDAC
+            output_voltage = laser_voltage * 1000
+            self.laser.move_axis(self.axis, laser_voltage)
+        else:
+            # Programmable Logic Card
+            if laser_voltage > 2.5:
+                output_voltage = 5
+            else:
+                output_voltage = 0
+            self.laser.move_digital_axis(self.axis, output_voltage)
 
+
+
+    "Fix these two"
     def turn_on(self) -> None:
         """Turns on the laser."""
         self.set_power(self._current_intensity)
         if self.digital_port_type == "digital":
-            TigerController.send_command(f"MOVE [axis] = {self.laser_max_do.f}" )
+            self.laser.move_digital_axis(self.axis, self.laser_max_do)
         elif self.digital_port_type == "analog":
-            TigerController.send_command(f"MOVE [axis] = {self.laser_max_ao.f}" )
+            self.laser.move_axis(self.axis, self.laser_max_ao)
 
     def turn_off(self) -> None:
         """Turns off the laser."""
@@ -194,27 +235,23 @@ class LaserASI(LaserBase):
         self._current_intensity = tmp
 
         if self.digital_port_type == "digital":
-            TigerController.send_command(f"MOVE [axis] = {self.laser_min_do.f}" )
+            self.laser.move_digital_axis(self.axis, self.laser_min_do)
         elif self.digital_port_type == "analog":
-            TigerController.send_command(f"MOVE [axis] = {self.laser_min_ao.f}" )
-
-    """ def close(self):
-        Close the ASI Filter Wheel serial ports.
-
-        Sets the filter wheel to the home position and then closes the port.
-        
-        if self.filter_wheel.is_open():
-            self.filter_wheel.move_filter_wheel_to_home()
-            logger.debug("ASI Filter Wheel - Closing Device.")
-            self.filter_wheel.disconnect_from_serial()
-    """
-
-    """
-    def __del__(self):
-        Destructor for the ASIFilterWheel class.
-        self.close()
-    """
+            self.laser.move_axis(self.axis, self.laser_min_ao)
 
     
+    def close(self):
+        """Close the ASI Laser serial port.
+
+        Sets the laser to the home position and then closes the port.
+        """
+        if self.laser.is_open():
+            self.laser.move_filter_wheel_to_home()
+            self.laser.disconnect_from_serial()
+
+
+    def __del__(self):
+        """Destructor for the ASILaser class."""
+        self.close()
 
 
