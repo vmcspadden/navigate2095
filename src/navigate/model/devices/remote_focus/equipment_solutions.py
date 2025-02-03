@@ -147,7 +147,7 @@ class EquipmentSolutionsRemoteFocus(NIRemoteFocus, SerialDevice):
         """
         # Open Serial Port
         try:
-            logger.debug(f"Opening Voice Coil on COM: {self.comport}")
+            logger.debug(f"Opening Voice Coil on COM: {port}")
             serial_connection = serial.Serial(
                 port=port,
                 baudrate=baudrate,

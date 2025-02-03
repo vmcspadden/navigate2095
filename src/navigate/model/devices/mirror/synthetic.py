@@ -48,7 +48,7 @@ logger = logging.getLogger(p)
 class SyntheticMirror(MirrorBase):
     """SyntheticMirror Class - literally does nothing"""
 
-    def __init__(self, microscope_name, device_connection, configuration):
+    def __init__(self, microscope_name, device_connection, configuration, *args, **kwargs):
         """Initialize the SyntheticMirror class.
 
         Parameters

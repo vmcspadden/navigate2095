@@ -57,12 +57,9 @@ class MP285Stage(StageBase, SerialDevice):
     def __init__(
         self,
         microscope_name: str,
-        axes: list,
-        stage_limits: dict,
-        axes_mapping=None: list,
-        feedback_alignment=None: list,
-        device_connection=None: Any,
-        **kwargs: Any,
+        device_connection: Any,
+        configuration: Dict[str, Any],
+        device_id: int = 0,
     ) -> None:
         """Initialize the MP285Stage.
 
@@ -155,17 +152,16 @@ class MP285Stage(StageBase, SerialDevice):
         self.close()
 
     @classmethod
-    def connect(cls, port: str, baud_rate=115200: int, timeout=0.25: float) -> None:
+    def connect(cls, port: str, baud_rate: int=115200, timeout: float=0.25) -> MP285:
         """Connect to the MP285Stage."""
         try:
             mp285_stage = MP285(port, baud_rate, timeout)
             mp285_stage.connect_to_serial()
-            self.stage = mp285_stage
             return mp285_stage
         except SerialException as e:
             logger.error(f"Communication Error: {e}")
             raise UserWarning(
-                "Could not communicate with Sutter MP-285 via COMPORT", com_port
+                "Could not communicate with Sutter MP-285 via COMPORT", port
             )
         
 

@@ -56,10 +56,10 @@ camera_hardware_widgets = {
 }
 
 filter_wheel_device_types = {
-    "Sutter Instruments": ("SutterFilterWheel", "sutter"),
+    "Sutter Instruments": ("Sutter", "sutter"),
     "ASI Filter Wheel": ("ASI", "asi"),
     "ASI Dichroic Slider": ("ASICubeSlider", "asi"),
-    "Ludl Electronic Products": ("LUDLFilterWheel", "ludl"),
+    "Ludl Electronic Products": ("LUDL", "ludl"),
     "Analog/Digital Device": ("NI", "ni"),
     "Virtual Device": ("Synthetic", "synthetic"),
 }

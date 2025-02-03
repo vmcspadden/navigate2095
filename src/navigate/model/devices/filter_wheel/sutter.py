@@ -100,7 +100,7 @@ class SutterFilterWheel(FilterWheelBase, SerialDevice):
                 [0, 0.230, 0.440, 0.650, 0.860, 1.100],
             ]
         )
-
+        self.serial = device_connection
         self.serial.write(bytes.fromhex("ee"))
 
         if self.read_on_init:
