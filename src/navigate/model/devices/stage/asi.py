@@ -38,6 +38,7 @@ from typing import Any, Dict
 
 # Local Imports
 from navigate.model.devices.stage.base import StageBase
+from navigate.model.devices.device_types import SerialDevice, IntegratedDevice
 from navigate.model.devices.APIs.asi.asi_tiger_controller import (
     TigerController,
     TigerException,
@@ -50,7 +51,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class ASIStage(StageBase, SerialDevice):
+class ASIStage(StageBase, SerialDevice, IntegratedDevice):
     """Applied Scientific Instrumentation (ASI) Stage Class
 
     ASI Documentation: https://asiimaging.com/docs/products/serial_commands

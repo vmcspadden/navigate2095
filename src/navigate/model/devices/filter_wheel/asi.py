@@ -77,6 +77,8 @@ class ASIFilterWheel(FilterWheelBase, SerialDevice):
         #: float: Delay for filter wheel to change positions.
         self.wait_until_done_delay = self.device_config["filter_wheel_delay"]
 
+        self.filter_wheel = device_connection
+
         # Send Filter Wheel/Wheels to Zeroth Position
         self.filter_wheel.select_filter_wheel(
             filter_wheel_number=self.filter_wheel_number
@@ -110,7 +112,7 @@ class ASIFilterWheel(FilterWheelBase, SerialDevice):
             ASI Tiger Controller object.
         """
         # wait until ASI device is ready
-        tiger_controller = TigerController(comport, baudrate)
+        tiger_controller = TigerController(port, baudrate)
         tiger_controller.connect_to_serial()
         if not tiger_controller.is_open():
             logger.error("ASI stage connection failed.")
@@ -219,7 +221,7 @@ class ASICubeSliderFilterWheel(FilterWheelBase, SerialDevice):
         #: int: Filter wheel position.
         self.dichroic_position = 0
 
-        @classmethod
+    @classmethod
     def connect(cls, port, baudrate=115200, timeout=0.25):
         """Build ASIFilterWheel Serial Port connection
 
@@ -238,7 +240,7 @@ class ASICubeSliderFilterWheel(FilterWheelBase, SerialDevice):
             ASI Tiger Controller object.
         """
         # wait until ASI device is ready
-        tiger_controller = TigerController(comport, baudrate)
+        tiger_controller = TigerController(port, baudrate)
         tiger_controller.connect_to_serial()
         if not tiger_controller.is_open():
             logger.error("ASI stage connection failed.")

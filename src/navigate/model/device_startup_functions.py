@@ -346,10 +346,10 @@ def start_device(
     if type(device_config) == ListProxy:
         device_config = device_config[device_id]
 
-    if device_category == "stage":
-        device_type = device_config["type"]
-    else:
-        device_type = device_config["hardware"]["type"]
+    if device_category != "stage":
+        device_config = device_config["hardware"]
+
+    device_type = device_config["type"]
 
     if "_" in device_category:
         class_name_suffix = "".join(
@@ -406,12 +406,18 @@ def start_device(
                 exception=Exception,
             )
         elif issubclass(_class, SequenceDevice):
+            # get connection parameters
+            connection_params = []
+            if hasattr(_class, "get_connect_params"):
+                for param in _class.get_connect_params():
+                    connection_params.append(device_config[param])
             # build connection
             device_connection = SequenceDeviceFactory.build_connection(
                 build_ref_name(
                     "_", device_category, device_config.get("serial_number", "000000")
                 ),
                 _class.connect,
+                args=connection_params,
                 exception=Exception,
             )
         elif hasattr(_class, "connect"):

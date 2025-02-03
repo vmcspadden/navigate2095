@@ -42,7 +42,7 @@ from serial import SerialException
 # Local Imports
 from navigate.model.devices.stage.base import StageBase
 from navigate.model.devices.APIs.sutter.MP285 import MP285
-from navigate.model.devices.serial_devices import SerialDevice
+from navigate.model.devices.device_types import SerialDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
