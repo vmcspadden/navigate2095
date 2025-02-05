@@ -62,7 +62,7 @@ class NILaser(LaserBase, NIDevice):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
-        laser_id: int,
+        device_id: int,
     ) -> None:
         """Initialize the LaserNI class.
 
@@ -74,17 +74,17 @@ class NILaser(LaserBase, NIDevice):
             The device connection object.
         configuration : Dict[str, Any]
             The device configuration.
-        laser_id : int
+        device_id : int
             The laser id.
         """
-        super().__init__(microscope_name, device_connection, configuration, laser_id)
+        super().__init__(microscope_name, device_connection, configuration, device_id)
         analog = configuration["configuration"]["microscopes"][microscope_name][
             "laser"
-        ][laser_id]["power"]["hardware"].get("type", None)
+        ][device_id]["power"]["hardware"].get("type", None)
 
         digital = configuration["configuration"]["microscopes"][microscope_name][
             "laser"
-        ][laser_id]["onoff"]["hardware"].get("type", None)
+        ][device_id]["onoff"]["hardware"].get("type", None)
 
 
         if analog == "NI" and digital == "NI":

@@ -38,7 +38,7 @@ import random
 from pipython import GCSError
 
 # Local Imports
-from navigate.model.devices.stages.pi import PIStage
+from navigate.model.devices.stage.pi import PIStage
 
 
 class MockPIStage:
@@ -65,7 +65,10 @@ class MockPIStage:
     def STP(self, noraise=True):
         pass
 
-    def waitontarget(self, pi_device, timeout=5.0):
+    def waitontarget(self, pi_device, timeout=5.0, **kwargs):
+        pass
+
+    def CloseConnection(self):
         pass
 
 

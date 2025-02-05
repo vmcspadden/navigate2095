@@ -53,7 +53,7 @@ class LaserBase:
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
-        laser_id: int,
+        device_id: int,
     ) -> None:
         """Initialize Laser Base Class
 
@@ -65,7 +65,7 @@ class LaserBase:
             Communication instance with the device.
         configuration : Dict[str, Any]
             Configuration dictionary
-        laser_id : int
+        device_id : int
             Laser ID
         """
         #: Any: Communication instance with the device
@@ -80,7 +80,7 @@ class LaserBase:
         #: int: Laser ID
         self.device_config = configuration["configuration"]["microscopes"][
             microscope_name
-        ]["laser"][laser_id]
+        ]["laser"][device_id]
 
     def __str__(self) -> str:
         """Return string representation of the class"""

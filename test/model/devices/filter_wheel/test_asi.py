@@ -47,16 +47,26 @@ class TestASIFilterWheel(unittest.TestCase):
         self.filter_wheel_delay = 0.5
         self.microscope_name = "mock_filter_wheel"
         self.mock_configuration = {
-            "filter_wheel_delay": self.filter_wheel_delay,
-            "hardware": {"wheel_number": self.number_of_filter_wheels},
-            "available_filters": {
-                "filter1": 0,
-                "filter2": 1,
-                "filter3": 2,
-                "filter4": 3,
-                "filter5": 4,
-                "filter6": 5,
-            },
+            "configuration": {
+                "microscopes": {
+                    "mock_filter_wheel": {
+                        "filter_wheel": [
+                            {
+                            "filter_wheel_delay": self.filter_wheel_delay,
+                            "hardware": {"wheel_number": self.number_of_filter_wheels},
+                            "available_filters": {
+                                "filter1": 0,
+                                "filter2": 1,
+                                "filter3": 2,
+                                "filter4": 3,
+                                "filter5": 4,
+                                "filter6": 5,
+                            }
+                            }
+                        ]
+                    }
+                }
+            }
         }
 
         # Mock Device Connection
@@ -69,8 +79,10 @@ class TestASIFilterWheel(unittest.TestCase):
         self.mock_device_connection.is_open.return_value = True
 
         self.filter_wheel = ASIFilterWheel(
+            microscope_name=self.microscope_name,
             device_connection=self.mock_device_connection,
-            device_config=self.mock_configuration,
+            configuration=self.mock_configuration,
+            device_id=0,
         )
 
     def test_init(self):

@@ -36,20 +36,20 @@ import unittest
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.shutter.ni import ShutterTTL
+from navigate.model.devices.shutter.ni import NIShutter
 
 
-class TestShutterTTL(unittest.TestCase):
-    """Unit Test for ShutterTTL Class"""
+class TestNIShutter(unittest.TestCase):
+    """Unit Test for NIShutter Class"""
 
     def test_shutter_ttl_attributes(self):
-        assert hasattr(ShutterTTL, "open_shutter") and callable(
-            getattr(ShutterTTL, "open_shutter")
+        assert hasattr(NIShutter, "open_shutter") and callable(
+            getattr(NIShutter, "open_shutter")
         )
-        assert hasattr(ShutterTTL, "close_shutter") and callable(
-            getattr(ShutterTTL, "close_shutter")
+        assert hasattr(NIShutter, "close_shutter") and callable(
+            getattr(NIShutter, "close_shutter")
         )
-        assert hasattr(ShutterTTL, "state")
+        assert hasattr(NIShutter, "state")
 
 
 if __name__ == "__main__":

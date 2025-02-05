@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 
 from navigate.config import load_configs, get_configuration_paths
-from navigate.model.devices.lasers.ni import LaserNI
+from navigate.model.devices.laser.ni import NILaser
 
 
 class TestLaserNI(unittest.TestCase):
@@ -46,12 +46,11 @@ class TestLaserNI(unittest.TestCase):
         with patch("nidaqmx.Task") as self.mock_task:
             # self.mock_task_instance = MagicMock()
             # self.mock_task.return_value = self.mock_task_instance
-            self.laser = LaserNI(
+            self.laser = NILaser(
                 microscope_name=self.microscope_name,
                 device_connection=self.device_connection,
                 configuration=self.configuration,
-                laser_id=laser_id,
-                modulation_type="mixed",
+                device_id=laser_id,
             )
 
     def tearDown(self):

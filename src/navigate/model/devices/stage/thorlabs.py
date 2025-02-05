@@ -39,7 +39,6 @@ from multiprocessing.managers import ListProxy
 from navigate.model.devices.stage.base import StageBase
 from navigate.model.devices.device_types import IntegratedDevice
 from navigate.tools.decorators import log_initialization
-from navigate.model.devices.APIs.thorlabs.kcube_inertial import TLFTDICommunicationError
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -297,8 +296,8 @@ class KST101Stage(StageBase):
         if device_connection is not None:
             #: object: Thorlabs KST Stage controller
             self.kst_controller = device_connection
-        else:
-            self.kst_controller = self.connect(self.serial_number)
+        # else:
+        #     self.kst_controller = self.connect(self.serial_number)
 
     def __del__(self):
         """Delete the KST Connection"""
@@ -320,7 +319,7 @@ class KST101Stage(StageBase):
         return ["serial_number"]
 
     @classmethod
-    def connection(cls, serial_number):
+    def connect(cls, serial_number):
         """Connect to the Thorlabs KST Stage
 
         Parameters

@@ -54,7 +54,7 @@ class SyntheticGalvo(GalvoBase):
         microscope_name: str,
         device_connection: Optional[Any],
         configuration: Dict[str, Any],
-        galvo_id: int = 0,
+        device_id: int = 0,
     ) -> None:
         """Initialize the SyntheticGalvo class.
 
@@ -66,10 +66,10 @@ class SyntheticGalvo(GalvoBase):
             Device connection.
         configuration : Dict[str, Any]
             Dictionary of configuration parameters.
-        galvo_id : int
+        device_id : int
             Galvo ID. Default is 0.
         """
-        super().__init__(microscope_name, device_connection, configuration, galvo_id)
+        super().__init__(microscope_name, device_connection, configuration, device_id)
 
         #: str: Name of the microscope.
         self.microscope_name = microscope_name
@@ -81,7 +81,7 @@ class SyntheticGalvo(GalvoBase):
         self.configuration = configuration
 
         #: int: Galvo ID.
-        self.galvo_id = galvo_id
+        self.galvo_id = device_id
 
     def __str__(self) -> str:
         """Return string representation of the GalvoNI."""

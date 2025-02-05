@@ -37,7 +37,7 @@ import random
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.mcl import MCLStage
+from navigate.model.devices.stage.mcl import MCLStage
 
 
 class MockMCLController:
@@ -56,6 +56,8 @@ class MockMCLController:
     def MCL_SingleWriteN(self, pos, axis, handle=None):
         setattr(self, f"{axis}_abs", pos)
 
+    def MCL_ReleaseHandle(self, handle):
+        pass
 
 class TestStageMCL:
     """Unit Test for StageBase Class"""

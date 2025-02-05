@@ -895,7 +895,7 @@ def verify_configuration(manager, configuration):
 
     Supports old version of configurations.
     """
-    suppport_deceased_configuration(configuration)
+    support_deceased_configuration(configuration)
     device_config = configuration["configuration"]["microscopes"]
     # get microscope inheritance sequence
     microscope_name_seq = []
@@ -1062,7 +1062,7 @@ def verify_positions_config(positions):
 
     return positions
 
-def suppport_deceased_configuration(configuration):
+def support_deceased_configuration(configuration):
     """Support old version of configurations.
 
     Parameters

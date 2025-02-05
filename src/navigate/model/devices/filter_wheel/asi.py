@@ -57,7 +57,7 @@ class ASIFilterWheel(FilterWheelBase, SerialDevice):
         https://asiimaging.com/docs/fw_1000#fw-1000_ascii_command_set
     """
 
-    def __init__(self, microscope_name, device_connection, configuration, devcie_id):
+    def __init__(self, microscope_name, device_connection, configuration, device_id=0):
         """Initialize the ASIFilterWheel class.
 
         Parameters

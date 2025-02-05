@@ -65,6 +65,8 @@ def test_config_methods():
         "__spec__",
         "build_nested_dict",
         "build_ref_name",
+        "load_param_from_module",
+        "save_yaml_file",
         "get_configuration_paths",
         "get_navigate_path",
         "isfile",
@@ -79,6 +81,7 @@ def test_config_methods():
         "verify_waveform_constants",
         "verify_positions_config",
         "verify_configuration",
+        "support_deceased_configuration",
         "yaml",
         "logging",
         "logger",
@@ -704,7 +707,7 @@ class TestVerifyExperimentConfig(unittest.TestCase):
         lasers = [
             f"{laser['wavelength']}nm"
             for laser in configuration["configuration"]["microscopes"][microscope_name][
-                "lasers"
+                "laser"
             ]
         ]
         filterwheels = list(

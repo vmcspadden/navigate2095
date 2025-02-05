@@ -37,7 +37,7 @@ import random
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
 
 
 class TestStageBase:

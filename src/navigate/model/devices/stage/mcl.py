@@ -40,7 +40,6 @@ import time
 from navigate.tools.decorators import log_initialization
 from navigate.model.devices.stage.base import StageBase
 from navigate.model.devices.device_types import IntegratedDevice
-from navigate.model.devices.APIs.mcl.madlib import MadlibError
 
 # Logger Setup
 p = __name__.split(".")[1]

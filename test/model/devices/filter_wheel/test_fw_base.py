@@ -7,10 +7,9 @@ def test_filter_wheel_base_functions():
         "microscope_name"
     ]
     fw = FilterWheelBase(
+        microscope_name,
         None,
-        model.configuration["configuration"]["microscopes"][microscope_name][
-            "filter_wheel"
-        ][0],
+        model.configuration,
     )
 
     filter_dict = model.configuration["configuration"]["microscopes"][microscope_name][

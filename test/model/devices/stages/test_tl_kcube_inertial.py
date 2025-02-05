@@ -37,7 +37,7 @@ import random
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.tl_kcube_inertial import TLKIMStage
+from navigate.model.devices.stage.thorlabs import KIM001Stage
 
 
 class MockKimController:
@@ -92,7 +92,7 @@ class TestStageTlKCubeInertial:
         self.random_multiple_axes_test = random_multiple_axes_test
 
     def test_stage_attributes(self):
-        stage = TLKIMStage(self.microscope_name, None, self.configuration)
+        stage = KIM001Stage(self.microscope_name, self.kim_controller, self.configuration)
 
         # Methods
         assert hasattr(stage, "get_position_dict") and callable(
@@ -132,7 +132,7 @@ class TestStageTlKCubeInertial:
     def test_initialize_stage(self, axes, axes_mapping):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = TLKIMStage(self.microscope_name, None, self.configuration)
+        stage = KIM001Stage(self.microscope_name, self.kim_controller, self.configuration)
 
         # Attributes
         for axis in axes:
@@ -181,7 +181,7 @@ class TestStageTlKCubeInertial:
     def test_report_position(self, axes, axes_mapping):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = TLKIMStage(
+        stage = KIM001Stage(
             self.microscope_name, self.kim_controller, self.configuration
         )
 
@@ -214,7 +214,7 @@ class TestStageTlKCubeInertial:
     def test_move_axis_absolute(self, axes, axes_mapping):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = TLKIMStage(
+        stage = KIM001Stage(
             self.microscope_name, self.kim_controller, self.configuration
         )
         self.random_single_axis_test(stage)
@@ -241,7 +241,7 @@ class TestStageTlKCubeInertial:
     def test_move_absolute(self, axes, axes_mapping):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = TLKIMStage(
+        stage = KIM001Stage(
             self.microscope_name, self.kim_controller, self.configuration
         )
         self.random_multiple_axes_test(stage)

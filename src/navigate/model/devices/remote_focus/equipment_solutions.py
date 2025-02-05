@@ -88,18 +88,6 @@ class EquipmentSolutionsRemoteFocus(NIRemoteFocus, SerialDevice):
             "remote_focus"
         ]["hardware"].get("port", "COM1")
 
-        #: int: Baud rate of the RS232 communication port.
-        self.baud_rate = 115200
-
-        #: int: Number of data bits.
-        self.byte_size = serial.EIGHTBITS
-
-        #: int: Parity bit.
-        self.parity = serial.PARITY_NONE
-
-        #: int: Number of stop bits.
-        self.stop_bits = serial.STOPBITS_ONE
-
         #: float: Timeout for the serial port.
         self.timeout = 1.25
 
@@ -142,8 +130,24 @@ class EquipmentSolutionsRemoteFocus(NIRemoteFocus, SerialDevice):
             pass
 
     @classmethod
-    def connect(cls, port: str="COM1", baudrate: int=115200, timeout: float=1.25):
+    def connect(cls, port: str="COM1", baudrate: int=115200, timeout: float=1.25) -> serial.Serial:
         """Connect to Serial Communication Port
+        port : str
+            Serial Port (default is "COM1")
+        baudrate : int, optional
+            Baud rate of the serial port (default is 115200)
+        timeout : float, optional
+            Time out (default is 1.25)
+
+        Returns
+        -------
+        serial.Serial
+            An instance of the serial connection
+
+        Raises
+        ------
+        UserWarning
+            If there is a communication error with the serial port
         """
         # Open Serial Port
         try:
