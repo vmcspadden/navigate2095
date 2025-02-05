@@ -36,9 +36,7 @@ from unittest.mock import MagicMock
 # Third party imports
 
 # Local application imports
-from navigate.model.device_startup_functions import auto_redial
-from navigate.model.device_startup_functions import load_camera_connection
-from navigate.model.devices.camera.synthetic import SyntheticCameraController
+from navigate.model.device_startup_functions import auto_redial, start_device
 
 
 class TestAutoRedial(unittest.TestCase):
@@ -85,42 +83,3 @@ class TestAutoRedial(unittest.TestCase):
         auto_redial(mock_func, (1, 2), n_tries=1, kwarg1="test")
         mock_func.assert_called_with(1, 2, kwarg1="test")
 
-
-class TestLoadCameraConnection(unittest.TestCase):
-    """Test the load_camera_connection function."""
-
-    def setUp(self):
-        self.configuration = {
-            "configuration": {
-                "hardware": {
-                    "camera": {
-                        0: {"type": "syntheticcamera"},
-                        1: {"type": "HamamatsuOrca"},
-                        2: {"type": "HamamatsuOrcaLightning"},
-                        3: {"type": "Photometrics"},
-                        4: {"type": "synthetic"},
-                    }
-                }
-            }
-        }
-
-    def test_load_synthetic_camera_connection(self):
-        """Test that the function returns a camera connection."""
-        camera = load_camera_connection(configuration={}, is_synthetic=True)
-        self.assertTrue(isinstance(camera, SyntheticCameraController))
-
-    def test_load_synthetic_camera_connection_from_config(self):
-        """Test that the function returns a camera connection."""
-        camera = load_camera_connection(configuration=self.configuration, camera_id=0)
-        self.assertTrue(isinstance(camera, SyntheticCameraController))
-
-        camera = load_camera_connection(configuration=self.configuration, camera_id=4)
-        self.assertTrue(isinstance(camera, SyntheticCameraController))
-
-        # @patch('navigate.model.devices.camera.camera_synthetic.SyntheticCameraController')
-
-    # def test_load_hamamatsu_orca_camera_connection(self):
-    #     """Test that the function returns a camera connection."""
-    #     camera = load_camera_connection(configuration=self.configuration,
-    #                                     camera_id=1)
-    #     self.assertTrue(isinstance(camera, HamamatsuController))

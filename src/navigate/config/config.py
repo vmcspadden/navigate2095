@@ -999,6 +999,18 @@ def verify_configuration(manager, configuration):
                 {"type": "NI", "wavelength": laser_config["wavelength"]}
             )
 
+        # zoom
+        zoom_config = device_config[microscope_name]["zoom"]
+        if "hardware" not in zoom_config:
+            update_config_dict(
+                manager,
+                zoom_config,
+                "hardware",
+                {"type": "Synthetic", "servo_id": 0}
+            )
+        elif "type" not in zoom_config["hardware"]:
+                zoom_config["hardware"]["type"] = "Synthetic"
+
         filter_wheel_config = device_config[microscope_name]["filter_wheel"]
         if type(filter_wheel_config) == DictProxy:
             # support older version of configuration.yaml

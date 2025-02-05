@@ -190,7 +190,7 @@ class ASICubeSliderFilterWheel(FilterWheelBase, SerialDevice):
         Typical switch time between adjacent positions is < 250 ms.
     """
 
-    def __init__(self, microscope_name, device_connection, configuration, devcie_id):
+    def __init__(self, microscope_name, device_connection, configuration, device_id=0):
         """Initialize the ASICubeSlider class.
 
         Parameters

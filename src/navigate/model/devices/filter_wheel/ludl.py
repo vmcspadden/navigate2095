@@ -61,7 +61,7 @@ class LUDLFilterWheel(FilterWheelBase, SerialDevice):
 
     """
 
-    def __init__(self, microscope_name, device_connection, configuration, devcie_id):
+    def __init__(self, microscope_name, device_connection, configuration, device_id=0):
         """Initialize the LUDLFilterWheel class.
 
         Parameters
