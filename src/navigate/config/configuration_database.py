@@ -553,7 +553,7 @@ zoom_hardware_widgets = {
 }
 
 mirror_device_types = {
-    "Imagine Optics": ("ImagineOpticsMirror", "imop"),
+    "Imagine Optics": ("ImagineOptics", "imop"),
     "Virtual Device": ("Synthetic", "synthetic"),
 }
 
