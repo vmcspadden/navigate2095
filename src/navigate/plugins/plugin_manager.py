@@ -255,8 +255,8 @@ class PluginPackageManager:
                 )
                 try:
                     module = importlib.import_module(full_module_name)
-                except (ImportError, AttributeError):
-                    logger.debug("Plugin device not found.")
+                except (ImportError, AttributeError) as e:
+                    logger.debug(f"Plugin device not found: {e}")
                     continue
                 register_func(module_name, module)
 

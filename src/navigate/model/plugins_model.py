@@ -140,35 +140,34 @@ class PluginsModel:
                 "laser",
             ]
             if device_type_name in core_devices:
+                try:
+                    supported_device_types = module.SUPPORTED_DEVICE_TYPES
+                except AttributeError:
+                    print(
+                        f"Plugin device: {device} doesn't give any information about supported device types"
+                        "Please add line 'SUPPORTED_DEVICE_TYPES = []' in device_startup_functions.py in the plugin!"
+                    )
+                    return
                 if device_type_name not in self.devices_dict:
                     self.devices_dict[device_type_name] = {}
-                    self.devices_dict[device_type_name]["load_device"] = []
-                    self.devices_dict[device_type_name]["start_device"] = []
-                self.devices_dict[device_type_name]["load_device"].append(
-                    module.load_device
-                )
-                self.devices_dict[device_type_name]["start_device"].append(
-                    module.start_device
-                )
-            elif device_type_name == "multiple_devices":
+                for supported_device_type in supported_device_types:
+                    self.devices_dict[device_type_name][supported_device_type] = {
+                        "load_device": module.load_device,
+                        "start_device": module.start_device,
+                    }
+            elif device_type_name == "MMCore":
                 for device_name in core_devices:
                     if device_name not in self.devices_dict:
                         self.devices_dict[device_name] = {}
-                        self.devices_dict[device_name]["load_device"] = []
-                        self.devices_dict[device_name]["start_device"] = []
-                    self.devices_dict[device_name]["load_device"].append(
-                        module.load_device
-                    )
-                    self.devices_dict[device_name]["start_device"].append(
-                        module.start_device
-                    )
+                    self.devices_dict[device_name][device_type_name] = {
+                        "load_device": module.load_device,
+                        "start_device": module.start_device,
+                    }
             else:
                 self.devices_dict[device_type_name] = {}
                 self.devices_dict[device_type_name]["ref_list"] = module.DEVICE_REF_LIST
                 self.devices_dict[device_type_name]["load_device"] = module.load_device
-                self.devices_dict[device_type_name][
-                    "start_device"
-                ] = module.start_device
+                self.devices_dict[device_type_name][ "start_device"] = module.start_device
 
     def register_acquisition_mode(self, acquisition_mode_name, module):
         """Register acquisition mode

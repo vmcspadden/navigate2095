@@ -444,22 +444,39 @@ def start_device(
         return _class(microscope_name, device_connection, configuration, device_id)
 
     elif device_category in plugin_devices:
-        for start_function in plugin_devices[device_category]["start_device"]:
-            try:
-                return start_function(
-                    microscope_name,
-                    device_connection,
-                    configuration,
-                    is_synthetic,
-                    device_type=device_category,
-                    id=device_id,
-                )
-            except RuntimeError:
-                continue
-        device_not_found(microscope_name, device_category, device_type, device_id)
-
-    else:
-        device_not_found(microscope_name, device_category, device_type, device_id)
+        # device_category in ["stage", "shutter", "filter_wheel", "remote_focus", "camera", "galvo", "zoom", "laser"]
+        if device_category == "stage":
+            hardware_configuration = configuration["configuration"]["microscopes"][microscope_name][
+                device_category]["hardware"][device_id]
+        else:
+            hardware_configuration = configuration["configuration"]["microscopes"][microscope_name][
+                device_category][device_id]["hardware"]
+        # find the device in plugins
+        if device_type + class_name_suffix in plugin_devices[device_category]:
+            device_type += class_name_suffix
+        elif device_type not in plugin_devices[device_category]:
+            device_not_found(microscope_name, device_category, device_type, device_id)
+        
+        try:
+            
+            device_connection = plugin_devices[device_category][device_type]["load_device"](
+                hardware_configuration,
+                is_synthetic,
+                device_type = device_category,
+            )
+            start_function = plugin_devices[device_category][device_type]["start_device"]
+            return start_function(
+                microscope_name,
+                device_connection,
+                configuration,
+                is_synthetic=is_synthetic,
+                id=device_id,
+                device_type=device_category,
+            )
+        except RuntimeError:
+            print(f"{device_category}:{device_type} can't be loaded correctly, "
+                  f"make sure you have specify SUPPORTED_DEVICE_TYPES in your plugin!")
+    device_not_found(microscope_name, device_category, device_type, device_id)
 
 
 def start_daq(configuration: Dict[str, Any], device_type: str = "NI") -> DAQBase:

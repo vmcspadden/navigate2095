@@ -201,6 +201,7 @@ class Microscope:
             ) = self.assemble_device_config_lists(
                 device_name=device_name, device_name_dict=device_name_dict
             )
+            # new device type
             if device_name not in device_ref_dict:
                 if device_name in devices_dict["__plugins__"]:
                     device_ref_dict[device_name] = devices_dict["__plugins__"][
@@ -224,7 +225,7 @@ class Microscope:
                         device["hardware"][k] for k in device_ref_dict[device_name]
                     ]
                 except Exception as e:
-                    logger.error(f"Can't get the device attributes in configuration file by {k}")
+                    logger.error(f"Can't get the device attributes in configuration file: {e}")
 
                 device_ref_name = build_ref_name("_", *ref_list)
                 if (
@@ -234,18 +235,19 @@ class Microscope:
                     # get the device
                     device_connection = devices_dict[device_name][device_ref_name]
 
-                elif is_plugin:
+                if is_plugin:
                     device_plugin_dict = devices_dict.get(device_name, {})
                     try:
-                        exec(
-                            f"device_plugin_dict['{device_ref_name}'] = devices_dict["
-                            f"'__plugins__']['{device_name}']['load_device']"
-                            f"(configuration['configuration']['microscopes']["
-                            f"self.microscope_name]['{device_name}']['hardware'], "
-                            f"is_synthetic)"
-                        )
-                        devices_dict[device_name] = device_plugin_dict
-                        device_connection = device_plugin_dict[device_ref_name]
+                        if device_connection is None:
+                            exec(
+                                f"device_plugin_dict['{device_ref_name}'] = devices_dict["
+                                f"'__plugins__']['{device_name}']['load_device']"
+                                f"(configuration['configuration']['microscopes']["
+                                f"self.microscope_name]['{device_name}']['hardware'], "
+                                f"is_synthetic)"
+                            )
+                            devices_dict[device_name] = device_plugin_dict
+                            device_connection = device_plugin_dict[device_ref_name]
                         exec(
                             f"self.plugin_devices['{device_name}'] = devices_dict["
                             f"'__plugins__']['{device_name}']['start_device']"
