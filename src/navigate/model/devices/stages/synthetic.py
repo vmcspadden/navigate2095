@@ -34,7 +34,7 @@ import logging
 import time
 from typing import Any, Dict
 
-from typing_extensions import Optional
+from typing import Optional
 
 # Third Party Imports
 
