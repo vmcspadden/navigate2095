@@ -47,7 +47,7 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-class CameraSettingsTab(ttk.Frame):
+class CameraSettingsTab(tk.Frame):
     """
     This class holds and controls the layout of the major label frames for the
     camera  settings tab in the settings notebook. Any imported classes are children
@@ -73,13 +73,10 @@ class CameraSettingsTab(ttk.Frame):
             Keyword arguments for ttk.Frame
         """
         # Init Frame
-        ttk.Frame.__init__(self, setntbk, *args, **kwargs)
+        super().__init__(setntbk, *args, **kwargs)
 
         #: The index of the tab in the notebook
         self.index = 1
-
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
 
         #: tk.Frame: The camera mode frame
         self.camera_mode = CameraMode(self)

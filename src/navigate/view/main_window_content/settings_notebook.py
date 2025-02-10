@@ -81,7 +81,7 @@ class SettingsNotebook(DockableNotebook):
         """
 
         # Init notebook
-        DockableNotebook.__init__(self, frame_left, root, *args, **kwargs)
+        super().__init__(frame_left, root, *args, **kwargs)
 
         # Putting notebook 1 into left frame
         self.grid(row=0, column=0)
