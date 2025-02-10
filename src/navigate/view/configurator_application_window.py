@@ -191,22 +191,22 @@ class MicroscopeWindow(DockableNotebook):
     def rename_microscope(self):
         """Rename microscope"""
 
+        if self.selected_tab_id is None:
+            return
         result = simpledialog.askstring("Input", "Enter microscope name:")
         if result:
-            tab = self.select()
-            tab_name = self.tab(tab)["text"]
-            self.tab(tab, text=result)
+            tab_name = self.tab(self.selected_tab_id, option="text")
+            self.tab(self.selected_tab_id, text=result)
             self.tab_list.remove(tab_name)
             self.tab_list.append(result)
 
     def delete_microscope(self):
         """Delete selected microscope"""
-        tab = self.select()
-        tab_name = self.tab(tab)["text"]
-        current_tab_index = self.index("current")
-        if current_tab_index >= 0:
-            self.forget(current_tab_index)
-            self.tab_list.remove(tab_name)
+        if self.selected_tab_id is None:
+            return
+        tab_name = self.tab(self.selected_tab_id, option="text")
+        self.forget(self.selected_tab_id)
+        self.tab_list.remove(tab_name)
 
 
 class MicroscopeTab(DockableNotebook):
@@ -255,7 +255,7 @@ class MicroscopeTab(DockableNotebook):
         tab = HardwareTab(
             name, hardware_widgets, widgets=widgets, top_widgets=top_widgets, **kwargs
         )
-        self.tab_list.append(name)
+        self.tab_list.append(tab)
         self.add(tab, text=name, sticky=tk.NSEW)
 
 
