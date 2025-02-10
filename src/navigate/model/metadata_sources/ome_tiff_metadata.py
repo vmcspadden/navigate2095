@@ -85,7 +85,7 @@ class OMETIFFMetadata(XMLMetadata):
             "xmlns": "http://www.openmicroscopy.org/Schemas/OME/2016-06",
             "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
             "xsi:schemaLocation": "http://www.openmicroscopy.org/Schemas/OME/2016-06 "
-            "http://www.openmicroscopy.org/Schemas/OME/2016-06/ome.xsd",
+            "https://www.openmicroscopy.org/Schemas/OME/2016-06/ome.xsd",
         }
         if uid is not None:
             # Assume uid is a list passed in the order of the channels
