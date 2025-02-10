@@ -129,7 +129,6 @@ class DockableNotebook(ttk.Notebook):
         """
         element = event.widget.identify(event.x, event.y)
         self.selected_tab_id = self.index(f"@{event.x},{event.y}")  # Add this line
-        print(self.selected_tab_id)
         if "label" in element:
             try:
                 x, y = self.get_absolute_position()
@@ -156,10 +155,10 @@ class DockableNotebook(ttk.Notebook):
                 break
 
         if not tab_widget:
-            tab_widget = self.selected_tab_id
+            return
 
         # Save the original index and the tab's text
-        tab_widget._original_index = self.index(tab_widget)
+        tab_widget._original_index = self.selected_tab_id
         tab_widget._saved_text = selected_text
 
         if tab_widget in self.tab_list:
