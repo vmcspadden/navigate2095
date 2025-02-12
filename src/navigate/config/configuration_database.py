@@ -166,8 +166,8 @@ shutter_hardware_widgets = {
 
 stage_device_types = {
     "Applied Scientific Instrumentation": ("ASI", "asi"),
-    "ASI MFC2000": ("MFC2000", "asi_MFCTwoThousand"),
-    "ASI MS2000": ("MS2000", "asi_MSTTwoThousand"),
+    "ASI MFC2000": ("MFC2000", "asi"),
+    "ASI MS2000": ("MS2000", "asi"),
     "Analog/Digital Device": ("NI", "ni"),
     "Mad City Labs": ("MCL", "mcl"),
     "Physik Instrumente": ("PI", "pi"),
