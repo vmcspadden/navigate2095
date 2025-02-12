@@ -138,7 +138,7 @@ class LabelInput(ttk.Frame):
         else:
             #: ttk.Label: The label of the input widget
             self.label = ttk.Label(self, text=label, **label_args)
-            self.label.grid(row=0, column=0, sticky=(tk.W + tk.E))
+            self.label.grid(row=0, column=0, sticky=tk.EW)
             input_args["textvariable"] = input_var
 
         """Call the passed widget type constructor with the passed args"""
@@ -152,6 +152,7 @@ class LabelInput(ttk.Frame):
         else:
             self.widget.grid(row=0, column=1, sticky=(tk.W + tk.E))
             self.rowconfigure(0, weight=1)
+            for i in range(2): self.columnconfigure(index=i, weight=1)
 
     def get(self, default=None):
         """Returns the value of the input widget

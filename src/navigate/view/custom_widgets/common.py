@@ -30,12 +30,28 @@
 
 # Standard Library Imports
 from typing import Dict, Any
+import tkinter as tk
 from tkinter import ttk
 
 # Third Party Imports
 
 # Local Imports
 
+
+def uniform_grid(cls: Any) -> None:
+    """This function is used to equally distribute the columns and rows of a
+    tkinter frame.
+
+    Parameters
+    ----------
+    cls : tk.Frame or ttk.Frame
+        The class that is to be distributed.
+    """
+    cols, rows = cls.grid_size()
+    for col in range(cols):
+        cls.grid_columnconfigure(col, weight=1)
+    for row in range(rows):
+        cls.grid_rowconfigure(row, weight=1)
 
 class CommonMethods:
     """This class is a collection of common methods for handling variables, widgets,
