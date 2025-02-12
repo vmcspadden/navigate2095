@@ -71,7 +71,14 @@ class PopUp(tk.Toplevel):
 
     """
 
-    def __init__(self, root, name, size, top=True, transient=True, *args, **kwargs):
+    def __init__(self,
+                 root: tk.Tk,
+                 name: str,
+                 size: str,
+                 top: bool = True,
+                 transient: bool = True,
+                 *args,
+                 **kwargs) -> None:
         """Initialize Generic Popup Window class
 
         Parameters
@@ -97,13 +104,15 @@ class PopUp(tk.Toplevel):
         tk.Toplevel.__init__(self)
         # This starts the popup window config, and makes sure that any child widgets
         # can be resized with the window
+
         self.title(name)
+
         self.geometry(size)
         # 300x200 pixels, first +320 means 320 pixels from left edge, +180 means 180
         # pixels from top edge
 
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        self.columnconfigure(index=0, weight=1)
+        self.rowconfigure(index=0, weight=1)
         self.resizable(tk.FALSE, tk.FALSE)  # Makes it so user cannot resize
         if top is True:
             self.attributes("-topmost", 1)  # Makes it be on top of mainapp when called
@@ -121,7 +130,7 @@ class PopUp(tk.Toplevel):
         self.content_frame = ttk.Frame(self)
         self.content_frame.grid(row=0, column=0, sticky=tk.NSEW)
 
-    def showup(self):
+    def showup(self) -> None:
         """Display popup as top-level window.
 
         This function is used to display the popup window as a top-level window.
@@ -129,7 +138,7 @@ class PopUp(tk.Toplevel):
         self.deiconify()
         self.attributes("-topmost", 1)
 
-    def dismiss(self):
+    def dismiss(self) -> None:
         """Releases control back to main window from popup
 
         This function is used to release control back to the main window from the
@@ -139,7 +148,7 @@ class PopUp(tk.Toplevel):
         self.destroy()
 
     # Function so that popup entries can have a parent frame
-    def get_frame(self):
+    def get_frame(self) -> ttk.Frame:
         """Returns the parent frame for any widgets you add to the popup
 
         This function is used to return the parent frame for any widgets you add to the

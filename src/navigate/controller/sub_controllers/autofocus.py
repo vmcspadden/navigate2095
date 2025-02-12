@@ -147,7 +147,6 @@ class AutofocusPopupController(GUIController):
     def showup(self) -> None:
         """Shows the popup window"""
         self.view.popup.deiconify()
-        self.view.popup.attributes("-topmost", 1)
 
     def start_autofocus(self) -> None:
         """Starts the autofocus process."""

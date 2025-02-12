@@ -51,7 +51,11 @@ class WaveformParameterPopupWindow:
         # Toplevel window
         #: PopUp: The popup window
         self.popup = PopUp(
-            root, "Waveform Parameter Settings", "+320+180", top=False, transient=False
+            root,
+            name="Waveform Parameter Settings",
+            size="+320+180",
+            top=False,
+            transient=False
         )
 
         #: configuration_controller: The configuration controller
