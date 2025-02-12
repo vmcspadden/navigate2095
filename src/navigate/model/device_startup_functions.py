@@ -358,11 +358,6 @@ def start_device(
     else:
         class_name_suffix = device_category.capitalize()
 
-    if is_synthetic or device_type.lower().startswith("synthetic"):
-        device_type = "Synthetic"
-    elif device_type.endswith(class_name_suffix):
-        device_type = device_type[:-len(class_name_suffix)]
-
     device_types_dict = load_param_from_module(
         "navigate.config.configuration_database", device_category + "_device_types"
     )
@@ -373,11 +368,29 @@ def start_device(
 
     temp_device_ref = dict(device_types_dict.values())
 
-    if device_type in temp_device_ref:
+    if is_synthetic or device_type.lower().startswith("synthetic"):
+        device_type = "Synthetic"
+    elif device_type.endswith(class_name_suffix):
+        device_type = device_type[:-len(class_name_suffix)]
+
+    # device type naming rules: manufacturer(file_name).device_model
+    # if the device is currrently supported in Navigate, you can use device_model as device type.
+    if "." in device_type:
+        device_manufacturer, device_type = device_type.split(".")[:2]
+    elif device_type in temp_device_ref:
+        device_manufacturer = temp_device_ref[device_type]
+    else:
+        device_manufacturer = None
+
+    if device_manufacturer is not None and importlib.util.find_spec(f"navigate.model.devices.{device_category}.{device_manufacturer}"):
         module = importlib.import_module(
-            f"navigate.model.devices.{device_category}.{temp_device_ref[device_type]}"
+            f"navigate.model.devices.{device_category}.{device_manufacturer}"
         )
-        _class = getattr(module, device_type + class_name_suffix)
+        try:
+            _class = getattr(module, device_type + class_name_suffix)
+        except (KeyError, AttributeError):
+            logger.error(f"There is no device class {device_type + class_name_suffix} in the file: {device_manufacturer}.py")
+            return device_not_found(microscope_name, device_category, device_type, device_id)
         if issubclass(_class, SerialDevice):
             device_connection = SerialConnectionFactory.build_connection(
                 _class.connect,
