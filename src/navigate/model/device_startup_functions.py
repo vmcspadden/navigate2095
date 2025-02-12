@@ -410,7 +410,7 @@ def start_device(
             device_connection = IntegratedDeviceFactory.build_connection(
                 build_ref_name(
                     "_",
-                    temp_device_ref[device_type],
+                    device_manufacturer,
                     device_type,
                     device_config.get("serial_number", "000000"),
                 ),
