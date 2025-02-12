@@ -40,43 +40,17 @@ from typing import Any, Dict
 from navigate.model.devices.stage.base import StageBase
 from navigate.model.devices.APIs.asi.asi_MS2000_controller import (
     MS2000Controller,
-    MS2000Exception,
+    ASIException,
 )
+from navigate.model.devices.stage.asi import ASIStage
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
 p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
-
-def build_ASI_Stage_connection(com_port, baud_rate=115200):
-    """Connect to the ASI Stage
-
-    Parameters
-    ----------
-    com_port : str
-        Communication port for ASI MS2000 Controller - e.g., COM1
-    baud_rate : int
-        Baud rate for ASI MS2000 Controller - e.g., 115200
-
-    Returns
-    -------
-    asi_stage : object
-        Successfully initialized stage object.
-    """
-
-    # wait until ASI device is ready
-    asi_stage = MS2000Controller(com_port, baud_rate)
-    asi_stage.connect_to_serial()
-    if not asi_stage.is_open():
-        logger.error("ASI stage connection failed.")
-        raise Exception("ASI stage connection failed.")
-
-    return asi_stage
-
-
 @log_initialization
-class ASIStage(StageBase):
+class MS2000Stage(ASIStage):
     """Applied Scientific Instrumentation (ASI) Stage Class
 
     ASI Documentation: https://asiimaging.com/docs/products/serial_commands
@@ -106,7 +80,7 @@ class ASIStage(StageBase):
         configuration : Dict[str, Any]
             Global configuration of the microscope
         device_id : int
-            Device ID for the stage, by default 0
+            Device ID for the stage, default to 0
         """
         super().__init__(microscope_name, device_connection, configuration, device_id)
 
@@ -134,11 +108,11 @@ class ASIStage(StageBase):
             }
 
         #: object: ASI MS2000 Controller
-        self.ms2000_controller = device_connection
+        self.asi_controller = device_connection
         if device_connection is not None:
             # Set feedback alignment values
             for ax, aa in feedback_alignment.items():
-                self.ms2000_controller.set_feedback_alignment(ax, aa)
+                self.asi_controller.set_feedback_alignment(ax, aa)
             logger.debug("ASI Stage Feedback Alignment Settings:", feedback_alignment)
 
             # Set finishing accuracy to half of the minimum pixel size we will use
@@ -159,308 +133,44 @@ class ASIStage(StageBase):
             # If this is changing, the stage must be power cycled for these changes to
             # take effect.
             for ax in self.asi_axes.keys():
-                self.ms2000_controller.set_finishing_accuracy(ax, finishing_accuracy)
-                self.ms2000_controller.set_error(ax, 1.2 * finishing_accuracy)
+                self.asi_controller.set_finishing_accuracy(ax, finishing_accuracy)
+                self.asi_controller.set_error(ax, 1.2 * finishing_accuracy)
 
             # Set backlash to 0 (less accurate)
             for ax in self.asi_axes.keys():
-                self.ms2000_controller.set_backlash(ax, 0.02)
+                self.asi_controller.set_backlash(ax, 0.02)
 
             # Speed optimizations - Set speed to 90% of maximum on each axis
             self.set_speed(percent=0.9)
 
-    def __del__(self) -> None:
-        """Delete the ASI Stage connection."""
-        try:
-            if self.ms2000_controller is not None:
-                self.ms2000_controller.disconnect_from_serial()
-                logger.debug("ASI stage connection closed")
-        except (AttributeError, BaseException) as e:
-            logger.exception("ASI Stage Exception", e)
-            raise e
-
-    def get_axis_position(self, axis):
-        """Get position of specific axis
+    @classmethod
+    def connect(self, port, baudrate=115200, timeout=0.25):
+        """Connect to the ASI Stage
 
         Parameters
         ----------
-        axis : str
-            Axis to get position of
+        port : str
+            Communication port for ASI Tiger Controller - e.g., COM1
+        baudrate : int
+            Baud rate for ASI Tiger Controller - e.g., 9600
+        timeout : float
+            Timeout value.
 
         Returns
         -------
-            position: float
+        asi_stage : object
+            Successfully initialized stage object.
         """
-        try:
-            axis = self.axes_mapping[axis]
-            pos = self.ms2000_controller.get_axis_position_um(axis)
-        except MS2000Exception:
-            return float("inf")
-        except KeyError as e:
-            logger.exception(f"ASI Stage - KeyError in get_axis_position: {e}")
-            return float("inf")
-        return pos
 
-    def report_position(self):
-        """Reports the position for all axes in microns, and create
-        position dictionary.
+        # wait until ASI device is ready
+        asi_stage = MS2000Controller(port, baudrate)
+        asi_stage.connect_to_serial()
+        if not asi_stage.is_open():
+            logger.error("ASI stage connection failed.")
+            raise Exception("ASI stage connection failed.")
 
-        Returns
-        -------
-        dict
-            Dictionary of positions for each axis in microns.
-        """
-        try:
-            # positions from the device are in microns
-            pos_dict = self.ms2000_controller.get_position(list(self.asi_axes.keys()))
-            for axis, pos in pos_dict.items():
-                ax = self.asi_axes[axis]
-                setattr(self, f"{ax}_pos", float(pos) / 10.0)
-        except MS2000Exception as e:
-            logger.exception("ASI Stage Exception", e)
-        return self.get_position_dict()
+        return asi_stage
 
-    def move_axis_absolute(self, axis, abs_pos, wait_until_done=False):
-        """Move stage along a single axis.
-
-        Move absolute command for ASI is MOVE [Axis]=[units 1/10 microns]
-
-        Parameters
-        ----------
-        axis : str
-            An axis prefix in move_dictionary. For example, axis='x' corresponds to
-            'x_abs', 'x_min', etc.
-        abs_pos : float
-            Absolute position value
-        wait_until_done : bool
-            Block until stage has moved to its new spot.
-
-        Returns
-        -------
-        bool
-            Was the move successful?
-        """
-        if axis not in self.axes_mapping:
-            return False
-
-        axis_abs = self.get_abs_position(axis, abs_pos)
-        if axis_abs == -1e50:
-            logger.debug("move_axis_absolute failed, axis_abs == -1e50")
-            return False
-        # Move stage
-        try:
-            # The 10 is to account for the ASI units, 1/10 of a micron
-            self.ms2000_controller.move_axis(self.axes_mapping[axis], axis_abs * 10)
-
-        except MS2000Exception as e:
-            logger.exception("ASI Stage Exception", e)
-            return False
-
-        if wait_until_done:
-            self.ms2000_controller.wait_for_device()
-        return True
-
-    def verify_move(self, move_dictionary):
-        """Don't submit a move command for axes that aren't moving.
-        The MS2000 controller wait time for each axis is additive.
-
-        Parameters
-        ----------
-        move_dictionary : dict
-            A dictionary of values required for movement. Includes 'x_abs', etc. for
-            one or more axes. Expect values in micrometers, except for theta, which is
-            in degrees.
-
-        Returns
-        -------
-        res_dict : dict
-            A dictionary of values required for movement. Includes 'x_abs', etc. for
-            one or more axes. Expect values in micrometers, except for theta, which is
-            in degrees.
-        """
-        res_dict = {}
-        for axis, val in move_dictionary.items():
-            curr_pos = getattr(self, f"{axis}_pos", None)
-            if curr_pos != val:
-                res_dict[axis] = val
-        return res_dict
-
-    def move_absolute(self, move_dictionary, wait_until_done=False):
-        """Move Absolute Method.
-
-        XYZ Values should remain in microns for the ASI API
-        Theta Values are not accepted.
-
-        Parameters
-        ----------
-        move_dictionary : dict
-            A dictionary of values required for movement. Includes 'x_abs', etc. for
-            one or more axes. Expect values in micrometers, except for theta, which is
-            in degrees.
-        wait_until_done : bool
-            Block until stage has moved to its new spot.
-
-        Returns
-        -------
-        success : bool
-            Was the move successful?
-        """
-        abs_pos_dict = self.verify_abs_position(move_dictionary)
-
-        if not abs_pos_dict:
-            return False
-        abs_pos_dict = self.verify_move(abs_pos_dict)
-        if len(abs_pos_dict) == 0:
-            return
-
-        # This is to account for the asi 1/10 of a micron units
-        pos_dict = {
-            self.axes_mapping[axis]: pos * 1000 if axis == "theta" else pos * 10
-            for axis, pos in abs_pos_dict.items()
-        }
-        try:
-            self.ms2000_controller.move(pos_dict)
-        except MS2000Exception as e:
-            logger.exception("ASI Stage Exception", e)
-            return False
-        if wait_until_done:
-            self.ms2000_controller.wait_for_device()
-
-        return True
-
-    def stop(self):
-        """Stop all stage movement abruptly."""
-        try:
-            self.ms2000_controller.stop()
-        except MS2000Exception as e:
-            logger.exception("ASI Stage Exception", e)
-
-    def set_speed(self, velocity_dict=None, percent=None):
-        """Set scan velocity.
-
-        Parameters
-        ----------
-        velocity_dict: dict
-            velocity for specific axis
-            {'x': float, 'y': float, 'z': float}
-        percent : float
-            Percent of maximum speed
-
-        Returns
-        -------
-        success: bool
-            Was the setting successful?
-        """
-        if percent is not None:
-            try:
-                self.ms2000_controller.set_speed_as_percent_max(percent)
-            except MS2000Exception as e:
-                logger.exception(
-                    f"ASI Controller failed to set speed as a percent: {e}"
-                )
-                return False
-        else:
-            try:
-                self.ms2000_controller.set_speed(velocity_dict)
-            except MS2000Exception:
-                return False
-            except KeyError as e:
-                logger.exception(f"ASI Stage - KeyError in set_speed: {e}")
-                return False
-        return True
-
-    def get_speed(self, axis):
-        """Get scan velocity of the axis.
-
-        Parameters
-        ----------
-        axis: str
-            axis name, such as 'x', 'y', 'z'
-
-        Returns
-        -------
-        velocity: float
-            Velocity
-        """
-        try:
-            velocity = self.ms2000_controller.get_speed(self.axes_mapping[axis])
-        except MS2000Exception:
-            return 0
-        except KeyError as e:
-            logger.exception(f"ASI Stage - KeyError in get_speed: {e}")
-            return 0
-        return velocity
-
-    def scanr(self, start_position_mm, end_position_mm, enc_divide, axis="z"):
-        """Set scan range
-
-        Parameters
-        ----------
-        start_position_mm: float
-            scan start position
-        end_position_mm: float
-            scan end position
-        enc_divide: float
-            Step size desired.
-        axis: str
-            fast axis name
-
-        Returns
-        -------
-        success: bool
-            Was the setting successful?
-        """
-        try:
-            axis = self.axes_mapping[axis]
-            self.ms2000_controller.scanr(
-                start_position_mm, end_position_mm, enc_divide, axis
-            )
-        except MS2000Exception as e:
-            error_statement = f"MS2000Exception: {e}"
-            logger.exception(error_statement)
-            print(error_statement)
-            return False
-        except KeyError as e:
-            logger.exception(f"ASI Stage - KeyError in scanr: {e}")
-            return False
-
-        return True
-
-    def scanv(
-        self, start_position_mm, end_position_mm, number_of_lines, overshoot, axis="z"
-    ):
-        """Set scan range
-
-        Parameters
-        ----------
-        start_position_mm: float
-            scan start position
-        end_position_mm: float
-            scan end position
-        number_of_lines: int
-            number of steps.
-        overshoot: float
-            overshoot_time ms
-        axis: str
-            fast axis name
-
-        Returns
-        -------
-        success: bool
-            Was the setting successful?
-        """
-        try:
-            axis = self.axes_mapping[axis]
-            self.ms2000_controller.scanv(
-                start_position_mm, end_position_mm, number_of_lines, overshoot, axis
-            )
-        except MS2000Exception as e:
-            logger.exception(f"MS2000Exception: {e}")
-            return False
-        except KeyError as e:
-            logger.exception(f"ASI Stage - KeyError in scanr: {e}")
-            return False
-        return True
 
     def move_axis_relative(self, axis, distance, wait_until_done=False):
         """Move the stage relative to the current position along the specified axis.
@@ -496,9 +206,9 @@ class ASIStage(StageBase):
         # Move stage
         try:
             # The 10 is to account for the ASI units, 1/10 of a micron
-            self.ms2000_controller.moverel_axis(axis, distance * 10)
+            self.asi_controller.moverel_axis(axis, distance * 10)
 
-        except MS2000Exception as e:
+        except ASIException as e:
             print(
                 f"ASI stage move axis absolute failed or is trying to move out of "
                 f"range: {e}"
@@ -507,7 +217,7 @@ class ASIStage(StageBase):
             return False
 
         if wait_until_done:
-            self.ms2000_controller.wait_for_device()
+            self.asi_controller.wait_for_device()
         return True
 
     def scan_axis_triggered_move(
@@ -539,11 +249,11 @@ class ASIStage(StageBase):
         self.move_axis_relative(axis, distance, True)
 
         try:
-            self.ms2000_controller.set_backlash(axis, 0.05)
+            self.asi_controller.set_backlash(axis, 0.05)
             if ttl_triggered:
-                self.ms2000_controller.set_triggered_move(axis)
-        except MS2000Exception as e:
-            logger.exception(f"MS2000Exception: {e}")
+                self.asi_controller.set_triggered_move(axis)
+        except ASIException as e:
+            logger.exception(f"ASIException: {e}")
             return False
         except KeyError as e:
             logger.exception(f"ASI Stage - KeyError in scan_axis_triggered_move: {e}")
@@ -551,44 +261,3 @@ class ASIStage(StageBase):
 
         return True
 
-    def start_scan(self, axis):
-        """Start scan state machine
-
-        Parameters
-        ----------
-        axis: str
-            fast axis name, such as 'x', 'y', and 'z'
-
-        Returns
-        -------
-        success: bool
-            Was it successful?
-
-        """
-        try:
-            axis = self.axes_mapping[axis]
-            self.ms2000_controller.start_scan(axis)
-        except MS2000Exception as e:
-            logger.exception(f"MS2000Exception: {e}")
-            return False
-        except KeyError as e:
-            logger.exception(f"ASI Stage - KeyError in start_scan: {e}")
-            return False
-        return True
-
-    def stop_scan(self):
-        """Stop scan"""
-        try:
-            self.ms2000_controller.stop_scan()
-        except MS2000Exception as e:
-            logger.exception("ASI Stage Exception", e)
-
-    def wait_until_complete(self, axis):
-        try:
-            while self.ms2000_controller.is_axis_busy(axis):
-                time.sleep(0.1)
-        except MS2000Exception as e:
-            print(f"ASI Stage Exception {e}")
-            logger.exception(f"ASI Stage Exception {e}")
-            return False
-        return True

@@ -37,7 +37,7 @@ import logging
 # Local Imports
 from navigate.model.devices.APIs.asi.asi_tiger_controller import (
     TigerController,
-    TigerException,
+    ASIException,
 )
 
 p = __name__.split(".")[1]
@@ -58,7 +58,7 @@ class MFCTwoThousand(TigerController):
         if self.default_axes_sequence is None:
             error_statement = "Default axes sequence is not set. Cannot set speed."
             logger.error(error_statement)
-            raise TigerException(error_statement)
+            raise ASIException(error_statement)
 
         if self._max_speeds is None:
             # First, set the speed crazy high
