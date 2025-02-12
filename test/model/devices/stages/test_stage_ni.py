@@ -38,13 +38,13 @@ from unittest.mock import patch
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.ni import GalvoNIStage
+from navigate.model.devices.stage.ni import NIStage
 from test.model.dummy import DummyModel
 from navigate.tools.common_functions import copy_proxy_object
 
 
-class TestStageGalvo:
-    """Unit Test for Galvo stage Class"""
+class TestNIStage:
+    """Unit Test for NI stage Class"""
 
     @pytest.fixture(autouse=True)
     def setup_class(
@@ -63,7 +63,7 @@ class TestStageGalvo:
             "stage"
         ] = stage_configuration["stage"]
         self.stage_configuration = stage_configuration
-        self.stage_configuration["stage"]["hardware"]["type"] = "GalvoNIStage"
+        self.stage_configuration["stage"]["hardware"]["type"] = "NI"
         self.stage_configuration["stage"]["hardware"]["volts_per_micron"] = "0.1"
         self.stage_configuration["stage"]["hardware"]["max"] = 5.0
         self.stage_configuration["stage"]["hardware"]["min"] = 0.1
@@ -75,7 +75,7 @@ class TestStageGalvo:
 
     @patch("nidaqmx.Task")
     def test_stage_attributes(self, *args):
-        stage = GalvoNIStage(self.microscope_name, self.daq, self.configuration)
+        stage = NIStage(self.microscope_name, self.daq, self.configuration)
 
         # Methods
         assert hasattr(stage, "get_position_dict") and callable(
@@ -99,7 +99,7 @@ class TestStageGalvo:
     def test_initialize_stage(self, axes):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         with patch("nidaqmx.Task"):
-            stage = GalvoNIStage(self.microscope_name, self.daq, self.configuration)
+            stage = NIStage(self.microscope_name, self.daq, self.configuration)
 
             # Attributes
             for axis in axes:
@@ -126,7 +126,7 @@ class TestStageGalvo:
     def test_report_position(self, axes):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         with patch("nidaqmx.Task"):
-            stage = GalvoNIStage(self.microscope_name, self.daq, self.configuration)
+            stage = NIStage(self.microscope_name, self.daq, self.configuration)
 
             for _ in range(10):
                 pos_dict = {}
@@ -141,7 +141,7 @@ class TestStageGalvo:
     def test_move_axis_absolute(self, axes):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         with patch("nidaqmx.Task"):
-            stage = GalvoNIStage(self.microscope_name, self.daq, self.configuration)
+            stage = NIStage(self.microscope_name, self.daq, self.configuration)
 
             self.random_single_axis_test(stage)
             stage.stage_limits = False
@@ -151,7 +151,7 @@ class TestStageGalvo:
     def test_move_absolute(self, axes):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         with patch("nidaqmx.Task"):
-            stage = GalvoNIStage(self.microscope_name, self.daq, self.configuration)
+            stage = NIStage(self.microscope_name, self.daq, self.configuration)
 
             self.random_multiple_axes_test(stage)
             stage.stage_limits = False

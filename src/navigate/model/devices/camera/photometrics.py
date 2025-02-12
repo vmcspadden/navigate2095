@@ -32,7 +32,7 @@
 
 # Standard Library Imports
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # Third Party Imports
 from ctypes import *  # noqa
@@ -78,7 +78,7 @@ def build_photometrics_connection(camera_connection):
 
 
 @log_initialization
-class PhotometricsBase(CameraBase):
+class PhotometricsCamera(CameraBase):
     """Photometrics Base camera class.
 
     This class is the interface between the rest of the microscope code and the
@@ -97,6 +97,8 @@ class PhotometricsBase(CameraBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **args: Optional[Any],
     ) -> None:
         """Initialize the Photometrics class.
 
@@ -177,6 +179,34 @@ class PhotometricsBase(CameraBase):
         """Delete PhotometricsBase object."""
         if hasattr(self, "camera_controller"):
             self.camera_controller.close()
+
+    @classmethod
+    def connect(cls, camera_connection):
+        """Build Sutter Stage Serial Port connection
+
+        Import Photometrics API and Initialize Camera Controller.
+
+        Parameters
+        ----------
+        camera_connection : str
+            Camera connection string
+
+        Returns
+        -------
+        camera_to_open : object
+            Camera object.
+        """
+        try:
+            pvc.init_pvcam()
+            # camera_names = Camera.get_available_camera_names()
+            camera_to_open = Camera.select_camera(camera_connection)
+            camera_to_open.open()
+            return camera_to_open
+        except Exception as e:
+            logger.error(f"Could not establish connection with camera: {e}.")
+            raise UserWarning(
+                "Could not establish connection with camera", camera_connection
+            )
 
     @property
     def serial_number(self):

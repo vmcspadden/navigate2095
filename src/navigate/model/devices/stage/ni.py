@@ -42,7 +42,8 @@ import numpy as np
 import nidaqmx
 
 # Local Imports
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
+from navigate.model.devices.device_types import NIDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -51,7 +52,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class GalvoNIStage(StageBase):
+class NIStage(StageBase, NIDevice):
     """Galvo Stage Class (only supports one axis)
 
     Generic analog controlled stage. Could be used to control piezoelectric devices,

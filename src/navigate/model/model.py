@@ -123,9 +123,10 @@ class Model:
         self.plugin_acquisition_modes = plugin_acquisition_modes
 
         # Devices
-        devices_dict = load_devices(
-            configuration, args.synthetic_hardware, plugin_devices
-        )
+        # devices_dict = load_devices(
+        #     configuration, args.synthetic_hardware, plugin_devices
+        # )
+        devices_dict = {}
         devices_dict["__plugins__"] = plugin_devices
 
         #: dict: Dictionary of virtual microscopes.
@@ -1371,14 +1372,14 @@ class Model:
         )
         microscope.daq = SyntheticDAQ(self.configuration)
         microscope.laser_wavelength = self.microscopes[microscope_name].laser_wavelength
-        microscope.lasers = self.microscopes[microscope_name].lasers
+        microscope.laser = self.microscopes[microscope_name].laser
         microscope.camera = self.microscopes[microscope_name].camera
 
         # TODO: lasers
         temp = {
             "zoom": "SyntheticZoom",
             "shutter": "SyntheticShutter",
-            "remote_focus_device": "SyntheticRemoteFocus",
+            "remote_focus": "SyntheticRemoteFocus",
             "mirror": "SyntheticMirror",
         }
 

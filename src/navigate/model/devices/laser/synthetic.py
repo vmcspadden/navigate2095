@@ -38,7 +38,7 @@ from typing import Any, Dict
 
 # Local Imports
 from navigate.tools.decorators import log_initialization
-from navigate.model.devices.lasers.base import LaserBase
+from navigate.model.devices.laser.base import LaserBase
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -54,7 +54,7 @@ class SyntheticLaser(LaserBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
-        laser_id: int,
+        device_id: int,
     ) -> None:
         """Initialize the SyntheticLaser class.
 
@@ -66,10 +66,10 @@ class SyntheticLaser(LaserBase):
             The device connection object.
         configuration : Dict[str, Any]
             The device configuration.
-        laser_id : int
+        device_id : int
             The laser ID.
         """
-        super().__init__(microscope_name, device_connection, configuration, laser_id)
+        super().__init__(microscope_name, device_connection, configuration, device_id)
 
     def close(self) -> None:
         """Close the port before exit."""

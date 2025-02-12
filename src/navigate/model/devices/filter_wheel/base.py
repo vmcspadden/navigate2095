@@ -32,7 +32,7 @@
 
 #  Standard Library Imports
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # Third Party Imports
 
@@ -48,20 +48,25 @@ logger = logging.getLogger(p)
 class FilterWheelBase:
     """FilterWheelBase - Parent class for controlling filter wheels."""
 
-    def __init__(self, device_connection: Any, device_config: Dict[str, Any]) -> None:
+    def __init__(self, microscope_name: str, device_connection: Any, configuration: Dict[str, Any], device_id: int = 0) -> None:
         """Initialize the FilterWheelBase class.
 
         Parameters
         ----------
+        microscope_name : str
+            Name of the microscope.
         device_connection : Any
             The communication instance with the device.
-        device_config : Dict[str, Any]
-            Dictionary of device configuration parameters.
+        configuration : Dict[str, Any]
+            Global configuration dictionary.
+        device_id : int
+            The ID of the device. Default is 0.
         """
         #: Any: Device connection object.
         self.device_connection = device_connection
 
         #: Dict[str, Any]: Dictionary of device configuration parameters.
+        device_config = configuration["configuration"]["microscopes"][microscope_name]["filter_wheel"][device_id]
         self.device_config = device_config
 
         #: dict: Dictionary of filters available on the filter wheel.

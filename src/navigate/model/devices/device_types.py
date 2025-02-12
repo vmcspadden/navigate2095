@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2024  The University of Texas Southwestern Medical Center.
+# Copyright (c) 2021-2025  The University of Texas Southwestern Medical Center.
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
@@ -28,60 +28,80 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+#
 
+from abc import ABC, abstractmethod
 
-#  Standard Library Imports
-import logging
-from typing import Any, Dict
-
-# Third Party Imports
-
-# Local Imports
-from navigate.model.devices.remote_focus.base import RemoteFocusBase
-from navigate.tools.decorators import log_initialization
-
-# # Logger Setup
-p = __name__.split(".")[1]
-logger = logging.getLogger(p)
-
-
-@log_initialization
-class SyntheticRemoteFocus(RemoteFocusBase):
-    """SyntheticRemoteFocus Class"""
+class DeviceBase(ABC):
+    """DeviceBase - Parent device class."""
 
     def __init__(
         self,
-        microscope_name: str,
-        device_connection: Any,
-        configuration: Dict[str, Any],
+        device_name: str,
         *args,
         **kwargs,
-    ) -> None:
-        """Initialize the SyntheticRemoteFocus class.
-
-        Parameters
-        ----------
-        microscope_name : str
-            The microscope name.
-        device_connection : Any
-            The device connection object.
-        configuration : Dict[str, Any]
-            The device configuration.
+    ):
+        """Initialize DeviceBase class.
         """
-        super().__init__(microscope_name, device_connection, configuration)
+
+        self.device_name = device_name
+
+        self.unique_id = device_name
+
+        self.device_connection = None
+
+    @abstractmethod
+    def connect(self):
         pass
 
-    @staticmethod
-    def move(readout_time, offset=None):
-        """Moves the remote focus.
 
-        This method moves the remote focus.
-
-        Parameters
-        ----------
-        readout_time : float
-            The readout time in seconds.
-        offset : float
-            The offset of the signal in volts.
+class SerialDevice:
+    """SerialDevice - Parent serial device class."""
+    
+    def __init__(
+        self,
+        device_name: str,
+        port: str = "",
+        baudrate=115200,
+        timeout=0.25,
+        **kwargs,
+    ):
+        """Initialize SerialDevice class.
         """
-        logger.debug(f"Remote focus offset and readout time: {offset}, {readout_time}")
+
+        self.device_name = device_name
+        self.unique_id = "serial_" + port
+
+    def connect(self, port, baudrate=115200, timeout=0.25):
+        """Connect to serial device.
+        """
+        if port:
+            self.serial = Serial()
+            self.serial.port = port
+            self.serial.baudrate = baudrate
+            self.serial.timeout = timeout
+            self.serial.open()
+        else:
+            self.serial = None
+
+        return self.serial
+
+    def disconnect(self):
+        """Disconnect from serial device.
+        """
+        try:
+            if self.serial.is_open:
+                self.serial.close()
+        except Exception as e:
+            print(f"Error disconnecting from serial device: {e}")
+
+class IntegratedDevice:
+    """IntegratedDevice - Parent integrated device class."""
+
+class NIDevice:
+    """NIDevice - Parent National Instruments device class."""
+
+class SequenceDevice:
+    """SequenceDevice - The device loaded according to its sequence id, not serial number.
+    Always need to check if the serial number is match.
+    """

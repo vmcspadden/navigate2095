@@ -33,7 +33,7 @@
 # Standard Library Imports
 import logging
 import traceback
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # Third Party Imports
 import nidaqmx
@@ -49,7 +49,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class ShutterTTL(ShutterBase):
+class NIShutter(ShutterBase):
     """ShutterTTL Class
 
     Triggering for shutters delivered from DAQ using digital outputs.
@@ -62,6 +62,8 @@ class ShutterTTL(ShutterBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize the ShutterTTL.
 

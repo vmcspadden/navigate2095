@@ -8,7 +8,7 @@ import logging
 import serial
 from time import sleep
 
-from navigate.model.devices.lasers.base import LaserBase
+from navigate.model.devices.laser.base import LaserBase
 
 # Logger Setup
 p = __name__.split(".")[1]

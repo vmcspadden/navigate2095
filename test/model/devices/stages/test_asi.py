@@ -37,7 +37,7 @@ import random
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.asi import ASIStage
+from navigate.model.devices.stage.asi import ASIStage
 from navigate.model.devices.APIs.asi.asi_tiger_controller import TigerController
 
 

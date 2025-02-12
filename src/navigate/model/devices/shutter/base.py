@@ -32,7 +32,7 @@
 
 # Standard Library Imports
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 # Third Party Imports
 
@@ -53,6 +53,8 @@ class ShutterBase:
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args: Optional[Any],
+        **kwargs: Optional[Any],
     ) -> None:
         """Initialize the Shutter.
 

@@ -40,7 +40,7 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 
 # Local application imports
-from navigate.model.device_startup_functions import start_stage
+from navigate.model.device_startup_functions import load_devices, start_device
 from navigate.tools.common_functions import build_ref_name
 
 # Set up logging
@@ -104,19 +104,16 @@ class Microscope:
         self.shutter = None
 
         #: dict: Dictionary of lasers.
-        self.lasers = {}
+        self.laser = {}
 
         #: dict: Dictionary of galvanometers.
         self.galvo = {}
 
         #: Any: Remote focus device.
-        self.remote_focus_device = None
+        self.remote_focus = None
 
         #: dict: Dictionary of filter_wheels
         self.filter_wheel = {}
-
-        #: dict: Dictionary of data acquisition devices.
-        self.daq = devices_dict.get("daq", None)
 
         #: dict: Dictionary of microscope info.
         self.info = {}
@@ -162,23 +159,30 @@ class Microscope:
             "filter_wheel": ["type", "wheel_number"],
             "zoom": ["type", "servo_id"],
             "shutter": ["type", "channel"],
-            "remote_focus_device": ["type", "channel"],
+            "remote_focus": ["type", "channel"],
             "galvo": ["type", "channel"],
-            "lasers": ["wavelength"],
+            "laser": ["wavelength"],
             "mirror": ["type"],
         }
 
-        device_name_dict = {"lasers": "wavelength"}
+        device_name_dict = {"laser": "wavelength"}
 
         laser_list = self.configuration["configuration"]["microscopes"][
             self.microscope_name
-        ]["lasers"]
+        ]["laser"]
 
         #: dict: Dictionary of laser configurations.
         self.laser_wavelength = [laser["wavelength"] for laser in laser_list]
 
         if "__plugins__" not in devices_dict:
             devices_dict["__plugins__"] = {}
+
+        devices_dict = load_devices(
+            self.microscope_name, configuration, is_synthetic, devices_dict, devices_dict["__plugins__"]
+        )
+        daq_type = "Synthetic" if is_synthetic else self.configuration["configuration"]["microscopes"][self.microscope_name]["daq"]["hardware"]["type"]
+        #: dict: Dictionary of data acquisition devices.
+        self.daq = devices_dict["daq"].get(daq_type, None)
 
         # Load and start all devices
         for device_name in self.configuration["configuration"]["microscopes"][
@@ -197,6 +201,7 @@ class Microscope:
             ) = self.assemble_device_config_lists(
                 device_name=device_name, device_name_dict=device_name_dict
             )
+            # new device type
             if device_name not in device_ref_dict:
                 if device_name in devices_dict["__plugins__"]:
                     device_ref_dict[device_name] = devices_dict["__plugins__"][
@@ -215,36 +220,34 @@ class Microscope:
                     continue
             for i, device in enumerate(device_config_list):
                 device_ref_name = None
-                if "hardware" in device.keys():
+                try:
                     ref_list = [
                         device["hardware"][k] for k in device_ref_dict[device_name]
                     ]
-
-                else:
-                    try:
-                        ref_list = [device[k] for k in device_ref_dict[device_name]]
-                    except KeyError:
-                        ref_list = []
+                except Exception as e:
+                    logger.error(f"Can't get the device attributes in configuration file: {e}")
 
                 device_ref_name = build_ref_name("_", *ref_list)
                 if (
                     device_name in devices_dict
                     and device_ref_name in devices_dict[device_name]
                 ):
+                    # get the device
                     device_connection = devices_dict[device_name][device_ref_name]
 
-                elif is_plugin:
+                if is_plugin:
                     device_plugin_dict = devices_dict.get(device_name, {})
                     try:
-                        exec(
-                            f"device_plugin_dict['{device_ref_name}'] = devices_dict["
-                            f"'__plugins__']['{device_name}']['load_device']"
-                            f"(configuration['configuration']['microscopes']["
-                            f"self.microscope_name]['{device_name}']['hardware'], "
-                            f"is_synthetic)"
-                        )
-                        devices_dict[device_name] = device_plugin_dict
-                        device_connection = device_plugin_dict[device_ref_name]
+                        if device_connection is None:
+                            exec(
+                                f"device_plugin_dict['{device_ref_name}'] = devices_dict["
+                                f"'__plugins__']['{device_name}']['load_device']"
+                                f"(configuration['configuration']['microscopes']["
+                                f"self.microscope_name]['{device_name}']['hardware'], "
+                                f"is_synthetic)"
+                            )
+                            devices_dict[device_name] = device_plugin_dict
+                            device_connection = device_plugin_dict[device_ref_name]
                         exec(
                             f"self.plugin_devices['{device_name}'] = devices_dict["
                             f"'__plugins__']['{device_name}']['start_device']"
@@ -264,14 +267,6 @@ class Microscope:
                         self.commands[command] = (device_name, commands_dict[command])
                     continue
 
-                # SHARED DEVICES
-                elif device_ref_name.startswith("NI") and (
-                    device_name == "galvo" or device_name == "remote_focus_device"
-                ):
-                    device_connection = self.daq
-
-                if device_ref_name.startswith("EquipmentSolutions"):
-                    device_connection = self.daq
 
                 # LOAD AND START DEVICES
                 self.load_and_start_devices(
@@ -311,12 +306,22 @@ class Microscope:
             device_ref_name = build_ref_name(
                 "_", device_config["type"], device_config["serial_number"]
             )
+            if device_config["type"] == "NIStage":
+                self.configuration["configuration"]["microscopes"][self.microscope_name][
+                    "stage"
+                ]["has_ni_galvo_stage"] = True
 
-            if device_ref_name not in devices_dict["stages"]:
-                logger.error(
-                    f"{device_ref_name} is not in the devices_dict."
-                    f"Defined stages include {devices_dict['stages'].keys()}"
+            try:
+                stage = start_device(
+                    microscope_name=self.microscope_name,
+                    configuration=self.configuration,
+                    device_category="stage",
+                    device_id=i,
+                    is_synthetic=is_synthetic,
+                    daq_connection=self.daq,
+                    plugin_devices=devices_dict["__plugins__"],
                 )
+            except Exception as e:
                 raise Exception(
                     "Stage not found. "
                     "This often arises when the configuration.yaml file is "
@@ -337,23 +342,6 @@ class Microscope:
                     "the documentation."
                     f"The stage that failed to load is: {device_ref_name}",
                 )
-
-            # SHARED DEVICES
-            if device_ref_name.startswith("GalvoNIStage"):
-                devices_dict["stages"][device_ref_name] = self.daq
-                # set the NI Galvo stage flag
-                self.configuration["configuration"]["microscopes"][
-                    self.microscope_name
-                ]["stage"]["has_ni_galvo_stage"] = True
-
-            stage = start_stage(
-                microscope_name=self.microscope_name,
-                device_connection=devices_dict["stages"][device_ref_name],
-                configuration=self.configuration,
-                id=i,
-                is_synthetic=is_synthetic,
-                plugin_devices=devices_dict["__plugins__"],
-            )
             for axis in device_config["axes"]:
                 self.stages[axis] = stage
                 self.info[f"stage_{axis}"] = device_ref_name
@@ -546,8 +534,8 @@ class Microscope:
         if self.camera.is_acquiring:
             self.camera.close_image_series()
         self.shutter.close_shutter()
-        for k in self.lasers:
-            self.lasers[k].turn_off()
+        for k in self.laser:
+            self.laser[k].turn_off()
         self.current_channel = 0
         self.central_focus = None
         logger.info("Acquisition Ended")
@@ -557,14 +545,14 @@ class Microscope:
         logger.info(
             f"Turning on laser {self.laser_wavelength[self.current_laser_index]}"
         )
-        self.lasers[str(self.laser_wavelength[self.current_laser_index])].turn_on()
+        self.laser[str(self.laser_wavelength[self.current_laser_index])].turn_on()
 
     def turn_off_lasers(self) -> None:
         """Turn off current laser."""
         logger.info(
             f"Turning off laser {self.laser_wavelength[self.current_laser_index]}"
         )
-        self.lasers[str(self.laser_wavelength[self.current_laser_index])].turn_off()
+        self.laser[str(self.laser_wavelength[self.current_laser_index])].turn_off()
 
     def calculate_all_waveform(self) -> dict:
         """Calculate all the waveforms.
@@ -578,7 +566,7 @@ class Microscope:
         camera_waveform = self.daq.calculate_all_waveforms(
             self.microscope_name, exposure_times, sweep_times
         )
-        remote_focus_waveform = self.remote_focus_device.adjust(
+        remote_focus_waveform = self.remote_focus.adjust(
             exposure_times, sweep_times
         )
         galvo_waveform = [
@@ -774,16 +762,16 @@ class Microscope:
 
         # Laser Settings
         self.current_laser_index = channel["laser_index"]
-        for k in self.lasers:
-            self.lasers[k].turn_off()
-        self.lasers[str(self.laser_wavelength[self.current_laser_index])].set_power(
+        for k in self.laser:
+            self.laser[k].turn_off()
+        self.laser[str(self.laser_wavelength[self.current_laser_index])].set_power(
             channel["laser_power"]
         )
         logger.info(
             f"{self.laser_wavelength[self.current_laser_index]} "
             f"nm laser power set to {channel['laser_power']}"
         )
-        # self.lasers[str(self.laser_wavelength[self.current_laser_index])].turn_on()
+        # self.laser[str(self.laser_wavelength[self.current_laser_index])].turn_on()
 
         # stop daq before writing new waveform
         # When called the first time, throws an error.
@@ -920,7 +908,7 @@ class Microscope:
             Offset, by default None
         """
         exposure_times, sweep_times = self.calculate_exposure_sweep_times()
-        self.remote_focus_device.move(exposure_times, sweep_times, offset)
+        self.remote_focus.move(exposure_times, sweep_times, offset)
 
     def update_stage_limits(self, limits_flag: bool = True) -> None:
         """Update stage limits.
@@ -1024,33 +1012,21 @@ class Microscope:
             Plugin Devices
 
         """
-        try:
-            exec(
-                f"start_{device_name}=importlib.import_module("
-                f"'navigate.model.device_startup_functions').start_{device_name}"
-            )
-        except AttributeError:
-            error_string = (
-                f"Could not import: "
-                f"navigate.model.device_startup_functions.start_{device_name}"
-            )
-            print(error_string)
-            logger.error(error_string)
 
         # Start the devices
         if is_list:
             exec(
                 f"self.{device_name}['{device_name_list[i]}'] = "
-                f"start_{device_name}(name, device_connection, self.configuration, "
-                f"i, self.is_synthetic, plugin_devices)"
+                f"start_device(name, self.configuration, '{device_name}', "
+                f"i, self.is_synthetic, self.daq, plugin_devices)"
             )
             if device_name in device_name_list[i]:
                 self.info[device_name_list[i]] = device_ref_name
         else:
             exec(
-                f"self.{device_name} = start_{device_name}(name, "
-                f"device_connection, self.configuration, "
-                f"self.is_synthetic, plugin_devices)"
+                f"self.{device_name} = start_device(name, "
+                f"self.configuration, '{device_name}', 0, "
+                f"self.is_synthetic, self.daq, plugin_devices)"
             )
             self.info[device_name] = device_ref_name
 
@@ -1060,7 +1036,7 @@ class Microscope:
         Closes all devices other than plugin devices and deformable mirrors.
         """
 
-        for device in [self.camera, self.daq, self.remote_focus_device,
+        for device in [self.camera, self.daq, self.remote_focus,
                        self.shutter, self.zoom]:
             del device
 
@@ -1070,8 +1046,8 @@ class Microscope:
         for key in list(self.galvo.keys()):
             del self.galvo[key]
 
-        for key in list(self.lasers.keys()):
-            del self.lasers[key]
+        for key in list(self.laser.keys()):
+            del self.laser[key]
 
         for stage, _ in self.stages_list:
             del stage

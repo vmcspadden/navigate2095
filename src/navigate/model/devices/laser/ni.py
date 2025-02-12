@@ -41,7 +41,8 @@ from nidaqmx.errors import DaqError
 from nidaqmx.constants import LineGrouping
 
 # Local Imports
-from navigate.model.devices.lasers.base import LaserBase
+from navigate.model.devices.laser.base import LaserBase
+from navigate.model.devices.device_types import NIDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -50,7 +51,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class LaserNI(LaserBase):
+class NILaser(LaserBase, NIDevice):
     """LaserNI Class
 
     This class is used to control a laser connected to a National Instruments DAQ.
@@ -61,8 +62,7 @@ class LaserNI(LaserBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
-        laser_id: int,
-        modulation_type="digital",
+        device_id: int,
     ) -> None:
         """Initialize the LaserNI class.
 
@@ -74,12 +74,25 @@ class LaserNI(LaserBase):
             The device connection object.
         configuration : Dict[str, Any]
             The device configuration.
-        laser_id : int
+        device_id : int
             The laser id.
-        modulation_type : str
-            The modulation type of the laser - Analog, Digital, or Mixed.
         """
-        super().__init__(microscope_name, device_connection, configuration, laser_id)
+        super().__init__(microscope_name, device_connection, configuration, device_id)
+        analog = configuration["configuration"]["microscopes"][microscope_name][
+            "laser"
+        ][device_id]["power"]["hardware"].get("type", None)
+
+        digital = configuration["configuration"]["microscopes"][microscope_name][
+            "laser"
+        ][device_id]["onoff"]["hardware"].get("type", None)
+
+
+        if analog == "NI" and digital == "NI":
+            modulation_type = "mixed"
+        elif analog == "NI":
+            odulation_type = "analog"
+        elif digital == "NI":
+            modulation_type = "digital"
 
         #: str: The modulation type of the laser - Analog, Digital, or Mixed.
         self.modulation_type = modulation_type

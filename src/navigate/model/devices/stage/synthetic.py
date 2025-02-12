@@ -39,7 +39,7 @@ from typing import Optional
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.base import StageBase
+from navigate.model.devices.stage.base import StageBase
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup

@@ -4,7 +4,7 @@ import pytest
 @pytest.mark.hardware
 def test_remote_focus_ni_functions():
     from navigate.model.devices.daq.ni import NIDAQ
-    from navigate.model.devices.remote_focus.ni import RemoteFocusNI
+    from navigate.model.devices.remote_focus.ni import NIRemoteFocus
     from test.model.dummy import DummyModel
 
     model = DummyModel()
@@ -12,7 +12,7 @@ def test_remote_focus_ni_functions():
     microscope_name = model.configuration["experiment"]["MicroscopeState"][
         "microscope_name"
     ]
-    rf = RemoteFocusNI(microscope_name, daq, model.configuration)
+    rf = NIRemoteFocus(microscope_name, daq, model.configuration)
 
     funcs = ["adjust"]
     args = [

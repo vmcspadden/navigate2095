@@ -39,7 +39,7 @@ def dummy_microscope(dummy_model):
     from navigate.model.microscope import Microscope
     from navigate.model.device_startup_functions import load_devices
 
-    devices_dict = load_devices(dummy_model.configuration, is_synthetic=True)
+    devices_dict = load_devices(dummy_model.active_microscope_name, dummy_model.configuration, is_synthetic=True)
 
     return Microscope(
         dummy_model.active_microscope_name,

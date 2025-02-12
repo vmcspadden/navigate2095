@@ -54,7 +54,7 @@ class GalvoBase:
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
-        galvo_id: int = 0,
+        device_id: int = 0,
     ) -> None:
         """Initialize the GalvoBase class.
 
@@ -66,7 +66,7 @@ class GalvoBase:
             Device connection.
         configuration : Dict[str, Any]
             Dictionary of configuration parameters.
-        galvo_id : int
+        device_id : int
             Galvo ID. Default is 0.
         """
         #: Any: Device connection.
@@ -79,12 +79,12 @@ class GalvoBase:
         self.microscope_name = microscope_name
 
         #: str: Name of the galvo.
-        self.galvo_name = "Galvo " + str(galvo_id)
+        self.galvo_name = "Galvo " + str(device_id)
 
         #: dict: Dictionary of device connections.
         self.device_config = configuration["configuration"]["microscopes"][
             microscope_name
-        ]["galvo"][galvo_id]
+        ]["galvo"][device_id]
 
         #: int: Sample rate.
         self.sample_rate = configuration["configuration"]["microscopes"][

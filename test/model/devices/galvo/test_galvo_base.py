@@ -78,7 +78,7 @@ class TestGalvoBase(unittest.TestCase):
             microscope_name=self.microscope_name,
             device_connection=self.device_connection,
             configuration=self.configuration,
-            galvo_id=galvo_id,
+            device_id=galvo_id,
         )
 
         self.exposure_times = {"channel_1": 0.11, "channel_2": 0.2, "channel_3": 0.3}

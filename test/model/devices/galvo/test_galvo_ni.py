@@ -31,7 +31,7 @@
 
 import unittest
 from unittest.mock import MagicMock
-from navigate.model.devices.galvo.ni import GalvoNI
+from navigate.model.devices.galvo.ni import NIGalvo
 from navigate.config import (
     load_configs,
     get_configuration_paths,
@@ -41,7 +41,7 @@ from navigate.config import (
 from multiprocessing import Manager
 
 
-class TestGalvoNI(unittest.TestCase):
+class TestNIGalvo(unittest.TestCase):
     """Unit tests for the Galvo NI Device."""
 
     def setUp(self) -> None:
@@ -74,11 +74,11 @@ class TestGalvoNI(unittest.TestCase):
         self.device_connection = MagicMock()
         galvo_id = 0
 
-        self.galvo = GalvoNI(
+        self.galvo = NIGalvo(
             microscope_name=self.microscope_name,
             device_connection=self.device_connection,
             configuration=self.configuration,
-            galvo_id=galvo_id,
+            device_id=galvo_id,
         )
 
     def tearDown(self):
@@ -102,7 +102,7 @@ class TestGalvoNI(unittest.TestCase):
         assert self.galvo.galvo_waveform == "sawtooth" or "sine"
         assert self.galvo.waveform_dict == {}
 
-        # GalvoNI Init
+        # NIGalvo Init
         assert self.galvo.trigger_source == "/PXI6259/PFI0"
         assert hasattr(self.galvo, "daq")
 

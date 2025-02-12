@@ -69,7 +69,7 @@ microscopes:
         step: 1
       flip_x: False
       flip_y: False
-    remote_focus_device:
+    remote_focus:
       hardware:
         name: daq
         type: synthetic
@@ -194,7 +194,7 @@ microscopes:
         channel: PXI6259/port0/line0
         min: 0
         max: 5
-    lasers:
+    laser:
       # Omicron LightHub Ultra
       # 488 and 640 are LuxX+ Lasers
       # 561 is a Coherent OBIS Laser

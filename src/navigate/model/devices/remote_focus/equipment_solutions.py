@@ -40,7 +40,8 @@ from typing import Any, Dict
 from navigate.tools.decorators import log_initialization
 
 # Local Imports
-from navigate.model.devices.remote_focus.ni import RemoteFocusNI
+from navigate.model.devices.remote_focus.ni import NIRemoteFocus
+from navigate.model.devices.device_types import NIDevice, SerialDevice
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -48,7 +49,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class RemoteFocusEquipmentSolutions(RemoteFocusNI):
+class EquipmentSolutionsRemoteFocus(NIRemoteFocus, SerialDevice):
     """RemoteFocusEquipmentSolutions Class
 
     Note
@@ -66,6 +67,8 @@ class RemoteFocusEquipmentSolutions(RemoteFocusNI):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args,
+        **kwargs,
     ) -> None:
         """Initialize the RemoteFocusEquipmentSolutions Class
 
@@ -82,20 +85,8 @@ class RemoteFocusEquipmentSolutions(RemoteFocusNI):
 
         #: str: Name of the RS232 communication port.
         self.comport = configuration["configuration"]["microscopes"][microscope_name][
-            "remote_focus_device"
+            "remote_focus"
         ]["hardware"].get("port", "COM1")
-
-        #: int: Baud rate of the RS232 communication port.
-        self.baud_rate = 115200
-
-        #: int: Number of data bits.
-        self.byte_size = serial.EIGHTBITS
-
-        #: int: Parity bit.
-        self.parity = serial.PARITY_NONE
-
-        #: int: Number of stop bits.
-        self.stop_bits = serial.STOPBITS_ONE
 
         #: float: Timeout for the serial port.
         self.timeout = 1.25
@@ -106,26 +97,9 @@ class RemoteFocusEquipmentSolutions(RemoteFocusNI):
         #: bool: Debug mode.
         self.debug = False
 
-        # Open Serial Port
-        try:
-            logger.debug(f"Opening Voice Coil on COM: {self.comport}")
-            self.serial = serial.Serial(
-                port=self.comport,
-                baudrate=self.baud_rate,
-                bytesize=self.byte_size,
-                parity=self.parity,
-                stopbits=self.stop_bits,
-                timeout=self.timeout,
-                dsrdtr=False,
-                rtscts=False,
-            )
-
-        except (serial.SerialException, ValueError) as error:
-            logger.error(f"Communication Error: {error}")
-            raise UserWarning(
-                "Could not Communicate with RemoteFocusEquipmentSolutions on COM:",
-                self.comport,
-            )
+        # set connection
+        self.serial = device_connection["connection"]
+        self.daq = device_connection["daq_connection"]
 
         # Send command d0 and read returned information
         if self.read_on_init:
@@ -154,6 +128,48 @@ class RemoteFocusEquipmentSolutions(RemoteFocusNI):
             self.serial.close()
         except Exception:
             pass
+
+    @classmethod
+    def connect(cls, port: str="COM1", baudrate: int=115200, timeout: float=1.25) -> serial.Serial:
+        """Connect to Serial Communication Port
+        port : str
+            Serial Port (default is "COM1")
+        baudrate : int, optional
+            Baud rate of the serial port (default is 115200)
+        timeout : float, optional
+            Time out (default is 1.25)
+
+        Returns
+        -------
+        serial.Serial
+            An instance of the serial connection
+
+        Raises
+        ------
+        UserWarning
+            If there is a communication error with the serial port
+        """
+        # Open Serial Port
+        try:
+            logger.debug(f"Opening Voice Coil on COM: {port}")
+            serial_connection = serial.Serial(
+                port=port,
+                baudrate=baudrate,
+                bytesize=serial.EIGHTBITS,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                timeout=timeout,
+                dsrdtr=False,
+                rtscts=False,
+            )
+            return serial_connection
+        except (serial.SerialException, ValueError) as error:
+            logger.error(f"Communication Error: {error}")
+            raise UserWarning(
+                "Could not Communicate with RemoteFocusEquipmentSolutions on COM:",
+                port,
+            )
+
     def read_bytes(self, num_bytes: int) -> bytes:
         """Read the specified number of bytes from RemoteFocusEquipmentSolutions.
 

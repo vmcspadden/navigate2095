@@ -2,8 +2,9 @@
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
-# modification, are permitted for academic and research use only (subject to the
-# limitations in the disclaimer below) provided that the following conditions are met:
+# modification, are permitted for academic and research use only
+# (subject to the limitations in the disclaimer below)
+# provided that the following conditions are met:
 
 #      * Redistributions of source code must retain the above copyright notice,
 #      this list of conditions and the following disclaimer.
@@ -28,47 +29,87 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-#
 
-#  Standard Library Imports
+# Standard Library Imports
 import logging
+from typing import Any, Dict
 
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.mirrors.base import MirrorBase
 from navigate.tools.decorators import log_initialization
 
-# # Logger Setup
+# Logger Setup
 p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
 @log_initialization
-class SyntheticMirror(MirrorBase):
-    """SyntheticMirror Class - literally does nothing"""
+class LaserBase:
+    """Laser Base Class"""
 
-    def __init__(self, microscope_name, device_connection, configuration):
-        """Initialize the SyntheticMirror class.
+    def __init__(
+        self,
+        microscope_name: str,
+        device_connection: Any,
+        configuration: Dict[str, Any],
+        device_id: int,
+    ) -> None:
+        """Initialize Laser Base Class
 
         Parameters
         ----------
         microscope_name : str
-            Name of the microscope.
-        device_connection : dict
-            Dictionary containing the device connection information.
-        configuration : dict
-            Dictionary containing the configuration information.
+            Name of the microscope
+        device_connection : Any
+            Communication instance with the device.
+        configuration : Dict[str, Any]
+            Configuration dictionary
+        device_id : int
+            Laser ID
         """
-        super().__init__(microscope_name, device_connection, configuration)
+        #: Any: Communication instance with the device
+        self.device_connection = device_connection
 
-        #: bool: Is this a synthetic mirror?
-        self.is_synthetic = True
+        #: dict: Configuration dictionary
+        self.configuration = configuration
 
-    def flat(self) -> None:
-        """Flat the mirror."""
+        #: str: Name of the microscope
+        self.microscope_name = microscope_name
+
+        #: int: Laser ID
+        self.device_config = configuration["configuration"]["microscopes"][
+            microscope_name
+        ]["laser"][device_id]
+
+    def __str__(self) -> str:
+        """Return string representation of the class"""
+        return "LaserBase"
+
+    def set_power(self, laser_intensity: int) -> None:
+        """Set laser power
+
+        Parameters
+        ----------
+        laser_intensity : int
+            Laser intensity
+        """
         pass
 
-    def __del__(self) -> None:
-        """Delete the object."""
+    def turn_on(self) -> None:
+        """Turn on the laser"""
+        pass
+
+    def turn_off(self) -> None:
+        """Turn off the laser"""
+        pass
+
+    def close(self) -> None:
+        """
+        Close the laser before exit.
+        """
+        pass
+
+    def initialize_laser(self) -> None:
+        """Initialize lasers."""
         pass
