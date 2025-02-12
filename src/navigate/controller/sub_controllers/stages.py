@@ -125,11 +125,16 @@ class StageController(GUIController):
                 axis = match.group(1)
                 if "up" in k:
                     buttons[k].configure(
-                        command=self.up_btn_handler(axis=axis, large_step=large_step)
+                        command=self.up_btn_handler(axis=axis, large_step=large_step),
+                        repeatinterval=300,
+                        repeatdelay=300,
                     )
+
                 elif "down" in k:
                     buttons[k].configure(
-                        command=self.down_btn_handler(axis=axis, large_step=large_step)
+                        command=self.down_btn_handler(axis=axis, large_step=large_step),
+                        repeatinterval=300,
+                        repeatdelay=300,
                     )
 
         for k in ["xy", "z", "f", "theta"]:
