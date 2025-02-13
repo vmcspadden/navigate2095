@@ -125,11 +125,16 @@ class StageController(GUIController):
                 axis = match.group(1)
                 if "up" in k:
                     buttons[k].configure(
-                        command=self.up_btn_handler(axis=axis, large_step=large_step)
+                        command=self.up_btn_handler(axis=axis, large_step=large_step),
+                        repeatinterval=300,
+                        repeatdelay=300,
                     )
+
                 elif "down" in k:
                     buttons[k].configure(
-                        command=self.down_btn_handler(axis=axis, large_step=large_step)
+                        command=self.down_btn_handler(axis=axis, large_step=large_step),
+                        repeatinterval=300,
+                        repeatdelay=300,
                     )
 
         for k in ["xy", "z", "f", "theta"]:
@@ -594,7 +599,7 @@ class StageController(GUIController):
             # clicks that a user provides. If 1000 ms, if user hits button 10x within
             # 1s, only moves to the final value.
             self.event_id[axis] = self.view.after(
-                500,
+                300,
                 lambda *args: self.parent_controller.execute("stage", position, axis),
             )
 
