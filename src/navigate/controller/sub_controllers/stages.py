@@ -599,7 +599,7 @@ class StageController(GUIController):
             # clicks that a user provides. If 1000 ms, if user hits button 10x within
             # 1s, only moves to the final value.
             self.event_id[axis] = self.view.after(
-                500,
+                300,
                 lambda *args: self.parent_controller.execute("stage", position, axis),
             )
 
