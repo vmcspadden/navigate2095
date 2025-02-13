@@ -409,6 +409,7 @@ class Controller:
             # update widgets
             self.stage_controller.initialize()
             self.channels_tab_controller.initialize()
+            self.channels_tab_controller.populate_experiment_values()
             self.camera_setting_controller.update_camera_device_related_setting()
             self.camera_setting_controller.populate_experiment_values()
             self.camera_setting_controller.calculate_physical_dimensions()
