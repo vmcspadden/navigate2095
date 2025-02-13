@@ -181,12 +181,18 @@ class ChannelSettingController(GUIController):
         to be populated with a default value.
         """
         for i in range(self.num):
-            if self.view.laser_pulldowns[i].get() == "":
+            if (
+                self.view.laser_pulldowns[i].get()
+                not in self.view.laser_pulldowns[i]["values"]
+            ):
                 self.view.laser_pulldowns[i].set(
                     self.view.laser_pulldowns[i]["values"][0]
                 )
 
-            if self.view.filterwheel_pulldowns[i].get() == "":
+            if (
+                self.view.filterwheel_pulldowns[i].get()
+                not in self.view.filterwheel_pulldowns[i]["values"]
+            ):
                 self.view.filterwheel_pulldowns[i].set(
                     self.view.filterwheel_pulldowns[i]["values"][0]
                 )
@@ -431,7 +437,11 @@ class ChannelSettingController(GUIController):
         if not value:
             return -1
         if dropdown_name == "laser":
-            return self.view.laser_pulldowns[0]["values"].index(value)
+            try:
+                laser_id = self.view.laser_pulldowns[0]["values"].index(value)
+            except ValueError:
+                return 0
+            return laser_id
         elif dropdown_name.startswith("filter"):
             idx = int(dropdown_name[dropdown_name.rfind("_") + 1 :])
             return self.view.filterwheel_pulldowns[idx]["values"].index(value)
