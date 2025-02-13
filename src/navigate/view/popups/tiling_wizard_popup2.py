@@ -64,8 +64,8 @@ class TilingWizardPopup:
         #: tk.TopLevel: The popup window
         self.popup = PopUp(
             root,
-            "Multi-Position Tiling Wizard",
-            "800x250+10+10",
+            name="Multi-Position Tiling Wizard",
+            size="800x250+10+10",
             top=False,
             transient=False,
         )

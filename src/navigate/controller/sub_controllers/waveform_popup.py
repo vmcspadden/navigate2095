@@ -42,6 +42,7 @@ from navigate.tools.common_functions import combine_funcs
 from navigate.view.popups.waveform_parameter_popup_window import (
     AdvancedWaveformParameterPopupWindow,
 )
+from navigate.view.custom_widgets.popup import PopUp
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -56,7 +57,10 @@ class WaveformPopupController(GUIController):
     constants to a file.
     """
 
-    def __init__(self, view, parent_controller, waveform_constants_path):
+    def __init__(self,
+                 view: PopUp,
+                 parent_controller,
+                 waveform_constants_path: str) -> None:
         """Initialize the WaveformPopupController.
 
         Parameters
@@ -70,11 +74,11 @@ class WaveformPopupController(GUIController):
         """
         super().__init__(view, parent_controller)
 
-        # Microscope information
         #: dict: Waveform constants for the microscope.
         self.resolution_info = self.parent_controller.configuration[
             "waveform_constants"
         ]
+
         #: dict: Galvo constants for the microscope.
         self.galvo_setting = self.resolution_info["galvo_constants"]
 
@@ -84,14 +88,12 @@ class WaveformPopupController(GUIController):
         #: str: The path to the waveform constants file.
         self.waveform_constants_path = waveform_constants_path
 
-        # Get mode and mag widgets
         #: dict: The widgets for the mode and magnification.
         self.widgets = self.view.get_widgets()
 
         #: dict: The variables for the mode and magnification.
         self.variables = self.view.get_variables()
 
-        # Get configuration
         #: list: The lasers.
         self.lasers = self.configuration_controller.lasers_info
 
@@ -135,7 +137,6 @@ class WaveformPopupController(GUIController):
         #: int: The event id.
         self.event_id = None
 
-        # Event Binding
         # Switching microscopes modes (e.g., meso, nano, etc.)
         self.widgets["Mode"].widget.bind(
             "<<ComboboxSelected>>", self.show_magnification
@@ -202,9 +203,9 @@ class WaveformPopupController(GUIController):
         self.view.popup.protocol("WM_DELETE_WINDOW", self.close_window)
         self.view.popup.bind("<Escape>", self.close_window)
 
-
         # All channels use the same galvo parameters
-        self.widgets["all_channels"].widget.configure(command=self.set_galvo_to_all_channels)
+        self.widgets["all_channels"].widget.configure(
+            command=self.set_galvo_to_all_channels)
 
         # Populate widgets
         self.widgets["Mode"].widget["values"] = list(
@@ -220,7 +221,7 @@ class WaveformPopupController(GUIController):
         self.view.popup.dismiss()
         delattr(self.parent_controller, "waveform_popup_controller")
 
-    def configure_widget_range(self):
+    def configure_widget_range(self) -> None:
         """Update widget ranges and precisions based on the current resolution mode.
 
         TODO: Other parameters we wish to enable/disable based on configuration?
@@ -318,8 +319,14 @@ class WaveformPopupController(GUIController):
         # amplitude.
         #
 
-    def populate_experiment_values(self, force_update=False):
-        """Set experiment values."""
+    def populate_experiment_values(self, force_update: bool = False) -> None:
+        """Set experiment values.
+
+        Parameters
+        ----------
+        force_update : bool, optional
+            If true, the experiment values will be updated, by default False
+        """
         self.remote_focus_experiment_dict = self.parent_controller.configuration[
             "experiment"
         ]["MicroscopeState"]
@@ -341,12 +348,11 @@ class WaveformPopupController(GUIController):
         self.widgets["Mode"].set(resolution_value)
         self.show_magnification(mag)
 
-    def showup(self):
+    def showup(self) -> None:
         """This function will let the popup window show in front."""
         self.view.popup.deiconify()
-        self.view.popup.attributes("-topmost", 1)
 
-    def show_magnification(self, *args):
+    def show_magnification(self, *args: tuple) -> None:
         """Show magnification options when the user changes the focus mode.
 
         Parameters
@@ -371,7 +377,7 @@ class WaveformPopupController(GUIController):
         # update laser info
         self.show_laser_info()
 
-    def show_laser_info(self, *args):
+    def show_laser_info(self, *args: tuple) -> None:
         """Show laser info when the user changes magnification setting.
 
         Parameters
@@ -461,7 +467,10 @@ class WaveformPopupController(GUIController):
         )
         self.set_galvo_factor(galvo_factor)
 
-    def update_remote_focus_settings(self, name, laser, remote_focus_name):
+    def update_remote_focus_settings(self,
+                                     name: str,
+                                     laser: str,
+                                     remote_focus_name: str) -> None:
         """Update remote focus settings in memory.
 
         Parameters
@@ -520,7 +529,9 @@ class WaveformPopupController(GUIController):
 
         return func_laser
 
-    def update_waveform_parameters(self, *args, **wargs):
+    def update_waveform_parameters(self,
+                                   *args: tuple,
+                                   **kwargs: dict) -> None:
         """Update the waveform parameters for delay, duty cycle, and smoothing.
 
         Communicate changes to the parent controller.
@@ -529,7 +540,7 @@ class WaveformPopupController(GUIController):
         ----------
         *args : tuple
             The first element is the new waveform.
-        **wargs : dict
+        **kwargs : dict
             The key is the name of the waveform and the value is the waveform
         """
         if not self.update_waveform_parameters_flag:
@@ -573,7 +584,7 @@ class WaveformPopupController(GUIController):
             ),
         )
 
-    def estimate_galvo_setting(self, *args, **kwargs):
+    def estimate_galvo_setting(self, *args: tuple, **kwargs: dict) -> None:
         """Digitally scanned light-sheet frequency estimation.
 
         When imaging in a digitally scanned light-sheet mode, the galvo must
@@ -632,7 +643,10 @@ class WaveformPopupController(GUIController):
         # Update the GUI
         self.view.inputs[galvo_name].widget.set(round(frequency, 3))
 
-    def update_galvo_setting(self, galvo_name, widget_name, parameter):
+    def update_galvo_setting(self,
+                             galvo_name: str,
+                             widget_name: str,
+                             parameter: str) -> None:
         """Update galvo settings in memory.
 
         Parameters
@@ -693,7 +707,7 @@ class WaveformPopupController(GUIController):
 
         return func_galvo
 
-    def save_waveform_constants(self):
+    def save_waveform_constants(self) -> None:
         """Save updated waveform parameters to yaml file."""
         # errors = self.get_errors()
         # if errors:
@@ -770,7 +784,7 @@ class WaveformPopupController(GUIController):
                 ),
             )
 
-    def restore_amplitude(self):
+    def restore_amplitude(self) -> None:
         """Restore amplitude values to previous values."""
         self.view.buttons["toggle_waveform_button"].config(text="Disable Waveforms")
         self.waveforms_enabled = True
@@ -790,7 +804,7 @@ class WaveformPopupController(GUIController):
             self.widgets[galvo + " Amp"].widget.config(state="normal")
         self.amplitude_dict = None
 
-    def display_advanced_setting_window(self):
+    def display_advanced_setting_window(self) -> None:
         """Display advanced galvo setting window"""
         if hasattr(self, "advanced_setting_popup"):
             galvo_factor = self.resolution_info["other_constants"].get(
@@ -821,7 +835,9 @@ class WaveformPopupController(GUIController):
             )
             self.advanced_setting_popup.variables["galvo_factor"].set(galvo_factor)
 
-    def display_galvo_advanced_setting(self, *args, **kwargs):
+    def display_galvo_advanced_setting(self,
+                                       *args: tuple,
+                                       **kwargs: dict) -> None:
         """Generate dynamic galvo advanced setting widgets"""
         galvo_factor = self.advanced_setting_popup.variables["galvo_factor"].get()
         if galvo_factor == "none":
@@ -919,8 +935,12 @@ class WaveformPopupController(GUIController):
             self.set_galvo_factor(galvo_factor)
 
     def update_galvo_advanced_setting(
-        self, factor_id, galvo_id, factor_name, amp_or_off
-    ):
+            self,
+            factor_id: int,
+            galvo_id: int,
+            factor_name: str,
+            amp_or_off: str
+    ) -> None:
         """Update galvo setting parameters
 
         Parameters
@@ -971,14 +991,14 @@ class WaveformPopupController(GUIController):
 
         return func
 
-    def set_galvo_to_all_channels(self):
+    def set_galvo_to_all_channels(self) -> None:
         """Set galvo factor to 'none' and use galvo parameters in all channels"""
         self.set_galvo_factor("none")
         self.resolution_info["other_constants"]["galvo_factor"] = "none"
         if hasattr(self, "advanced_setting_popup"):
             self.advanced_setting_popup.variables["galvo_factor"].set("none")
 
-    def set_galvo_factor(self, galvo_factor="none"):
+    def set_galvo_factor(self, galvo_factor: str = "none") -> None:
         """Set galvo factor and display information
 
         Parameters
