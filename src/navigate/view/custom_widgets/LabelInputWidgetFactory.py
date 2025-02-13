@@ -149,10 +149,13 @@ class LabelInput(ttk.Frame):
         if label_pos == "top":
             self.widget.grid(row=1, column=0, sticky=(tk.W + tk.E))
             self.columnconfigure(0, weight=1)
+            self.rowconfigure(index=0, weight=1)
+            self.rowconfigure(index=1, weight=1)
         else:
             self.widget.grid(row=0, column=1, sticky=(tk.W + tk.E))
             self.rowconfigure(0, weight=1)
-            for i in range(2): self.columnconfigure(index=i, weight=1)
+            self.columnconfigure(index=0, weight=1)
+            self.columnconfigure(index=1, weight=1)
 
     def get(self, default=None):
         """Returns the value of the input widget
