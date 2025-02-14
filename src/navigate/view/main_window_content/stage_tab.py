@@ -44,6 +44,7 @@ from navigate.view.custom_widgets.hover import HoverTkButton
 from navigate.view.custom_widgets.LabelInputWidgetFactory import LabelInput
 from navigate.view.custom_widgets.validation import ValidatedSpinbox
 from navigate.view.custom_widgets.validation import ValidatedEntry
+from navigate.view.custom_widgets.common import uniform_grid
 import navigate
 
 # Logger Setup
@@ -183,6 +184,9 @@ class StageControlTab(tk.Frame):
             stage_control_tab=self, name="Stage Movement Interrupt"
         )
         self.stop_frame.grid(row=2, column=1, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
+
+        uniform_grid(self)
+
 
     def load_images(self) -> None:
         """Load images for the stage control tab."""
@@ -368,11 +372,6 @@ class OtherAxisFrame(ttk.Labelframe):
             label_args={"font": tk.font.Font(size=10)},
         )
 
-        # Center the widgets laterally.
-        self.columnconfigure(index=0, weight=1)
-        self.columnconfigure(index=1, weight=1)
-        self.columnconfigure(index=2, weight=1)
-
         # # Adding space between buttons
         space_1 = ttk.Label(self, borderwidth=0)
         space_2 = ttk.Label(self, borderwidth=0)
@@ -399,6 +398,9 @@ class OtherAxisFrame(ttk.Labelframe):
         self.large_down_btn.grid(
             row=(row + 1), column=1, rowspan=1, columnspan=1, padx=2, pady=2
         )
+
+        uniform_grid(self)
+
 
     def get_widget(self) -> LabelInput:
         """Returns the frame widget
@@ -514,7 +516,6 @@ class PositionFrame(ttk.Labelframe):
         entry_labels = ["X", "Y", "Z", "\N{Greek Capital Theta Symbol}", "F"]
 
         #: list: List of frames for the position entries.
-        self.frame_back_list = []
         for i in range(len(entry_names)):
             self.inputs[entry_names[i]] = LabelInput(
                 parent=self,
@@ -524,16 +525,13 @@ class PositionFrame(ttk.Labelframe):
                 input_args={
                     "required": True,
                     "precision": 0.1,
-                    "width": 10,
                     "takefocus": False,
                 },
             )
-            self.frame_back_list.append(
-                tk.Frame(self, bg="#f0f0f0", width=60, height=26)
-            )
-            self.frame_back_list[i].grid(row=i, column=0)
-            self.inputs[entry_names[i]].grid(row=i, column=0)
-            self.frame_back_list[i].lower()
+            self.inputs[entry_names[i]].grid(row=i, column=0, sticky=tk.EW)
+
+        uniform_grid(self)
+
 
     def get_widgets(self) -> dict:
         """Get all widgets in the position frame
@@ -619,6 +617,8 @@ class StackShortcuts(ttk.LabelFrame):
 
         self.set_end_button = HoverTkButton(self, text="Set End Pos/Foc")
         self.set_end_button.grid(row=1, column=0, sticky="ew")
+
+        uniform_grid(self)
 
 
 class XYFrame(ttk.Labelframe):
@@ -760,6 +760,8 @@ class XYFrame(ttk.Labelframe):
             row=5, column=8, rowspan=2, columnspan=2, padx=2, pady=2
         )
 
+        uniform_grid(self)
+
         # Increment spinbox
         self.increment_box.widget.set_precision(-1)
 
@@ -895,6 +897,8 @@ class StopFrame(ttk.Labelframe):
         # Griding out buttons
         self.stop_btn.grid(row=0, column=0, rowspan=2, pady=2)
         self.joystick_btn.grid(row=2, column=0, rowspan=2, pady=2)
+
+        uniform_grid(self)
 
     def get_buttons(self) -> dict:
         """Returns the buttons in the frame

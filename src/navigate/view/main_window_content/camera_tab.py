@@ -41,6 +41,7 @@ from tkinter import ttk
 import navigate
 from navigate.view.custom_widgets.LabelInputWidgetFactory import LabelInput
 from navigate.view.custom_widgets.validation import ValidatedSpinbox, ValidatedEntry
+from navigate.view.custom_widgets.common import uniform_grid
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -93,6 +94,9 @@ class CameraSettingsTab(tk.Frame):
         self.camera_roi.grid(
             row=1, column=0, columnspan=2, sticky=tk.NSEW, padx=10, pady=10
         )
+
+        # Uniform Grid
+        uniform_grid(self)
 
 
 class CameraMode(ttk.Labelframe):

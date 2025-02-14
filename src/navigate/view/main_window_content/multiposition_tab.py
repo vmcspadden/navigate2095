@@ -40,6 +40,7 @@ import pandas as pd
 from pandastable import Table, Menu, RowHeader, ColumnHeader
 
 # Local Imports
+from navigate.view.custom_widgets.common import uniform_grid
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -65,14 +66,10 @@ class MultiPositionTab(tk.Frame):
             Arbitrary keyword arguments.
         """
         # Init Frame
-        tk.Frame.__init__(self, setntbk, *args, **kwargs)
+        super().__init__(setntbk, *args, **kwargs)
 
         #: The index of the tab in the notebook
         self.index = 3
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
 
         #: MultiPointFrame: The frame that contains the widgets for the multipoint
         # experiment settings.
@@ -87,6 +84,8 @@ class MultiPositionTab(tk.Frame):
         self.multipoint_list.grid(
             row=6, column=0, columnspan=3, sticky=tk.NSEW, padx=10, pady=10
         )
+
+        uniform_grid(self)
 
 
 class MultiPointFrame(ttk.Labelframe):
@@ -109,11 +108,7 @@ class MultiPointFrame(ttk.Labelframe):
 
         """
         text_label = "Multi-Position Acquisition"
-        ttk.Labelframe.__init__(self, settings_tab, text=text_label, *args, **kwargs)
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
+        super().__init__(settings_tab, text=text_label, *args, **kwargs)
 
         #: dict: A dictionary of all the widgets that are tied to each widget name.
         self.buttons = {
@@ -130,13 +125,15 @@ class MultiPointFrame(ttk.Labelframe):
                 row, column = 1, 0
             elif counter == 2:
                 row, column = 1, 1
-            elif counter == 3:
+            else:
                 row, column = 0, 1
 
             button.grid(
-                row=row, column=column, sticky=tk.NSEW, padx=(4, 1), pady=(4, 6)
+                row=row, column=column, sticky=tk.NSEW, padx=(4, 4), pady=(4, 4)
             )
             counter += 1
+
+        uniform_grid(self)
 
     def get_variables(self):
         """Returns a dictionary of all the variables that are tied to each widget name.
@@ -160,7 +157,7 @@ class MultiPointFrame(ttk.Labelframe):
 
         Returns
         -------
-        dict
+        inputs : dict
             A dictionary of all the widgets that are tied to each widget name.
         """
         return self.inputs
@@ -186,9 +183,10 @@ class MultiPointList(ttk.Frame):
         **kwargs : dict
             Arbitrary keyword arguments.
         """
-        ttk.Frame.__init__(self, settings_tab, *args, **kwargs)
+        super().__init__(settings_tab, *args, **kwargs)
 
         df = pd.DataFrame({"X": [0], "Y": [0], "Z": [0], "R": [0], "F": [0]})
+
         #: MultiPositionTable: The PandasTable instance that is being used.
         self.pt = MultiPositionTable(self, showtoolbar=False)
         self.pt.show()
@@ -204,7 +202,7 @@ class MultiPointList(ttk.Frame):
 
         Returns
         -------
-        self.pt.model.df: Pandas DataFrame
+        self.pt: MultiPositionTable
             Reference to table data as dataframe
         """
         return self.pt
@@ -394,10 +392,6 @@ class MultiPositionTable(Table):
             The function that is called when the table is shown.
         """
         super().show(callback)
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
 
         #: MultiPositionRowHeader: The row header for the table.
         self.rowheader = MultiPositionRowHeader(self.parentframe, self)
