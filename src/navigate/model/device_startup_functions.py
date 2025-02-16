@@ -1276,25 +1276,25 @@ def start_lasers(
             modulation_type=modulation,
         )
     
-    elif analog == "ASI" or digital == "ASI": 
-        if device_connection is not None:
-            return device_connection
-        from navigate.model.devices.lasers.asi import ASILaser
+        """elif analog == "ASI" or digital == "ASI": 
+            if device_connection is not None:
+                return device_connection
+            from navigate.model.devices.lasers.asi import ASILaser
 
-        if analog == "ASI" and digital == "ASI":
-            modulation = "mixed"
-        elif analog == "ASI":
-            modulation = "analog"
-        elif digital == "ASI":
-            modulation = "digital"
+            if analog == "ASI" and digital == "ASI":
+                modulation = "mixed"
+            elif analog == "ASI":
+                modulation = "analog"
+            elif digital == "ASI":
+                modulation = "digital"
 
-        return ASILaser(
-            microscope_name=microscope_name,
-            device_connection=device_connection,
-            configuration=configuration,
-            laser_id=id,
-            modulation_type=modulation,
-        )
+            return ASILaser(
+                microscope_name=microscope_name,
+                device_connection=device_connection,
+                configuration=configuration,
+                laser_id=id,
+                modulation_type=modulation,
+            )"""
 
     elif device_type.lower() == "syntheticlaser" or device_type.lower() == "synthetic":
         if device_connection is not None:
