@@ -111,7 +111,7 @@ class ASILaser(LaserBase):
         #: str: The modulation type of the laser - Analog, Digital, or Mixed.
         self.modulation_type = modulation_type
 
-        #: float: The minimum digital modulation voltage.
+        '''#: float: The minimum digital modulation voltage.
         self.laser_min_do = None
 
         #: float: The maximum digital modulation voltage.
@@ -142,9 +142,9 @@ class ASILaser(LaserBase):
     
     def __str__(self):
         """String representation of the class."""
-        return "ASIFilterWheel"
+        return "ASIFilterWheel"'''
     
-    def initialize_analog_modulation(self) -> None:
+    '''def initialize_analog_modulation(self) -> None:
         """Initialize the analog modulation of the laser."""
 
         #: str: axis the laser input is connected to
@@ -162,11 +162,11 @@ class ASILaser(LaserBase):
 
         #: object: The laser analog modulation task.
         self.laser.laser_analog(self.axis, self.laser_min_ao, self.laser_max_ao)
-        self.laser.sam(self.axis, 1)
+        self.laser.sam(self.axis, 1)'''
 
 
-    """def initialize_digital_modulation(self) -> None:
-        Initialize the digital modulation of the laser.
+    '''def initialize_digital_modulation(self) -> None:
+        """Initialize the digital modulation of the laser."""
         laser_do_port = self.device_config["onoff"]["hardware"]["channel"]
 
         #: float: The minimum digital modulation voltage.
@@ -254,4 +254,4 @@ class ASILaser(LaserBase):
         """Destructor for the ASILaser class."""
         self.close()
 
-
+'''
