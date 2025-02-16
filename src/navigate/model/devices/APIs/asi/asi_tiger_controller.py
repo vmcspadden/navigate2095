@@ -934,7 +934,7 @@ class TigerController:
         self.send_filter_wheel_command(f"MOVE {dichroic_id}={dichroic_position}")
         self.read_response()
 
-    '''def laser_analog(self, axis: str, min_voltage: float, max_voltage: float):
+    def laser_analog(self, axis: str, min_voltage: float, max_voltage: float):
         """Programs the analog waveform for the laser class
 
         Parameters
@@ -972,4 +972,3 @@ class TigerController:
 
         self.send_command(f"SAP {axis}={mode}")
         self.read_response()
-'''
