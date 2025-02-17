@@ -53,10 +53,13 @@ class TestChannelSettingController:
             self.ctc,
             dummy_controller.configuration_controller,
         )
+        self.channel_setting.populate_experiment_values(dummy_controller.configuration[
+            "experiment"
+        ]["MicroscopeState"]["channels"])
 
     @pytest.mark.parametrize(
         "mode,state,state_readonly",
-        [("stop", "normal", "readonly"), ("live", "disabled", "disabled")],
+        [("stop", "normal", "readonly"), ("live", "disabled", "readonly")],
     )
     def test_set_mode(self, mode, state, state_readonly):
 
@@ -68,10 +71,16 @@ class TestChannelSettingController:
             assert (
                 str(self.channel_setting.view.interval_spins[i]["state"]) == "disabled"
             )
-            assert (
-                str(self.channel_setting.view.laser_pulldowns[i]["state"])
-                == state_readonly
-            )
+            if mode == "stop":
+                assert (
+                    str(self.channel_setting.view.laser_pulldowns[i]["state"])
+                    == state_readonly
+                )
+            else:
+                assert(
+                    str(self.channel_setting.view.laser_pulldowns[i]["state"])
+                    == "disabled"
+                )
             if self.channel_setting.mode != "live" or (
                 self.channel_setting.mode == "live"
                 and not self.channel_setting.view.channel_variables[i].get()

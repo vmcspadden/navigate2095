@@ -34,6 +34,7 @@
 import tkinter as tk
 from tkinter import ttk
 import logging
+from typing import Dict
 
 # Third Party Imports
 
@@ -41,6 +42,7 @@ import logging
 from navigate.view.custom_widgets.hover import Hover, HoverButton
 from navigate.view.custom_widgets.validation import ValidatedSpinbox, ValidatedCombobox
 from navigate.view.custom_widgets.LabelInputWidgetFactory import LabelInput
+import navigate
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -53,28 +55,28 @@ class ChannelsTab(tk.Frame):
     This tab is used to set the channels for the stack acquisition.
     """
 
-    def __init__(self, setntbk, *args, **kwargs):
+    def __init__(self,
+                 settings_notebook: "navigate.view.main_window_content.settings_notebook.SettingsNotebook",
+                 *args: list,
+                 **kwargs: dict
+                 ):
         """Initialization of the Channels Tab
 
         Parameters
         ----------
-        setntbk : tk.Notebook
+        settings_notebook : SettingsNotebook
             The notebook that this tab is added to
-        *args : tuple
+        *args : list
             Positional arguments for tk.Frame
         **kwargs : dict
             Keyword arguments for tk.Frame
 
         """
         # Init Frame
-        tk.Frame.__init__(self, setntbk, *args, **kwargs)
+        tk.Frame.__init__(self, settings_notebook, *args, **kwargs)
 
         #: int: The index of the tab
         self.index = 0
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
 
         #: ChannelCreator: The frame that holds the channel settings
         self.channel_widgets_frame = ChannelCreator(self)
@@ -113,14 +115,18 @@ class ChannelCreator(ttk.Labelframe):
     This frame is used to create the channels for the stack acquisition.
     """
 
-    def __init__(self, channels_tab, *args, **kwargs):
+    def __init__(self,
+                 channels_tab: "navigate.view.main_window_content.settings_notebook.SettingsNotebook",
+                 *args: list,
+                 **kwargs: dict
+                 ) -> None:
         """Initialization of the Channel Creator
 
         Parameters
         ----------
         channels_tab : tk.Frame
             The frame that this frame is added to
-        *args : tuple
+        *args : list
             Positional arguments for ttk.Labelframe
         **kwargs : dict
             Keyword arguments for ttk.Labelframe
@@ -129,9 +135,11 @@ class ChannelCreator(ttk.Labelframe):
         self.title = "Channel Settings"
         ttk.Labelframe.__init__(self, channels_tab, text=self.title, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
+        #: int: The default padding for widgets in the x direction
+        self.pad_x = 1
+
+        #: int: The default padding for widgets in the y direction
+        self.pad_y = 1
 
         #: list: List of the variables for the channel check buttons
         self.channel_variables = []
@@ -151,10 +159,10 @@ class ChannelCreator(ttk.Labelframe):
         #: list: List of the laser power dropdowns
         self.laserpower_pulldowns = []
 
-        #: list: List of the variables for the filter  wheel dropdowns
+        #: list: List of the variables for the filter wheel dropdowns
         self.filterwheel_variables = []
 
-        #: list: List of the filterwheel dropdowns
+        #: list: List of the filter wheel dropdowns
         self.filterwheel_pulldowns = []
 
         #: list: List of the variables for the exposure time dropdowns
@@ -192,7 +200,11 @@ class ChannelCreator(ttk.Labelframe):
         #: list: List of the frames for the columns
         self.frame_columns = []
 
-    def populate_frame(self, channels, filter_wheels, filter_wheel_names):
+    def populate_frame(self,
+                       channels: int,
+                       filter_wheels: int,
+                       filter_wheel_names: list
+                       ) -> None:
         """Populates the frame with the widgets.
 
         This function populates the frame with the widgets for the channels. By updating
@@ -209,160 +221,111 @@ class ChannelCreator(ttk.Labelframe):
         filter_wheel_names : list
             The names of the filter wheels
         """
-        if filter_wheels > 1:
-            self.label_text = [
-                "Channel",
-                "Laser",
-                "Power",
-            ]
 
-            for i in range(filter_wheels):
-                self.label_text.append(filter_wheel_names[i])
+        self.create_labels(filter_wheel_names, filter_wheels)
 
-            self.label_text += ["Exp. Time (ms)", "Interval", "Defocus"]
-        #  Creates a column frame for each widget,
-        for idx in range(len(self.label_text)):
-            self.frame_columns.append(ttk.Frame(self))
-            self.frame_columns[idx].columnconfigure(0, weight=1, uniform=1)
-            self.frame_columns[idx].rowconfigure("all", weight=1, uniform=1)
-            self.frame_columns[idx].grid(
-                row=0, column=idx, sticky=tk.NSEW, padx=1, pady=(4, 6)
-            )
-            self.labels.append(
-                ttk.Label(self.frame_columns[idx], text=self.label_text[idx])
-            )
-            self.labels[idx].grid(row=0, column=0, sticky=tk.N, pady=1, padx=1)
-        self.frame_columns[5].grid(padx=(1, 4))
-        self.frame_columns[0].grid(padx=(4, 1))
+        # Configure the columns for consistent spacing
+        for i in range(len(self.label_text)):
+            self.columnconfigure(i, weight=1)
+        for i in range(channels):
+            self.rowconfigure(i, weight=1, uniform="1")
 
         # Creates the widgets for each channel - populates the rows.
         for num in range(0, channels):
-
-            column_id = 0
-            #  Channel Checkboxes
             self.channel_variables.append(tk.BooleanVar())
             self.channel_checks.append(
-                ttk.Checkbutton(
-                    self.frame_columns[column_id],
-                    text="CH" + str(num + 1),
-                    variable=self.channel_variables[num],
-                )
-            )
-            self.channel_checks[num].grid(
-                row=num + 1, column=0, sticky=tk.NSEW, padx=1, pady=1
-            )
-            column_id += 1
+                ttk.Checkbutton(self, text="CH" + str(num + 1), variable=self.channel_variables[num]))
+            self.channel_checks[num].grid(row=num + 1, column=(column_id := 0), sticky=tk.NSEW, padx=self.pad_x,
+                                          pady=self.pad_y)
 
-            #  Laser Dropdowns
+            # Laser Dropdowns
             self.laser_variables.append(tk.StringVar())
-            self.laser_pulldowns.append(
-                ttk.Combobox(
-                    self.frame_columns[column_id],
-                    textvariable=self.laser_variables[num],
-                    width=6,
-                )
-            )
+            self.laser_pulldowns.append(ttk.Combobox(self, textvariable=self.laser_variables[num], width=6))
             self.laser_pulldowns[num].config(state="readonly")
-            self.laser_pulldowns[num].grid(
-                row=num + 1, column=0, sticky=tk.NSEW, padx=1, pady=1
-            )
-            column_id += 1
+            self.laser_pulldowns[num].grid(row=num + 1, column=(column_id := column_id + 1), sticky=tk.NSEW,
+                                           padx=self.pad_x, pady=self.pad_y)
 
-            #  Laser Power Spinbox
+            # Laser Power Spinbox
             self.laserpower_variables.append(tk.StringVar())
             self.laserpower_pulldowns.append(
-                ValidatedSpinbox(
-                    self.frame_columns[column_id],
-                    textvariable=self.laserpower_variables[num],
-                    width=5,
-                    font=tk.font.Font(size=11),
-                )
-            )
-            self.laserpower_pulldowns[num].grid(
-                row=num + 1, column=0, sticky=tk.NS, padx=1, pady=1
-            )
-            column_id += 1
+                ValidatedSpinbox(self, textvariable=self.laserpower_variables[num], width=4))
+            self.laserpower_pulldowns[num].grid(row=num + 1, column=(column_id := column_id + 1), sticky=tk.NSEW,
+                                                padx=self.pad_x, pady=self.pad_y)
 
+            # FilterWheel Dropdowns
             for i in range(filter_wheels):
-                #  FilterWheel Dropdowns
                 self.filterwheel_variables.append(tk.StringVar())
                 self.filterwheel_pulldowns.append(
-                    ttk.Combobox(
-                        self.frame_columns[column_id],
-                        textvariable=self.filterwheel_variables[-1],
-                        width=10,
-                    )
-                )
+                    ttk.Combobox(self, textvariable=self.filterwheel_variables[-1], width=10))
                 self.filterwheel_pulldowns[-1].config(state="readonly")
-                self.filterwheel_pulldowns[-1].grid(
-                    row=num + 1, column=0, sticky=tk.NSEW, padx=1, pady=1
-                )
-                column_id += 1
+                self.filterwheel_pulldowns[-1].grid(row=num + 1, column=(column_id := column_id + 1),
+                                                    sticky=tk.NSEW, padx=self.pad_x, pady=self.pad_y)
 
-            #  Exposure Time Spin boxes
+            # Exposure Time Spin boxes
             self.exptime_variables.append(tk.StringVar())
-            self.exptime_pulldowns.append(
-                ValidatedSpinbox(
-                    self.frame_columns[column_id],
-                    textvariable=self.exptime_variables[num],
-                    width=5,
-                    font=tk.font.Font(size=11),
-                )
-            )
-            self.exptime_pulldowns[num].grid(
-                row=num + 1, column=0, sticky=tk.NSEW, padx=1, pady=1
-            )
-            column_id += 1
+            self.exptime_pulldowns.append(ValidatedSpinbox(self, textvariable=self.exptime_variables[num], width=7))
+            self.exptime_pulldowns[num].grid(row=num + 1, column=(column_id := column_id + 1), sticky=tk.NSEW,
+                                             padx=self.pad_x, pady=self.pad_y)
 
-            #  Time Interval Spin boxes
+            # Time Interval Spin boxes
             self.interval_variables.append(tk.StringVar())
-            self.interval_spins.append(
-                ValidatedSpinbox(
-                    self.frame_columns[column_id],
-                    textvariable=self.interval_variables[num],
-                    width=3,
-                    font=tk.font.Font(size=11),
-                )
-            )
-            self.interval_spins[num].grid(
-                row=num + 1, column=0, sticky=tk.NSEW, padx=1, pady=1
-            )
-            column_id += 1
-            hover = Hover(self.interval_spins[num], text="Not Implemented", type="free")
-            hover.setdescription(text="Not Implemented")
+            self.interval_spins.append(ValidatedSpinbox(self, textvariable=self.interval_variables[num], width=3))
+            self.interval_spins[num].grid(row=num + 1, column=(column_id := column_id + 1), sticky=tk.NSEW,
+                                          padx=self.pad_x, pady=self.pad_y)
 
             # Defocus Spinbox
             self.defocus_variables.append(tk.DoubleVar())
-            self.defocus_spins.append(
-                ValidatedSpinbox(
-                    self.frame_columns[column_id],
-                    textvariable=self.defocus_variables[num],
-                    width=4,
-                    font=tk.font.Font(size=11),
-                )
-            )
-            self.defocus_spins[num].grid(
-                row=num + 1, column=0, sticky=tk.NSEW, padx=1, pady=1
-            )
-            column_id += 1
+            self.defocus_spins.append(ValidatedSpinbox(self, textvariable=self.defocus_variables[num], width=4))
+            self.defocus_spins[num].grid(row=num + 1, column=(column_id := column_id + 1), sticky=tk.NSEW,
+                                         padx=self.pad_x, pady=self.pad_y)
 
-            if num % 2 == 1:
-                self.filterwheel_pulldowns[num].grid(pady=2)
-                self.laser_pulldowns[num].grid(pady=2)
-                self.channel_checks[num].grid(pady=2)
+
+    def create_labels(self,
+                      filter_wheel_names: list,
+                      filter_wheels: int) -> None:
+        """ Create the labels for the columns.
+
+        Function to create the labels for the columns of the Channel Creator frame.
+
+        Parameters
+        ----------
+        filter_wheel_names : list
+            A list of the names of the filter wheels
+        filter_wheels : int
+            Number of filter wheels
+        """
+        # Create the labels for the columns.
+        self.label_text = [
+            "Channel",
+            "Laser",
+            "Power",
+        ]
+        for i in range(filter_wheels):
+            self.label_text.append(filter_wheel_names[i])
+
+        self.label_text += ["Exp. Time (ms)", "Interval", "Defocus"]
+
+        for idx in range(len(self.label_text)):
+            self.frame_columns.append(ttk.Frame(self))
+            self.frame_columns[idx].grid(row=0, column=idx, sticky=tk.NSEW, padx=self.pad_x, pady=self.pad_y)
+            self.labels.append(ttk.Label(self.frame_columns[idx], text=self.label_text[idx]))
+            self.labels[idx].grid(row=0, column=0, sticky=tk.N, pady=self.pad_y, padx=self.pad_x)
 
 
 class StackAcquisitionFrame(ttk.Labelframe):
     """This class is the frame that holds the stack acquisition settings."""
 
-    def __init__(self, settings_tab, *args, **kwargs):
+    def __init__(self,
+                 settings_tab: ChannelsTab,
+                 *args: list,
+                 **kwargs: dict) -> None:
         """Initialization of the Stack Acquisition Frame
 
         Parameters
         ----------
-        settings_tab : tkinter.Frame
+        settings_tab : ChannelsTab
             The frame that holds the settings tab.
-        *args : tuple
+        *args : list
             Variable length argument list.
         **kwargs : dict
             Arbitrary keyword arguments.
@@ -371,20 +334,16 @@ class StackAcquisitionFrame(ttk.Labelframe):
         text_label = "Stack Acquisition Settings (" + "\N{GREEK SMALL LETTER MU}" + "m)"
         ttk.Labelframe.__init__(self, settings_tab, text=text_label, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
         #: dict: Dictionary of the widgets in the frame
         self.inputs = {}
 
         #: dict: Dictionary of the buttons in the frame
         self.buttons = {}
 
-        #: tkinter.Frame: The frame that holds the position and slice settings
+        #: ttk.Frame: The frame that holds the position and slice settings
         self.pos_slice = ttk.Frame(self)
 
-        #: tkinter.Frame: The frame that holds the laser cycling settings
+        #: ttk.Frame: The frame that holds the laser cycling settings
         self.cycling = ttk.Frame(self)
 
         # Griding Each Holder Frame
@@ -395,7 +354,7 @@ class StackAcquisitionFrame(ttk.Labelframe):
         start_names = ["start_position", "start_focus"]
         start_labels = ["Pos", "Foc"]
 
-        #: tkinter.Label: The label for the start position frame
+        #: ttk.Label: The label for the start position frame
         self.start_label = ttk.Label(self.pos_slice, text="Start")
         self.start_label.grid(row=0, column=0, sticky="S")
         for i in range(len(start_names)):
@@ -406,22 +365,18 @@ class StackAcquisitionFrame(ttk.Labelframe):
                 input_var=tk.DoubleVar(),
                 input_args={"width": 6},
             )
-            self.inputs[start_names[i]].grid(
-                row=i + 1, column=0, sticky="N", pady=2, padx=(6, 0)
-            )
+            self.inputs[start_names[i]].grid(row=i + 1, column=0, sticky="N", pady=2, padx=(6, 0))
             self.inputs[start_names[i]].label.grid(sticky="N")
 
         # Start button
-        self.buttons["set_start"] = HoverButton(
-            self.pos_slice, text="Set Start Pos/Foc"
-        )
+        self.buttons["set_start"] = HoverButton(self.pos_slice, text="Set Start Pos/Foc")
         self.buttons["set_start"].grid(row=3, column=0, sticky="N", pady=2, padx=(6, 0))
 
         # End Pos Frame (Vertically Oriented)
         end_names = ["end_position", "end_focus"]
         end_labels = ["Pos", "Foc"]
 
-        #: tkinter.Label: The label for the end position
+        #: ttk.Label: The label for the end position
         self.end_label = ttk.Label(self.pos_slice, text="End")
         self.end_label.grid(row=0, column=1, sticky="S")
         for i in range(len(end_names)):
@@ -432,17 +387,14 @@ class StackAcquisitionFrame(ttk.Labelframe):
                 input_var=tk.DoubleVar(),
                 input_args={"width": 6},
             )
-            self.inputs[end_names[i]].grid(
-                row=i + 1, column=1, sticky="N", pady=2, padx=(6, 0)
-            )
+            self.inputs[end_names[i]].grid(row=i + 1, column=1, sticky="N", pady=2, padx=(6, 0))
             self.inputs[end_names[i]].label.grid(sticky="N")
 
         # End Button
         self.buttons["set_end"] = HoverButton(self.pos_slice, text="Set End Pos/Foc")
         self.buttons["set_end"].grid(row=3, column=1, sticky="N", pady=2, padx=(6, 0))
 
-        # Step Size Frame (Vertically oriented)
-        #: tkinter.Label: The label for the step size
+        #: ttk.Label: The label for the step size
         self.step_size_label = ttk.Label(self.pos_slice, text="Step Size")
         self.step_size_label.grid(row=0, column=2, sticky="S")
         self.inputs["step_size"] = LabelInput(
@@ -454,7 +406,7 @@ class StackAcquisitionFrame(ttk.Labelframe):
         self.inputs["step_size"].grid(row=1, column=2, sticky="N", padx=6)
 
         # Slice Frame (Vertically oriented)
-        #: tkinter.Label: The label to add empty space to the slice frame
+        #: ttk.Label: The label to add empty space to the slice frame
         self.empty_label = ttk.Label(self.pos_slice, text=" ")
         self.empty_label.grid(row=0, column=3, sticky="N")
         slice_names = ["number_z_steps", "abs_z_start", "abs_z_end"]
@@ -480,9 +432,7 @@ class StackAcquisitionFrame(ttk.Labelframe):
             input_var=tk.StringVar(),
             input_args={"width": 8},
         )
-        self.inputs["cycling"].state(
-            ["readonly"]
-        )  # Makes it so the user cannot type a choice into combobox
+        self.inputs["cycling"].state(["readonly"])
         self.inputs["cycling"].grid(row=0, column=0, sticky="NSEW", padx=6, pady=5)
 
         # Initialize DescriptionHovers
@@ -490,7 +440,7 @@ class StackAcquisitionFrame(ttk.Labelframe):
         self.buttons["set_end"].hover.setdescription("Sets End")
 
     # Getters
-    def get_variables(self):
+    def get_variables(self) -> dict:
         """Returns a dictionary of the variables in the widget
 
         This function returns a dictionary of all the variables
@@ -508,7 +458,7 @@ class StackAcquisitionFrame(ttk.Labelframe):
             variables[key] = widget.get_variable()
         return variables
 
-    def get_widgets(self):
+    def get_widgets(self) -> dict:
         """Returns a dictionary of the widgets.
 
         This function returns the dictionary that holds the input widgets.
@@ -521,7 +471,7 @@ class StackAcquisitionFrame(ttk.Labelframe):
         """
         return self.inputs
 
-    def get_buttons(self):
+    def get_buttons(self) -> dict:
         """Returns a dictionary of the buttons in the frame.
 
         This function returns the dictionary that holds the buttons.
@@ -536,20 +486,23 @@ class StackAcquisitionFrame(ttk.Labelframe):
 
 
 class StackTimePointFrame(ttk.Labelframe):
-    """Frame for the stack timepoint settings in the channels tab.
+    """Frame for the stack time point settings in the channels tab.
 
-    This class is a frame that holds the widgets for the stack timepoint settings.
+    This class is a frame that holds the widgets for the stack time point settings.
     It is a subclass of ttk.Labelframe.
     """
 
-    def __init__(self, settings_tab, *args, **kwargs):
-        """Initilization of the Stack Timepoint Frame
+    def __init__(self,
+                 settings_tab: ChannelsTab,
+                 *args: list,
+                 **kwargs: dict) -> None:
+        """Initialization of the Stack Time point Frame
 
         Parameters
         ----------
-        settings_tab : tk.Frame
-            The frame that the stack timepoint frame will be placed in
-        *args : tuple
+        settings_tab : ChannelsTab
+            The frame that the stack time point frame will be placed in
+        *args : list
             Variable length argument list
         **kwargs : dict
             Arbitrary keyword arguments
@@ -557,124 +510,87 @@ class StackTimePointFrame(ttk.Labelframe):
         text_label = "Timepoint Settings"
         ttk.Labelframe.__init__(self, settings_tab, text=text_label, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-        # Widget dictionary
         #: dict: Dictionary of the widgets in the frame
         self.inputs = {}
 
-        # Save Data Label
-        #: tkinter.Label: The label for the save data checkbox
+        #: ttk.Label: The label for the save data checkbox
         self.laser_label = ttk.Label(self, text="Save Data")
         self.laser_label.grid(row=0, column=0, sticky=tk.NSEW, padx=(4, 5), pady=(4, 0))
 
-        # Save Data Checkbox
         #: tk.BooleanVar: The variable for the save data checkbox
         self.save_data = tk.BooleanVar()
         self.save_data.set(False)
+
         #: ttk.Checkbutton: The save data checkbox
         self.save_check = ttk.Checkbutton(self, text="", variable=self.save_data)
         self.save_check.grid(row=0, column=1, sticky=tk.NSEW, pady=(4, 0))
         self.inputs["save_check"] = self.save_check
 
-        # Timepoints Label, spinbox defaults to 1.
-        #: tkinter.Label: The label for the timepoints spinbox
+        #: ttk.Label: The label for the timepoints spinbox
         self.filterwheel_label = ttk.Label(self, text="Timepoints")
-        self.filterwheel_label.grid(
-            row=1, column=0, sticky=tk.NSEW, padx=(4, 5), pady=2
-        )
+        self.filterwheel_label.grid(row=1, column=0, sticky=tk.NSEW, padx=(4, 5), pady=2)
+
         #: tk.StringVar: The variable for the timepoints spinbox
         self.exp_time_spinval = tk.StringVar()
 
-        #: ttk.Spinbox: The timepoints spinbox
-        self.exp_time_spinbox = ValidatedSpinbox(
-            self,
-            textvariable=self.exp_time_spinval,
-            width=3,
-        )
+        #: ValidatedSpinbox: The timepoints spinbox
+        self.exp_time_spinbox = ValidatedSpinbox(self, textvariable=self.exp_time_spinval, width=3)
         self.exp_time_spinbox.grid(row=1, column=1, sticky=tk.NSEW, pady=2)
         self.inputs["time_spin"] = self.exp_time_spinbox
 
-        # Stack Acq. Time Label
-        #: tkinter.Label: The label for the stack acquisition time spinbox
+        #: ttk.Label: The label for the stack acquisition time spinbox
         self.exp_time_label = ttk.Label(self, text="Stack Acq. Time")
         self.exp_time_label.grid(row=2, column=0, sticky=tk.NSEW, padx=(4, 5), pady=2)
 
-        # Stack Acq. Time Spinbox
         #: tk.StringVar: The variable for the stack acquisition time spinbox
         self.stack_acq_spinval = tk.StringVar()
 
         #: ttk.Spinbox: The stack acquisition time spinbox
-        self.stack_acq_spinbox = ttk.Spinbox(
-            self,
-            textvariable=self.stack_acq_spinval,  # this holds the data in the entry
-            width=6,
-        )
+        self.stack_acq_spinbox = ttk.Spinbox(self, textvariable=self.stack_acq_spinval, width=6)
         self.stack_acq_spinbox.grid(row=2, column=1, sticky=tk.NSEW, pady=2)
-        self.stack_acq_spinbox.state(["disabled"])  # Starts it disabled
+        self.stack_acq_spinbox.state(["disabled"])
 
-        # Stack Pause Label
-        #: tkinter.Label: The label for the stack pause spinbox
+        #: ttk.Label: The label for the stack pause spinbox
         self.exp_time_label = ttk.Label(self, text="Stack Pause (s)")
         self.exp_time_label.grid(row=0, column=2, sticky=tk.NSEW, padx=(4, 5), pady=2)
 
-        # Stack Pause Spinbox
         #: tk.StringVar: The variable for the stack pause spinbox
         self.stack_pause_spinval = tk.StringVar()
 
-        #: ttk.Spinbox: The stack pause spinbox
-        self.stack_pause_spinbox = ValidatedSpinbox(
-            self,
-            textvariable=self.stack_pause_spinval,
-            width=6,
-        )
+        #: ValidatedSpinbox: The stack pause spinbox
+        self.stack_pause_spinbox = ValidatedSpinbox(self, textvariable=self.stack_pause_spinval, width=6)
         self.stack_pause_spinbox.grid(row=0, column=3, sticky=tk.NSEW, pady=2)
         self.inputs["stack_pause"] = self.stack_pause_spinbox
 
-        # Timepoint Interval Label
-        #: tkinter.Label: The label for the timepoint interval spinbox
+        #: ttk.Label: The label for the time point interval spinbox
         self.exp_time_label = ttk.Label(self, text="Time Interval (hh:mm:ss)")
         self.exp_time_label.grid(row=1, column=2, sticky=tk.NSEW, padx=(4, 5), pady=2)
 
-        # Timepoint Interval Spinbox
-        #: tk.StringVar: The variable for the timepoint interval spinbox
+        #: tk.StringVar: The variable for the time point interval spinbox
         self.timepoint_interval_spinval = tk.StringVar()
         if self.timepoint_interval_spinval.get() == "":
             self.timepoint_interval_spinval.set("0")
-        #: ttk.Spinbox: The timepoint interval spinbox
-        self.timepoint_interval_spinbox = ttk.Spinbox(
-            self,
-            textvariable=self.timepoint_interval_spinval,
-            width=6,
-        )
+
+        #: ttk.Spinbox: The time point interval spinbox
+        self.timepoint_interval_spinbox = ttk.Spinbox(self, textvariable=self.timepoint_interval_spinval, width=6)
         self.timepoint_interval_spinbox.grid(row=1, column=3, sticky=tk.NSEW, pady=2)
         self.timepoint_interval_spinbox.state(["disabled"])  # Starts it disabled
 
-        # Total Time Label
-        #: tkinter.Label: The label for the total time spinbox
+        #: ttk.Label: The label for the total time spinbox
         self.exp_time_label = ttk.Label(self, text="Experiment Duration (hh:mm:ss)")
-        self.exp_time_label.grid(
-            row=2, column=2, sticky=tk.NSEW, padx=(4, 5), pady=(2, 6)
-        )
+        self.exp_time_label.grid(row=2, column=2, sticky=tk.NSEW, padx=(4, 5), pady=(2, 6))
 
-        # Total Time Spinbox
         #: tk.StringVar: The variable for the total time spinbox
         self.total_time_spinval = tk.StringVar()
         if self.total_time_spinval.get() == "":
             self.total_time_spinval.set("0")
+
         #: ttk.Spinbox: The total time spinbox
-        self.total_time_spinval = ttk.Spinbox(
-            self,
-            textvariable=self.total_time_spinval,
-            width=6,
-        )
+        self.total_time_spinval = ttk.Spinbox(self, textvariable=self.total_time_spinval, width=6)
         self.total_time_spinval.grid(row=2, column=3, sticky=tk.NSEW, pady=(2, 6))
         self.total_time_spinval.state(["disabled"])
 
-    # Getters
-    def get_variables(self):
+    def get_variables(self) -> dict:
         """Returns a dictionary of all the variables that are tied to each widget name.
 
         The key is the widget name, value is the variable associated.
@@ -689,7 +605,7 @@ class StackTimePointFrame(ttk.Labelframe):
             variables[key] = widget.get_variable()
         return variables
 
-    def get_widgets(self):
+    def get_widgets(self) -> dict:
         """Returns a dictionary of all the widgets that are tied to each widget name.
 
         The key is the widget name, value is the LabelInput class that has all the data.
@@ -705,14 +621,17 @@ class StackTimePointFrame(ttk.Labelframe):
 class MultiPointFrame(ttk.Labelframe):
     """Multi-Position Acquisition Frame"""
 
-    def __init__(self, settings_tab, *args, **kwargs):
-        """Initilization of the Multi-Position Acquisition Frame
+    def __init__(self,
+                 settings_tab: ChannelsTab,
+                 *args: list,
+                 **kwargs: dict) -> None:
+        """Initialization of the Multi-Position Acquisition Frame
 
         Parameters
         ----------
-        settings_tab : tk.Frame
+        settings_tab : ChannelsTab
             The frame that the multipoint frame will be placed in
-        *args : tuple
+        *args : list
             Variable length argument list
         **kwargs : dict
             Arbitrary keyword arguments
@@ -720,56 +639,20 @@ class MultiPointFrame(ttk.Labelframe):
         text_label = "Multi-Position Acquisition"
         ttk.Labelframe.__init__(self, settings_tab, text=text_label, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-        # Save Data Label
-        #: tkinter.Label: The label for the save data checkbox
+        #: ttk.Label: The label for the save data checkbox
         self.laser_label = ttk.Label(self, text="Enable")
         self.laser_label.grid(row=0, column=0, sticky=tk.NSEW, padx=(4, 4), pady=(4, 4))
 
-        # Save Data Checkbox
         #: tk.BooleanVar: The variable for the save data checkbox
         self.on_off = tk.BooleanVar()
+
         #: ttk.Checkbutton: The save data checkbox
         self.save_check = ttk.Checkbutton(self, text="", variable=self.on_off)
         self.save_check.grid(row=0, column=1, sticky=tk.NSEW, pady=(4, 4))
 
-        # Tiling Wizard Button
         #: dict: Dictionary of the buttons in the frame
-        self.buttons = {}
-        self.buttons["tiling"] = ttk.Button(self, text="Launch Tiling Wizard")
-        self.buttons["tiling"].grid(
-            row=0, column=2, sticky=tk.NSEW, padx=(10, 0), pady=(4, 4)
-        )
-
-    def get_variables(self):
-        """Returns a dictionary of all the variables that are tied to each widget name.
-
-        The key is the widget name, value is the variable associated.
-
-        Returns
-        -------
-        variables : dict
-            A dictionary of all the variables that are tied to each widget name.
-        """
-        variables = {}
-        for key, widget in self.inputs.items():
-            variables[key] = widget.get_variable()
-        return variables
-
-    def get_widgets(self):
-        """Returns a dictionary of all the widgets that are tied to each widget name.
-
-        The key is the widget name, value is the LabelInput class that has all the data.
-
-        Returns
-        -------
-        widgets : dict
-            A dictionary of all the widgets that are tied to each widget name.
-        """
-        return self.inputs
+        self.buttons = {"tiling": ttk.Button(self, text="Launch Tiling Wizard")}
+        self.buttons["tiling"].grid(row=0, column=2, sticky=tk.NSEW, padx=(10, 0), pady=(4, 4))
 
 
 class QuickLaunchFrame(ttk.Labelframe):
@@ -778,14 +661,14 @@ class QuickLaunchFrame(ttk.Labelframe):
     This frame contains buttons that launch the Tiling Wizard.
     """
 
-    def __init__(self, settings_tab, *args, **kwargs):
-        """Initilization of the Quick Launch Buttons Frame
+    def __init__(self, settings_tab: ChannelsTab, *args: list, **kwargs: dict) -> None:
+        """Initialization of the Quick Launch Buttons Frame
 
         Parameters
         ----------
-        settings_tab : object
+        settings_tab : ChannelsTab
             The settings tab object that this frame is being added to.
-        *args : tuple
+        *args : list
             Variable length argument list.
         **kwargs : dict
             Arbitrary keyword arguments.
@@ -793,20 +676,9 @@ class QuickLaunchFrame(ttk.Labelframe):
         text_label = "Quick Launch Buttons"
         ttk.Labelframe.__init__(self, settings_tab, text=text_label, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-        # Tiling Wizard Button
-        #: dict: Dictionary of the buttons in the frame
-        self.buttons = {
-            "waveform_parameters": ttk.Button(self, text="Waveform Parameters")
-        }
-        self.buttons["waveform_parameters"].grid(
-            row=0, column=2, sticky=tk.NSEW, padx=(4, 4), pady=(4, 4)
-        )
-
+        #: Dict[str, ttk.Button]: Dictionary of the buttons in the frame
+        self.buttons: Dict[str, ttk.Button] = {}
+        self.buttons = {"waveform_parameters": ttk.Button(self, text="Waveform Parameters")}
+        self.buttons["waveform_parameters"].grid(row=0, column=2, sticky=tk.NSEW, padx=(4, 4), pady=(4, 4))
         self.buttons["autofocus_button"] = ttk.Button(self, text="Autofocus Settings")
-        self.buttons["autofocus_button"].grid(
-            row=1, column=2, sticky=tk.NSEW, padx=(4, 4), pady=(4, 4)
-        )
+        self.buttons["autofocus_button"].grid(row=1, column=2, sticky=tk.NSEW, padx=(4, 4), pady=(4, 4))

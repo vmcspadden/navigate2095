@@ -4,7 +4,6 @@
 # modification, are permitted for academic and research use only
 # (subject to the limitations in the disclaimer below)
 # provided that the following conditions are met:
-
 #      * Redistributions of source code must retain the above copyright notice,
 #      this list of conditions and the following disclaimer.
 
@@ -37,8 +36,10 @@ import shutil
 import platform
 from pathlib import Path
 from os.path import isfile
+import multiprocessing
 from multiprocessing.managers import ListProxy, DictProxy
 import logging
+from typing import Union
 
 # Third Party Imports
 import yaml
@@ -90,6 +91,8 @@ def get_configuration_paths():
         Path to file containing waveform templates
     gui_configuration_path : str
         Path to file containing GUI configuration
+    multi_positions_path : str
+        Path to file containing multi-positions
     """
     # Create the navigate home directory if it doesn't exist
     navigate_directory = get_navigate_path()
@@ -108,7 +111,7 @@ def get_configuration_paths():
         "rest_api_config.yml",
         "waveform_templates.yml",
         "gui_configuration.yml",
-        "multi_positions.yml"
+        "multi_positions.yml",
     ]
 
     base_directory = Path(__file__).resolve().parent
@@ -187,7 +190,12 @@ def build_nested_dict(manager, parent_dict, key_name, dict_data):
     parent_dict[key_name] = d
 
 
-def update_config_dict(manager, parent_dict, config_name, new_config) -> bool:
+def update_config_dict(
+    manager: multiprocessing.Manager,
+    parent_dict: dict,
+    config_name: str,
+    new_config: Union[dict, str],
+) -> bool:
     """Read a new file and update info of the configuration dict.
 
     Parameters
@@ -197,7 +205,7 @@ def update_config_dict(manager, parent_dict, config_name, new_config) -> bool:
     parent_dict : dict
         Dictionary we are adding to
     config_name : str
-        Name of subdictionary to replace
+        Name of dictionary to replace
     new_config : dict or str
         Dictionary values or
         yaml file name
@@ -345,7 +353,7 @@ def verify_experiment_config(manager, configuration):
         if k not in saving_setting_dict:
             saving_setting_dict[k] = saving_dict_sample[k]
 
-    # if root directory/saving direcotry doesn't exist
+    # if root directory/saving directory doesn't exist
     if not os.path.exists(saving_setting_dict["root_directory"]):
         saving_setting_dict["root_directory"] = saving_dict_sample["root_directory"]
     if not os.path.exists(saving_setting_dict["save_directory"]):
@@ -652,6 +660,7 @@ def verify_experiment_config(manager, configuration):
                 channel_value[k] = temp[k]
             if channel_value[k] < 0:
                 channel_value[k] = temp[k]
+
 
 def verify_waveform_constants(manager, configuration):
     """Verifies and updates the waveform constants in the configuration dictionary.
@@ -972,7 +981,9 @@ def verify_configuration(manager, configuration):
                     f"{device_name} is not defined in configuration.yaml for "
                     f"microscope {microscope_name}"
                 )
-                raise Exception(f"No {device_name} defined for microscope {microscope_name}")
+                raise Exception(
+                    f"No {device_name} defined for microscope {microscope_name}"
+                )
         camera_config = device_config[microscope_name]["camera"]
         if "delay" not in camera_config.keys():
             camera_config["delay"] = camera_config.get("delay_percent", 2)
@@ -1094,12 +1105,13 @@ def verify_configuration(manager, configuration):
         {"channels": {"count": channel_count}},
     )
 
+
 def verify_positions_config(positions):
     if positions is None or type(positions) not in (list, ListProxy):
         return []
     # MultiPositions
     position_num = len(positions)
-    for i in range(position_num-1, -1, -1):
+    for i in range(position_num - 1, -1, -1):
         position = positions[i]
         try:
             for j in range(5):

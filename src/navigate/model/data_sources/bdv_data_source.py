@@ -33,6 +33,7 @@
 import os
 import logging
 from typing import Any, Dict
+import warnings
 
 # Third Party Imports
 import h5py
@@ -44,8 +45,16 @@ from .pyramidal_data_source import PyramidalDataSource
 from ..metadata_sources.bdv_metadata import BigDataViewerMetadata
 
 # Logger Setup
-p = __name__.split(".")[1]
-logger = logging.getLogger(p)
+logger = logging.getLogger(__name__.split(".")[1])
+
+# Suppress UserWarnings from zarr.n5
+warnings.filterwarnings("ignore", message="Attribute dataType is a reserved N5 keyword")
+warnings.filterwarnings(
+    "ignore", message="Attribute blockSize is a reserved N5 keyword"
+)
+warnings.filterwarnings(
+    "ignore", message="Attribute dimensions is a reserved N5 keyword"
+)
 
 
 class BigDataViewerDataSource(PyramidalDataSource):
@@ -67,19 +76,25 @@ class BigDataViewerDataSource(PyramidalDataSource):
         """
         #: np.array: The image.
         self.image = None
+
         #: list: The views.
         self._views = []
+
         #: zarr.N5Store: The N5 store.
         self.__store = None
+
         #: str: The file type.
         self.__file_type = os.path.splitext(os.path.basename(file_name))[-1][1:].lower()
+
         if self.__file_type not in ["h5", "n5"]:
             error_statement = f"Unknown file type {self.__file_type}."
             logger.error(error_statement)
             raise ValueError(error_statement)
+
         if self.__file_type == "h5":
             self.setup = self._setup_h5
             self.ds_name = self._h5_ds_name
+
         elif self.__file_type == "n5":
             self.setup = self._setup_n5
             self.ds_name = self._n5_ds_name
@@ -88,7 +103,7 @@ class BigDataViewerDataSource(PyramidalDataSource):
         #: BigDataViewerMetadata: The metadata.
         self.metadata = BigDataViewerMetadata()
 
-        super().__init__(file_name, mode)
+        super().__init__(file_name=file_name, mode=mode)
 
     def get_slice(self, x, y, c, z=0, t=0, p=0, subdiv=0) -> npt.ArrayLike:
         """Get a 3D slice of the dataset for a single c, t, p, subdiv.
@@ -148,34 +163,45 @@ class BigDataViewerDataSource(PyramidalDataSource):
         """
         self.mode = "w"
 
-        c, z, t, p = self._cztp_indices(
-            self._current_frame, self.metadata.per_stack
-        )  # find current channel
+        # find current channel
+        c, z, t, pos = self._cztp_indices(self._current_frame, self.metadata.per_stack)
 
-        if not (z or c or t or p):
+        if not (z or c or t or pos):
             self.setup()
 
-        ds_name = self.ds_name(t, c, p)
+        ds_name = self.ds_name(t, c, pos)
         is_kw = len(kw) > 0
         for i in range(self.subdivisions.shape[0]):
             dx, dy, dz = self.resolutions[i, ...]
+
+            # Down-sample in Z.
             if z % dz == 0:
                 dataset_name = ds_name.replace("???", str(i))
                 # print(z, dz, dataset_name, self.image[dataset_name].shape,
                 #       data[::dx, ::dy].shape)
                 zs = min(z // dz, self.shapes[i, 0] - 1)  # TODO: Is this necessary?
-                self.image[dataset_name][zs, ...] = data[::dy, ::dx].astype(self.dtype)
-                if is_kw and (i == 0):
-                    self._views.append(kw)
+                try:
+                    # Down-sample in X and Y.
+                    self.image[dataset_name][zs, ...] = data[::dy, ::dx].astype(self.dtype)
+                    if is_kw and (i == 0):
+                        self._views.append(kw)
+                except OSError as e:
+                    if e.errno == 28:
+                        logger.error("No disk space left on device. Closing the file.")
+                        self.close()
+                        raise Exception("No disk space left on device.")
+
         self._current_frame += 1
 
         # Check if this was the last frame to write
-        c, z, t, p = self._cztp_indices(self._current_frame, self.metadata.per_stack)
-        if (z == 0) and (c == 0) and ((t >= self.shape_t) or (p >= self.positions)):
+        c, z, t, pos = self._cztp_indices(self._current_frame, self.metadata.per_stack)
+        if (z == 0) and (c == 0) and ((t >= self.shape_t) or (pos >= self.positions)):
             self.setup(
-                self.shape_c * self.positions, self.shape_c * (p + 1), create_flag=False
+                self.shape_c * self.positions,
+                self.shape_c * (pos + 1),
+                create_flag=False,
             )
-            self.positions = p + 1
+            self.positions = pos + 1
 
     def _h5_ds_name(self, t, c, p):
         """Get the HDF5 dataset name for the given timepoint, channel, and position.
@@ -256,16 +282,19 @@ class BigDataViewerDataSource(PyramidalDataSource):
             setup_group_name = f"s{i:02}"
             if setup_group_name in self.image:
                 del self.image[setup_group_name]
-            self.image.create_dataset(
+            dataset = self.image.create_dataset(
                 f"{setup_group_name}/resolutions",
                 data=self.resolutions,
                 dtype="float64",
             )
-            self.image.create_dataset(
+            dataset.attrs["element_size_um"] = [self.dy, self.dx, self.dz]
+
+            dataset = self.image.create_dataset(
                 f"{setup_group_name}/subdivisions",
                 data=self.subdivisions,
                 dtype="int32",
             )
+            dataset.attrs["element_size_um"] = [self.dy, self.dx, self.dz]
 
             # https://github.com/bigdataviewer/bigdataviewer-core/issues/102#issuecomment-2072802080
             self.image[setup_group_name].attrs["dataType"] = self.dtype
@@ -282,12 +311,17 @@ class BigDataViewerDataSource(PyramidalDataSource):
                     if dataset_name in self.image:
                         del self.image[dataset_name]
                     # print(f"Creating {dataset_name} with shape {self.shapes[j,...]}")
-                    self.image.create_dataset(
+                    dataset = self.image.create_dataset(
                         dataset_name,
                         chunks=tuple(self.subdivisions[j, ...][::-1]),
                         shape=self.shapes[j, ...],
                         dtype=self.dtype,
                     )
+                    dataset.attrs["element_size_um"] = [
+                        self.dy * self.resolutions[j, ...][1],
+                        self.dx * self.resolutions[j, ...][0],
+                        self.dz * self.resolutions[j, ...][2],
+                    ]
 
     def _setup_n5(self, *args, create_flag=True):
         """Set up the N5 file.

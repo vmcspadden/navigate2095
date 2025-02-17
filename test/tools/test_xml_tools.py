@@ -39,7 +39,7 @@ import unittest
 
 # Local application imports
 from navigate.tools import xml_tools
-
+from navigate.tools.xml_tools import parse_xml
 
 def test_xml_parse_write():
 
@@ -130,5 +130,62 @@ class TestDictToXml(unittest.TestCase):
         self.assertEqual(actual_xml, expected_xml)
 
 
-if __name__ == "__main__":
+class TestParseXml(unittest.TestCase):
+
+    def test_parse_xml_single_level(self):
+        xml_string = '<person name="John" age="30" city="New York"/>'
+        root = ET.fromstring(xml_string)
+        expected_dict = {"name": "John", "age": "30", "city": "New York"}
+        self.assertEqual(parse_xml(root), expected_dict)
+
+    def test_parse_xml_nested_elements(self):
+        xml_string = '''
+        <root>
+            <person name="John" age="30" city="New York"/>
+            <address street="123 Main St" zipcode="10001"/>
+        </root>
+        '''
+        root = ET.fromstring(xml_string)
+        expected_dict = {
+            "person": {"name": "John", "age": "30", "city": "New York"},
+            "address": {"street": "123 Main St", "zipcode": "10001"}
+        }
+        self.assertEqual(parse_xml(root), expected_dict)
+
+    def test_parse_xml_with_text(self):
+        xml_string = '''
+        <root>
+            <person name="John" age="30" city="New York">Hello, world!</person>
+        </root>
+        '''
+        root = ET.fromstring(xml_string)
+        expected_dict = {
+            "person": {
+                "name": "John",
+                "age": "30",
+                "city": "New York",
+                "text": "Hello, world!"
+            }
+        }
+        self.assertEqual(parse_xml(root), expected_dict)
+
+    def test_parse_xml_with_repeated_elements(self):
+        xml_string = '''
+        <class>
+            <student name="Alice" age="20"/>
+            <student name="Bob" age="22"/>
+            <student name="Charlie" age="21"/>
+        </class>
+        '''
+        root = ET.fromstring(xml_string)
+        expected_dict = {
+            "student": [
+                {"name": "Alice", "age": "20"},
+                {"name": "Bob", "age": "22"},
+                {"name": "Charlie", "age": "21"}
+            ]
+        }
+        self.assertEqual(parse_xml(root), expected_dict)
+
+if __name__ == '__main__':
     unittest.main()

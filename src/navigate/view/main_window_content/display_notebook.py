@@ -120,10 +120,6 @@ class MIPTab(tk.Frame):
         #: Bool: The docked flag.
         self.is_docked = True
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
         #: ttk.Frame: The frame that will hold the camera image.
         self.cam_image = ttk.Frame(self)
         self.cam_image.grid(row=0, column=0, rowspan=3, sticky=tk.NSEW)
@@ -147,7 +143,7 @@ class MIPTab(tk.Frame):
         self.canvas.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         #: matplotlib.figure.Figure: The figure that will hold the camera image.
-        self.matplotlib_figure = Figure(figsize=[6, 6], tight_layout=True)
+        self.matplotlib_figure = Figure(figsize=(6.0, 6.0), tight_layout=True)
 
         #:  FigureCanvasTkAgg: The canvas that will hold the camera image.
         self.matplotlib_canvas = FigureCanvasTkAgg(self.matplotlib_figure, self.canvas)

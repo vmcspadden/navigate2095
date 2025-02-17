@@ -31,6 +31,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 # Standard Library Imports
+import logging
 
 # Third Party Imports
 import numpy as np
@@ -38,11 +39,9 @@ import matplotlib.ticker as tck
 from tkinter import messagebox
 
 # Local Imports
+import navigate
 from navigate.controller.sub_controllers.gui import GUIController
-from navigate.tools.common_functions import combine_funcs
-
-
-import logging
+from navigate.view.popups.autofocus_setting_popup import AutofocusPopup
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -52,19 +51,28 @@ logger = logging.getLogger(p)
 class AutofocusPopupController(GUIController):
     """Class creates the popup to configure autofocus parameters."""
 
-    def __init__(self, view, parent_controller):
+    def __init__(
+            self,
+            view: AutofocusPopup,
+            parent_controller: 'navigate.controller.controller.Controller') -> None:
         """
         Parameters
         ----------
-        view : navigate.view.popups.autofocus_setting_popup.AutofocusPopup
+        view : AutofocusPopup
             The view of the autofocus popup.
-        parent_controller : navigate.controller.main_controller.MainController
+        parent_controller : navigate.controller.controller.Controller
             The parent controller of the autofocus popup.
         """
         super().__init__(view, parent_controller)
 
         #: dict: The autofocus setting dictionary.
         self.widgets = self.view.get_widgets()
+
+        #: str: The microscope name.
+        self.microscope_name = None
+
+        #: dict: The autofocus setting dictionary.
+        self.setting_dict = None
 
         #: object: The autofocus figure.
         self.autofocus_fig = self.view.fig
@@ -76,12 +84,10 @@ class AutofocusPopupController(GUIController):
         #: object: The autofocus coarse plot.
         self.coarse_plot = None
 
-        # add saving function to the function closing the window
-        exit_func = combine_funcs(
-            self.view.popup.dismiss,
-            lambda: delattr(self.parent_controller, "af_popup_controller"),
-        )
-        self.view.popup.protocol("WM_DELETE_WINDOW", exit_func)
+        # Dismiss popup.
+        self.view.popup.protocol("WM_DELETE_WINDOW", self.close_popup)
+        self.view.popup.bind("<Escape>", self.close_popup)
+
         self.view.autofocus_btn.configure(command=self.start_autofocus)
         self.view.inputs["device"].get_variable().trace_add(
             "write", self.update_device_ref
@@ -92,19 +98,31 @@ class AutofocusPopupController(GUIController):
         for k in self.view.setting_vars:
             self.view.setting_vars[k].trace_add("write", self.update_setting_dict(k))
 
-    def populate_experiment_values(self):
+    def close_popup(self, *_: tuple[str]) -> None:
+        """Closes the popup window
+
+        Parameters
+        ----------
+        _ : tuple[str]
+            The event arguments.
+        """
+        # We should add saving function to the function closing the window
+
+        self.view.popup.dismiss()
+        delattr(self.parent_controller, "af_popup_controller")
+
+    def populate_experiment_values(self) -> None:
         """Populate Experiment Values
 
         Populates the experiment values from the experiment settings dictionary
         """
-        #: dict: The autofocus setting dictionary.
         self.setting_dict = self.parent_controller.configuration["experiment"][
             "AutoFocusParameters"
         ]
-        #: str: The microscope name.
         self.microscope_name = self.parent_controller.configuration["experiment"][
             "MicroscopeState"
         ]["microscope_name"]
+
         setting_dict = self.setting_dict[self.microscope_name]
 
         # Default to stages, if they exist.
@@ -126,12 +144,12 @@ class AutofocusPopupController(GUIController):
         for k in self.view.setting_vars:
             self.view.setting_vars[k].set(setting_dict[device][device_ref][k])
 
-    def showup(self):
+    def showup(self) -> None:
         """Shows the popup window"""
         self.view.popup.deiconify()
         self.view.popup.attributes("-topmost", 1)
 
-    def start_autofocus(self):
+    def start_autofocus(self) -> None:
         """Starts the autofocus process."""
         device = self.widgets["device"].widget.get()
         device_ref = self.widgets["device_ref"].widget.get()
@@ -141,6 +159,7 @@ class AutofocusPopupController(GUIController):
         self.parent_controller.configuration["experiment"]["MicroscopeState"][
             "autofocus_device_ref"
         ] = device_ref
+
         # verify autofocus parameters
         setting_dict = self.setting_dict[self.microscope_name][device][device_ref]
         warning_message = ""
@@ -151,7 +170,8 @@ class AutofocusPopupController(GUIController):
                     value = float(setting_dict[f"{k}_range"])
                     if step <= 0 or value < step:
                         warning_message += f"{k} settings are not correct!\n"
-                except Exception:
+                except Exception as e:
+                    logger.exception(e)
                     warning_message += f"{k} settings are not correct!\n"
         if warning_message:
             messagebox.showerror(
@@ -161,24 +181,26 @@ class AutofocusPopupController(GUIController):
             return
         self.parent_controller.execute("autofocus", device, device_ref)
 
-    def update_device_ref(self, *args):
+    def update_device_ref(self, *_: tuple[str]) -> None:
         """Update device reference name
 
         Parameters
         ----------
-        args: tk event arguments
+        _: tuple[str]
+            The event arguments.
         """
         device = self.widgets["device"].widget.get()
         device_refs = self.setting_dict[self.microscope_name][device].keys()
         self.widgets["device_ref"].widget["values"] = device_refs
         self.widgets["device_ref"].widget.set(device_refs[0])
 
-    def show_autofocus_setting(self, *args):
+    def show_autofocus_setting(self, *_: tuple[str]) -> None:
         """Show Autofocus Parameters
 
         Parameters
         ----------
-        args: tk event arguments
+        _: tuple[str]
+            The event arguments.
         """
         device = self.widgets["device"].widget.get()
         device_ref = self.widgets["device_ref"].widget.get()
@@ -186,16 +208,21 @@ class AutofocusPopupController(GUIController):
         for k in self.view.setting_vars:
             self.view.setting_vars[k].set(setting_dict[device][device_ref][k])
 
-    def update_setting_dict(self, parameter):
+    def update_setting_dict(self, parameter: str) -> callable:
         """Show Autofocus Parameters
 
         Parameters
         ----------
         parameter : str
             The parameter to be updated.
+
+        Returns
+        -------
+        callable
+            The function to update the parameter
         """
 
-        def func(*args):
+        def func(*_: tuple[str]) -> None:
             device = self.widgets["device"].widget.get()
             device_ref = self.widgets["device_ref"].widget.get()
             self.setting_dict[self.microscope_name][device][device_ref][
@@ -204,10 +231,13 @@ class AutofocusPopupController(GUIController):
 
         return func
 
-    def display_plot(self, data_and_flags):
+    def display_plot(
+            self,
+            data_and_flags: tuple[np.ndarray, bool, bool]
+    ) -> None:
         """Displays the autofocus plot
 
-        data : tuple (numpy.ndarray, bool, bool)
+        data : tuple[np.ndarray, bool, bool]
             (data, line_plot, clear_data)
             data: The data to be plotted.
             line_plot:
@@ -273,6 +303,12 @@ class AutofocusPopupController(GUIController):
         self.autofocus_fig.canvas.draw_idle()
 
     @property
-    def custom_events(self):
-        """dict: Custom events for this controller"""
+    def custom_events(self) -> dict[str, callable]:
+        """dict: Custom events for this controller
+
+        Returns
+        -------
+        dict[str, callable]
+            The custom events for this controller.
+        """
         return {"autofocus": self.display_plot}

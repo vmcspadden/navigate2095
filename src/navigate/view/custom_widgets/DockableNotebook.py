@@ -47,7 +47,7 @@ logger = logging.getLogger(p)
 
 class DockableNotebook(ttk.Notebook):
     """Dockable Notebook that allows for tabs to be popped out into a separate
-    windows by right clicking on the tab. The tab must be selected before
+    windows by right-clicking on the tab. The tab must be selected before
     right-clicking.
     """
 
@@ -58,7 +58,7 @@ class DockableNotebook(ttk.Notebook):
         ----------
         parent: Tk parent widget.
             The parent widget being passed down for hierarchy and organization.
-            Typically a ttk.Frame or tk.Frame.
+            Typically, a ttk.Frame or tk.Frame.
         root : Tk top-level widget.
             Tk.tk GUI instance.
         *args :
@@ -66,17 +66,17 @@ class DockableNotebook(ttk.Notebook):
         **kwargs:
             Keyword options for the ttk.Notebook class
         """
-        ttk.Notebook.__init__(self, parent, *args, **kwargs)
+        super().__init__(parent, *args, **kwargs)
+
         #: tk.Tk: Tkinter root
         self.root = root
+
+        #: int: Selected tab id where user right-clicked.
+        self.selected_tab_id = None
+
         #: list: List of tab variables
         self.tab_list = []
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-        # Popup setup
         #: tk.Menu: Tkinter menu
         self.menu = tk.Menu(self, tearoff=0)
         self.menu.add_command(label="Popout Tab", command=self.popout)
@@ -87,20 +87,23 @@ class DockableNotebook(ttk.Notebook):
         else:
             self.bind("<ButtonPress-3>", self.find)
 
-    def set_tablist(self, tab_list):
+    def set_tablist(
+            self,
+            tab_list: list
+    ) -> None:
         """Setter for tab list
 
         Parameters
         ----------
         tab_list: list
-            List of tab variables
+            The list of tab variables
         """
         self.tab_list = tab_list
 
-    def get_absolute_position(self):
+    def get_absolute_position(self) -> tuple:
         """Get absolute position of mouse.
 
-        This helps the popup menu appear where the mouse is right clicked.
+        This helps the popup menu appear where the mouse is right-clicked.
 
         Returns
         -------
@@ -111,7 +114,7 @@ class DockableNotebook(ttk.Notebook):
         y = self.root.winfo_pointery()
         return x, y
 
-    def find(self, event):
+    def find(self, event: tk.Event) -> None:
         """Find the widget that was clicked on.
 
         Will check if the proper widget element in the event is what we expect.
@@ -121,11 +124,11 @@ class DockableNotebook(ttk.Notebook):
 
         Parameters
         ----------
-        event: Tkinter event
-            Holds information about the event that was triggered and caught by Tkinters
-            event system
+        event: tk.Event
+            Tkinter event object
         """
         element = event.widget.identify(event.x, event.y)
+        self.selected_tab_id = self.index(f"@{event.x},{event.y}")  # Add this line
         if "label" in element:
             try:
                 x, y = self.get_absolute_position()
@@ -133,57 +136,90 @@ class DockableNotebook(ttk.Notebook):
             finally:
                 self.menu.grab_release()
 
-    def popout(self):
+    def popout(self) -> None:
         """Popout the currently selected tab.
 
         Gets the currently selected tab, the tabs name and checks if the tab name is
-        in the tab list. If the tab is in the list, its removed from the list,
+        in the tab list. If the tab is in the list, it's removed from the list,
         hidden, and then passed to a new Top Level window.
         """
         # Get ref to correct tab to popout
-        tab = self.select()
-        tab_text = self.tab(tab)["text"]
-        for tab_name in self.tab_list:
-            if tab_text == self.tab(tab_name)["text"]:
-                tab = tab_name
-                self.tab_list.remove(tab_name)
-        self.hide(tab)
-        self.root.wm_manage(tab)
+        if self.selected_tab_id is None:
+            return
 
-        # self.root.wm_title(tab, tab_text)
-        tk.Wm.title(tab, tab_text)
-        tk.Wm.protocol(tab, "WM_DELETE_WINDOW", lambda: self.dismiss(tab, tab_text))
-        if tab_text == "Camera View":
-            tk.Wm.minsize(tab, 663, 597)
-            tab.is_docked = False
-        elif tab_text == "Waveform Settings":
-            tab.is_docked = False
+        selected_text = self.tab(self.selected_tab_id, "text")
+        tab_widget = None
+        for t in self.tab_list:
+            if self.tab(t, "text") == selected_text:
+                tab_widget = t
+                break
 
-    def dismiss(self, tab, tab_text):
-        """Dismisses the popup menu
+        if not tab_widget:
+            return
 
-        This function is called when the top level that the tab was originally passed to
-        has been closed. The window manager releases control and then the tab is
-        added back to its original ttk.Notebook.
+        # Save the original index and the tab's text
+        tab_widget._original_index = self.selected_tab_id
+        tab_widget._saved_text = selected_text
 
-        Parameters
-        ----------
-        tab: Tkinter tab (path to widget represented as a str)
-            The tab that was popped out, this reference to the dismiss function is
-            associated with this tab
-        tab_text: string
-            Name of the tab as it appears in the GUI
+        if tab_widget in self.tab_list:
+            self.tab_list.remove(tab_widget)
+        self.hide(tab_widget)
+        self.root.wm_manage(tab_widget)
+
+        tk.Wm.title(tab_widget, selected_text)
+        tk.Wm.protocol(
+            tab_widget,
+            "WM_DELETE_WINDOW",
+            lambda: self.dismiss(tab_widget)
+        )
+
+        if selected_text == "Camera View":
+            tk.Wm.minsize(tab_widget, 663, 597)
+            tab_widget.is_docked = False
+        elif selected_text == "Waveform Settings":
+            tab_widget.is_docked = False
+
+    def dismiss(self, tab_widget):
         """
-        self.root.wm_forget(tab)
-        tab.grid(row=0, column=0)
-        if self.index("end") - 1 > tab.index:
-            self.insert(tab.index, tab)
+        Called when the popout window is closed.
+        We 'forget' the window manager, re‐insert the tab into the notebook,
+        and restore its label text and position.
+        """
+        popout = getattr(tab_widget, "_popout_window", None)
+        if popout:
+            popout.destroy()
+            del tab_widget._popout_window
         else:
-            self.insert("end", tab)
-        self.tab(tab, text=tab_text)
-        self.tab_list.append(tab)
-        if tab_text == "Camera View":
-            tab.canvas.configure(width=512, height=512)
-            tab.is_docked = True
-        elif tab_text == "Waveform Settings":
-            tab.is_docked = True
+            # If we used wm_manage successfully, then do wm_forget
+            self.root.wm_forget(tab_widget)
+
+        # Then remove it from any geometry manager just in case
+        tab_widget.grid_forget()
+        tab_widget.pack_forget()
+
+        # Retrieve the original index and the saved text
+        original_index = getattr(tab_widget, "_original_index", None)
+        saved_text = getattr(tab_widget, "_saved_text", "Untitled")
+
+        if original_index is not None:
+            current_count = self.index("end")
+            if original_index >= current_count:
+                original_index = "end"
+            self.insert(original_index, tab_widget)
+
+        else:
+            self.add(tab_widget)
+
+        self.tab(tab_widget, text=saved_text)
+        self.tab_list.append(tab_widget)
+
+        # Restore the tab's docked state
+        if saved_text == "Camera View":
+            if hasattr(tab_widget, "canvas"):
+                tab_widget.canvas.configure(width=512, height=512)
+            tab_widget.is_docked = True
+        elif saved_text == "Waveform Settings":
+            tab_widget.is_docked = True
+
+        # Select tab in main window
+        self.select(tab_widget)

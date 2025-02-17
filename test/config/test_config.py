@@ -83,6 +83,8 @@ def test_config_methods():
         "logging",
         "logger",
         "p",
+        "Union",
+        "multiprocessing",
     ]
     for method in methods:
         assert method in desired_methods
@@ -358,7 +360,7 @@ class TestVerifyExperimentConfig(unittest.TestCase):
             "waveform_template": "Default",
         }
 
-        multipositions_sample = [[10.0, 10.0, 10.0, 10.0, 10.0]]
+        # multipositions_sample = [[10.0, 10.0, 10.0, 10.0, 10.0]]
 
         self.experiment_sample = {
             "Saving": saving_dict_sample,
@@ -804,20 +806,47 @@ class TestVerifyExperimentConfig(unittest.TestCase):
         assert len(new_positions) == 0
 
     def test_load_multi_positions_with_corrupted_values(self):
-        positions = [[1, 2, 3], ['a', 'b', 'c', 1, 2], [10, 'a', 30, 40,]]
+        positions = [
+            [1, 2, 3],
+            ["a", "b", "c", 1, 2],
+            [
+                10,
+                "a",
+                30,
+                40,
+            ],
+        ]
         new_positions = config.verify_positions_config(positions)
         assert isinstance(new_positions, list)
         assert len(new_positions) == 0
 
-
-        positions = [[1, 2, 3], ['a', 'b', 'c', 1, 2], [1, 2, 3, 4, 5], [10, 'a', 30, 40,]]
+        positions = [
+            [1, 2, 3],
+            ["a", "b", "c", 1, 2],
+            [1, 2, 3, 4, 5],
+            [
+                10,
+                "a",
+                30,
+                40,
+            ],
+        ]
         new_positions = config.verify_positions_config(positions)
         assert isinstance(new_positions, list)
         assert len(new_positions) == 1
 
-        positions = [[1, 2, 3], ['a', 'b', 'c', 1, 2], [1, 2, 3, 4, 5], [10, 'a', 30, 40,],
-                     [1, 2, 3, 4, 5, 6]]
+        positions = [
+            [1, 2, 3],
+            ["a", "b", "c", 1, 2],
+            [1, 2, 3, 4, 5],
+            [
+                10,
+                "a",
+                30,
+                40,
+            ],
+            [1, 2, 3, 4, 5, 6],
+        ]
         new_positions = config.verify_positions_config(positions)
         assert isinstance(new_positions, list)
         assert len(new_positions) == 2
-

@@ -33,6 +33,7 @@
 # Standard library imports
 import logging
 from functools import reduce
+import time
 
 # Third party imports
 
@@ -41,6 +42,7 @@ from functools import reduce
 # Logger Setup
 p = __name__.split(".")[1]
 logger = logging.getLogger(p)
+
 
 class ChangeResolution:
     """
@@ -109,6 +111,39 @@ class ChangeResolution:
         bool
             A boolean value indicating the success of the resolution change process.
         """
+        # verify microscope name and zoom value
+        if (
+            self.resolution_mode
+            not in self.model.configuration["configuration"]["microscopes"].keys()
+        ):
+            error_message = f"Can't change resolution: Microscope name {self.resolution_mode} isn't exist!"
+            # logger.exception(error_message) doesn't work
+            print(error_message)
+            raise Exception(error_message)
+        if (
+            self.zoom_value
+            not in self.model.configuration["configuration"]["microscopes"][
+                self.resolution_mode
+            ]["zoom"]["position"].keys()
+        ):
+            error_message = (
+                f"Can't change resolution: Zoom value {self.zoom_value} isn't exist!"
+            )
+            # logger.exception(error_message) doesn't work
+            print(error_message)
+            raise Exception(error_message)
+        # check the image size
+        camera_config = self.model.configuration["experiment"]["CameraParameters"]
+        if (
+            camera_config[self.resolution_mode]["img_x_pixels"]
+            != camera_config[self.model.active_microscope_name]["img_x_pixels"]
+            or camera_config[self.resolution_mode]["img_y_pixels"]
+            != camera_config[self.model.active_microscope_name]["img_y_pixels"]
+        ):
+            error_message = f"Can't change resolution: Image sizes are different!"
+            # logger.exception(error_message) doesn't work
+            print(error_message)
+            raise Exception(error_message)
         # pause data thread
         self.model.pause_data_thread()
         # end active microscope
@@ -230,7 +265,8 @@ class SetCameraParameters:
         camera_config = self.model.configuration["configuration"]["microscopes"][
             self.microscope_name
         ]["camera"]
-        updated_value = [None] * 3
+        updated_value = [None] * 4
+        updated_value[0] = self.microscope_name
         if (
             self.sensor_mode in ["Normal", "Light-Sheet"]
             and self.sensor_mode != camera_parameters["sensor_mode"]
@@ -238,7 +274,7 @@ class SetCameraParameters:
             update_flag = True
             update_sensor_mode = True
             camera_parameters["sensor_mode"] = self.sensor_mode
-            updated_value[0] = self.sensor_mode
+            updated_value[1] = self.sensor_mode
         if camera_parameters["sensor_mode"] == "Light-Sheet":
             if self.readout_direction in camera_config[
                 "supported_readout_directions"
@@ -248,16 +284,16 @@ class SetCameraParameters:
             ):
                 update_flag = True
                 camera_parameters["readout_direction"] = self.readout_direction
-                updated_value[1] = self.readout_direction
+                updated_value[2] = self.readout_direction
             if self.rolling_shutter_width and (
                 update_sensor_mode
                 or self.rolling_shutter_width != camera_parameters["number_of_pixels"]
             ):
                 update_flag = True
                 camera_parameters["number_of_pixels"] = self.rolling_shutter_width
-                updated_value[2] = self.rolling_shutter_width
+                updated_value[3] = self.rolling_shutter_width
 
-        if not update_flag:
+        if not update_flag or self.microscope_name != self.model.active_microscope_name:
             return True
         # pause data thread
         self.model.pause_data_thread()
@@ -279,7 +315,6 @@ class SetCameraParameters:
 
 
 class UpdateExperimentSetting:
-
     def __init__(self, model, experiment_parameters={}):
         self.model = model
 
@@ -311,7 +346,15 @@ class UpdateExperimentSetting:
         # end active microscope
         self.model.active_microscope.end_acquisition()
 
+        state = self.model.configuration["experiment"]["MicroscopeState"]
+        pre_z_steps = state["number_z_steps"]
+        pre_channels = sum(
+            [v["is_selected"] is True for k, v in state["channels"].items()]
+        )
+        pre_timepoints = state["timepoints"]
+
         # update experiment values
+        # check if any parameter about x, y, c, z, t changed
         for k, v in self.experiment_parameters.items():
             try:
                 parameters = k.split(".")
@@ -328,6 +371,13 @@ class UpdateExperimentSetting:
         self.model.active_microscope.prepare_next_channel()
         # update image writer
         if self.model.image_writer:
+            z_steps = state["number_z_steps"]
+            channels = sum(
+                [v["is_selected"] is True for k, v in state["channels"].items()]
+            )
+            timepoints = state["timepoints"]
+            if pre_z_steps != z_steps or pre_channels != channels or pre_timepoints != timepoints:
+                self.model.image_writer.initialize_saving(sub_dir=time.strftime("%H%M%S"))
             try:
                 self.model.image_writer.data_source.set_metadata_from_configuration_experiment(
                     self.model.configuration

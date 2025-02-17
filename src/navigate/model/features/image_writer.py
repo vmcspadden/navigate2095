@@ -36,6 +36,7 @@ import os
 import logging
 import shutil
 import time
+from typing import Optional
 from datetime import datetime
 
 # Third Party Imports
@@ -43,7 +44,9 @@ import numpy as np
 from tifffile import imsave
 
 # Local imports
+import navigate
 from navigate.model import data_sources
+from navigate.model.concurrency.concurrency_tools import SharedNDArray
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -55,13 +58,13 @@ class ImageWriter:
 
     def __init__(
         self,
-        model,
-        microscope_name=None,
-        data_buffer=None,
-        sub_dir="",
-        image_name=None,
-        saving_flags=None,
-        saving_config={},
+        model: "navigate.model.Model",
+        microscope_name: str = None,
+        data_buffer: list[SharedNDArray] = None,
+        sub_dir: str = "",
+        image_name: Optional[str] = None,
+        saving_flags: Optional[list[bool]] = None,
+        saving_config: Optional[dict] = None,
     ):
         """Class for saving acquired data to disk.
 
@@ -73,12 +76,19 @@ class ImageWriter:
             data_buffer will use model's default data_buffer if it's not specified
         sub_dir : str
             Sub-directory of self.model.configuration['experiment']
-            ['Saving']['save_directory']
-            indicating where to save data
-        image_name : str
+            ['Saving']['save_directory'] indicating where to save data
+        image_name : Optional[str]
             Name of the image to be saved. If None, a name will be generated
+        saving_flags : Optional[list[bool]]
+            A list of flags indicating whether to save each frame.
+        saving_config : Optional[dict]
+            Dictionary of saving configuration
         """
+
         #: str: Name of the microscope.
+        if saving_config is None:
+            saving_config = {}
+
         self.microscope_name = microscope_name
 
         #: navigate.model.model.Model: Navigate Model class for controlling
@@ -98,6 +108,12 @@ class ImageWriter:
 
         #: str : Directory for saving data to disk.
         self.save_directory = ""
+
+        #: np.ndarray : Maximum intensity projection image.
+        self.mip = None
+
+        #: str : Directory for saving maximum intensity projection images.
+        self.mip_directory = ""
 
         #: str : Sub-directory for saving data to disk.
         self.sub_dir = sub_dir
@@ -131,6 +147,15 @@ class ImageWriter:
             "y": camera_config.get("flip_y", False),
         }
 
+        #: int: Disk space check interval in seconds.
+        self.disk_space_check_interval = 60
+
+        #: int: Minimum disk space required in bytes.
+        self.min_disk_space = 10 * 1024 * 1024 * 1024 # 10 GB
+
+        #: float: Time of last disk space check
+        self.last_disk_space_check = 0
+
         # initialize saving
         self.initialize_saving(sub_dir, image_name)
 
@@ -139,16 +164,29 @@ class ImageWriter:
 
         Parameters
         ----------
-        frame_ids : int
+        frame_ids : list[int]
             Index into self.model.data_buffer.
         """
 
         for idx in frame_ids:
-
             if (idx < 0) or (idx > (self.number_of_frames - 1)):
                 msg = f"Received invalid index {idx}. Skipping this frame."
                 logger.debug(f"Received invalid index: {msg}.")
                 continue
+
+            # Check disk space at regular intervals to prevent running out of space
+            if time.time() - self.last_disk_space_check > self.disk_space_check_interval:
+                _, _, free = shutil.disk_usage(self.save_directory)
+                logger.info(f"Free Disk Space: {free / 1024 / 1024 / 1024} GB")
+                if free < self.min_disk_space:
+                    logger.warning("Insufficient Disk Space. Acquisition Terminated")
+                    self.close()
+                    self.model.stop_acquisition = True
+                    self.model.event_queue.put(
+                        ("warning", "Insufficient Disk Space. Acquisition Terminated")
+                    )
+                    return
+                self.last_disk_space_check = time.time()
 
             # check the saving flag
             if self.saving_flags:
@@ -191,8 +229,10 @@ class ImageWriter:
                     theta=self.model.data_buffer_positions[idx][3],
                     f=self.model.data_buffer_positions[idx][4],
                 )
-                logger.info(f"C: {c_idx}, Z:{z_idx}, T:{t_idx}, P:{p_idx}, Write Time:"
-                            f" {time.time() - start_time}")
+                logger.info(
+                    f"C: {c_idx}, Z:{z_idx}, T:{t_idx}, P:{p_idx}, Write Time:"
+                    f" {time.time() - start_time}"
+                )
 
                 # Update MIP
                 self.mip[c_idx, :, :] = np.maximum(self.mip[c_idx, :, :], image)
@@ -257,8 +297,7 @@ class ImageWriter:
         return image_name
 
     def close(self):
-        """Close the data source we are writing to.
-        """
+        """Close the data source we are writing to."""
         self.data_source.close()
 
     def calculate_and_check_disk_space(self):
@@ -269,6 +308,7 @@ class ImageWriter:
 
         Assumes 16-bit image type, without compression."""
 
+        self.last_disk_space_check = time.time()
         # Return disk usage statistics in bytes
         _, _, free = shutil.disk_usage(self.save_directory)
         logger.info(f"Free Disk Space: {free}")
@@ -317,7 +357,7 @@ class ImageWriter:
                         "Unable to Create Save Directory. Acquisition Terminated",
                     )
                     return
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             logger.error(f"Unable to Create Save Directory - {self.save_directory}")
 
         # Set up the file name and path in the save directory
@@ -346,13 +386,8 @@ class ImageWriter:
         self.current_time_point = 0
 
         file_name = self.get_saving_file_name(sub_dir, image_name)
-        print("saving to new file:", file_name)
 
         # create the MIP directory if it doesn't already exist
-        #: np.ndarray : Maximum intensity projection image.
-        self.mip = None
-
-        #: str : Directory for saving maximum intensity projection images.
         self.mip_directory = os.path.join(self.save_directory, "MIP")
         try:
             if not os.path.exists(self.mip_directory):
@@ -369,15 +404,13 @@ class ImageWriter:
                         "Unable to create MIP Directory. Acquisition Terminated.",
                     )
                     return
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             logger.error("Image Writer: Unable to create MIP directory.")
-
-        
 
         # Initialize data source, pointing to the new file name
         #: navigate.model.data_sources.DataSource : Data source for saving data to disk.
         self.data_source = data_sources.get_data_source(self.file_type)(
-            file_name=file_name
+            file_name=file_name,
         )
 
         # Pass experiment and configuration to metadata

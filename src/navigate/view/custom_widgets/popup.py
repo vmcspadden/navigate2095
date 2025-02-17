@@ -81,7 +81,8 @@ class PopUp(tk.Toplevel):
         name : str
             The title of the popup window
         size : str
-            The size of the popup window in the format '600x400+320+180'
+            The size of the popup window in the format '600x400+320+180' where
+            it is width x height + x_offset + y_offset.
         top : bool, optional
             If true, the popup will always be on top of other windows, by default True
         transient : bool, optional

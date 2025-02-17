@@ -54,7 +54,7 @@ from navigate.controller.sub_controllers.gui import GUIController
 from navigate.model.analysis.camera import compute_signal_to_noise
 from navigate.tools.common_functions import VariableWithLock
 from navigate.tools.file_functions import get_ram_info
-from navigate.config import get_navigate_path
+from navigate.config import get_navigate_path, update_config_dict
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -1436,8 +1436,36 @@ class MIPViewController(BaseViewController):
         if platform.system() == "Windows":
             self.resize_event_id = self.view.bind("<Configure>", self.resize)
 
+        #: bool: The display enabled flag.
+        self.display_enabled = tk.BooleanVar()
+
         self.menu.entryconfig("Move Here", state="disabled")
         self.menu.entryconfig("Mark Position", state="disabled")
+        self.menu.add_separator()
+        self.menu.add_checkbutton(
+            label="Enable MIP Display",
+            variable=self.display_enabled,
+            onvalue=True,
+            offvalue=False,
+            command=self.update_experiment,
+        )
+
+        # Default location for communicating with the plugin in the model.
+        if "mip_display" not in self.parent_controller.configuration["gui"].keys():
+            update_config_dict(manager=self.parent_controller.manager,
+                               parent_dict=self.parent_controller.configuration["gui"],
+                               config_name="mip_display",
+                               new_config={"enabled": True}
+                               )
+
+        # Set histogram according to the experiment.yaml file. If disabled, stays disabled upon restart.
+        self.display_enabled.set(
+            self.parent_controller.configuration["gui"]["mip_display"].get("enabled", True)
+        )
+
+    def update_experiment(self) -> None:
+        """Update the experiment.yaml file"""
+        self.parent_controller.configuration["gui"]["mip_display"]["enabled"] = self.display_enabled.get()
 
     def initialize(self, name: str, data: list):
         """Initialize the MIP view.
@@ -1592,6 +1620,9 @@ class MIPViewController(BaseViewController):
         channel_idx, slice_idx = self.identify_channel_index_and_slice()
 
         if self.image_mode in ["live", "single"]:
+            return
+
+        if self.display_enabled.get() is False:
             return
 
         # Orthogonal maximum intensity projections.

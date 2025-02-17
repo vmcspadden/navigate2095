@@ -65,38 +65,37 @@ class PyramidalDataSource(DataSource):
             The mode to open the file in. Must be "w" for write or "r" for read.
         """
         #: np.array: The resolution of each down-sampled pyramid level.
-        self._resolutions = np.array(
-            [[1, 1, 1], [2, 2, 1], [4, 4, 1], [8, 8, 1]], dtype=int
-        )
+        self._resolutions = np.array([[1, 1, 1]], dtype=int)
         #: np.array: The number of subdivisions in each dimension.
         self._subdivisions = None
+
         #: np.array: The shape of the image.
         self._shapes = None
 
         super().__init__(file_name, mode)
 
     @property
-    def resolutions(self) -> npt.ArrayLike:
+    def resolutions(self) -> npt.NDArray:
         """Getter for resolutions.
 
         Store as XYZ per BDV spec.
 
         Returns
         -------
-        resolutions : npt.ArrayLike
+        resolutions : npt.NDArray
             The resolutions.
         """
         return self._resolutions
 
     @property
-    def subdivisions(self) -> npt.ArrayLike:
+    def subdivisions(self) -> npt.NDArray:
         """Getter for subdivisions.
 
         Store as XYZ per BDV spec.
 
         Returns
         -------
-        subdivisions : npt.ArrayLike
+        subdivisions : npt.NDArray
             The subdivisions.
         """
         if self._subdivisions is None:
@@ -113,14 +112,14 @@ class PyramidalDataSource(DataSource):
         return self._subdivisions
 
     @property
-    def shapes(self) -> npt.ArrayLike:
+    def shapes(self) -> npt.NDArray:
         """Getter for image shape.
 
         Store as ZYX rather than XYZ, per BDV spec.
 
         Returns
         -------
-        shapes : npt.ArrayLike
+        shapes : npt.NDArray
             The shapes.
         """
         if self._shapes is None:
@@ -167,6 +166,32 @@ class PyramidalDataSource(DataSource):
         """
         self._subdivisions = None
         self._shapes = None
+
+        if ("BDVParameters" in configuration["experiment"].keys()
+            and "down_sample" in configuration["experiment"]["BDVParameters"].keys()):
+            down_sample = configuration["experiment"]["BDVParameters"]["down_sample"].get(
+                "down_sample", False
+            )
+
+            if down_sample:
+                max_xy = configuration["experiment"]["BDVParameters"]["down_sample"].get(
+                    "lateral_down_sample", 1
+                )
+                max_z = configuration["experiment"]["BDVParameters"]["down_sample"].get(
+                    "axial_down_sample", 1
+                )
+
+                xy_values = [2**i for i in range(int(np.log2(max_xy)) + 1)]
+                z_values = [2**i for i in range(int(np.log2(max_z)) + 1)]
+
+                max_len = max(len(xy_values), len(z_values))
+                xy_values.extend([xy_values[-1]] * (max_len - len(xy_values)))
+                z_values.extend([z_values[-1]] * (max_len - len(z_values)))
+
+                #: npt.NDArray: The resolution of each down-sampled pyramid level.
+                self._resolutions = np.array(
+                    [[xy, xy, z] for xy, z in zip(xy_values, z_values)], dtype=int
+                )
 
         return super().set_metadata_from_configuration_experiment(
             configuration, microscope_name
@@ -224,21 +249,21 @@ class PyramidalDataSource(DataSource):
             length -= 1
 
         if length > 6 and isinstance(keys[6], int):
-            subdiv = keys[6]
+            sub_divisions = keys[6]
         else:
-            subdiv = 0
+            sub_divisions = 0
 
         if len(cs) == 1 and len(ts) == 1 and len(ps) == 1:
-            return self.get_slice(xs, ys, cs[0], zs, ts[0], ps[0], subdiv)
+            return self.get_slice(xs, ys, cs[0], zs, ts[0], ps[0], sub_divisions)
 
         sliced_ds = np.empty(
             (
                 len(ps),
                 len(ts),
-                slice_len(zs, self.shape_z) // self.resolutions[subdiv][2],
+                slice_len(zs, self.shape_z) // self.resolutions[sub_divisions][2],
                 len(cs),
-                slice_len(ys, self.shape_y) // self.resolutions[subdiv][1],
-                slice_len(xs, self.shape_x) // self.resolutions[subdiv][0],
+                slice_len(ys, self.shape_y) // self.resolutions[sub_divisions][1],
+                slice_len(xs, self.shape_x) // self.resolutions[sub_divisions][0],
             ),
             dtype=self.dtype,
         )
@@ -247,7 +272,7 @@ class PyramidalDataSource(DataSource):
             for t in ts:
                 for p in ps:
                     sliced_ds[p, t, :, c, :, :] = self.get_slice(
-                        xs, ys, c, zs, t, p, subdiv
+                        xs, ys, c, zs, t, p, sub_divisions
                     )
 
         return sliced_ds

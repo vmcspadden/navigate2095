@@ -35,14 +35,16 @@ import logging
 import tkinter as tk
 from tkinter import messagebox
 from typing import Dict, Any, Iterable
+import re
 
 # Third Party Imports
 
 # Local Imports
 from navigate.controller.sub_controllers.gui import GUIController
+from navigate.tools.file_functions import create_save_path
 from navigate.view.popups.acquire_popup import AcquirePopUp
 from navigate.view.main_window_content.acquire_notebook import AcquireBar
-
+from navigate.config import update_config_dict
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -98,6 +100,18 @@ class AcquireBarController(GUIController):
 
         # framerate information.
         self.framerate = 0
+
+        #: dict: The ProxyDict for the BDV configuration.
+        self.bdv_configuration = self.parent_controller.configuration["experiment"].get(
+            "BDVParameters", None
+        )
+
+        #: dict: BDV Widgets. Keys are primary widgets, values are lists.
+        self.bdv_widgets = {
+            "shear_data": ["shear_dimension", "shear_angle"],
+            "rotate_data": ["rotate_angle_x", "rotate_angle_y", "rotate_angle_z"],
+            "down_sample_data": ["lateral_down_sample", "axial_down_sample"],
+        }
 
     def progress_bar(
         self,
@@ -312,8 +326,10 @@ class AcquireBarController(GUIController):
         """
         if self.is_acquiring and self.view.acquire_btn["text"] == "Acquire":
             return
+
         if not self.is_acquiring and self.view.acquire_btn["text"] == "Stop":
             return
+
         if self.view.acquire_btn["text"] == "Stop":
             # tell the controller to stop acquire (continuous mode)
             self.view.acquire_btn.configure(state="disabled")
@@ -339,15 +355,193 @@ class AcquireBarController(GUIController):
             file_type = widgets["file_type"].get_variable()
             file_type.trace_add("write", lambda *args: self.update_file_type(file_type))
 
+            self.set_bdv_settings()
+
+            for widget in self.bdv_widgets.keys():
+                # Traces for the main widgets
+                self.acquire_pop.tab_frame.inputs[widget].get_variable().trace_add(
+                    "write",
+                    lambda *args, main_widget=widget, dep_widget=self.bdv_widgets[
+                        widget
+                    ]: self.toggle_bdv_widgets(main_widget, dep_widget),
+                )
+
             for k, v in self.saving_settings.items():
                 if widgets.get(k, None):
                     widgets[k].set(v)
+            self.acquire_pop.tab_frame.inputs["misc"].insert(
+                "1.0", self.saving_settings.get("misc", "")
+            )
 
         else:
             self.is_acquiring = True
             self.view.acquire_btn.configure(state="disabled")
             self.view.pull_down.state(["disabled", "readonly"])
             self.parent_controller.execute("acquire")
+
+    def set_bdv_settings(self) -> None:
+        """Set the BDV Settings from the configuration file.
+
+        If the settings are not in the configuration file, they will be added.
+        """
+        update_config = False
+
+        if self.bdv_configuration is None:
+            update_config = True
+            self.bdv_configuration = {}
+
+        # Shear Parameters
+        if self.bdv_configuration.get("shear", None) is None:
+            update_config = True
+            self.bdv_configuration["shear"] = {
+                "shear_data": False,
+                "shear_dimension": "YZ",
+                "shear_angle": 0,
+            }
+        self.acquire_pop.tab_frame.inputs["shear_data"].set(
+            self.bdv_configuration["shear"].get("shear_data", False)
+        )
+        self.acquire_pop.tab_frame.inputs["shear_dimension"].set(
+            self.bdv_configuration["shear"].get("shear_dimension", "YZ")
+        )
+        self.acquire_pop.tab_frame.inputs["shear_angle"].set(
+            self.bdv_configuration["shear"].get("shear_angle", 0)
+        )
+
+        # Rotation Parameters
+        if self.bdv_configuration.get("rotate", None) is None:
+            update_config = True
+            self.bdv_configuration["rotate"] = {
+                "rotate_data": False,
+                "X": 0,
+                "Y": 0,
+                "Z": 0,
+            }
+        self.acquire_pop.tab_frame.inputs["rotate_data"].set(
+            self.bdv_configuration["rotate"].get("rotate_data", False)
+        )
+        self.acquire_pop.tab_frame.inputs["rotate_angle_x"].set(
+            self.bdv_configuration["rotate"].get("X", 0)
+        )
+        self.acquire_pop.tab_frame.inputs["rotate_angle_y"].set(
+            self.bdv_configuration["rotate"].get("Y", 0)
+        )
+        self.acquire_pop.tab_frame.inputs["rotate_angle_z"].set(
+            self.bdv_configuration["rotate"].get("Z", 0)
+        )
+
+        # Down Sample Parameters
+        if self.bdv_configuration.get("down_sample", None) is None:
+            update_config = True
+            self.bdv_configuration["down_sample"] = {
+                "down_sample": False,
+                "lateral_down_sample": 1,
+                "axial_down_sample": 1,
+            }
+        self.acquire_pop.tab_frame.inputs["down_sample_data"].set(
+            self.bdv_configuration["down_sample"].get("down_sample", False)
+        )
+        self.acquire_pop.tab_frame.inputs["lateral_down_sample"].set(
+            str(self.bdv_configuration["down_sample"].get("lateral_down_sample", 1))
+            + "x"
+        )
+        self.acquire_pop.tab_frame.inputs["axial_down_sample"].set(
+            str(self.bdv_configuration["down_sample"].get("axial_down_sample", 1)) + "x"
+        )
+
+        if update_config:
+            update_config_dict(
+                self.parent_controller.manager,
+                self.parent_controller.configuration["experiment"],
+                "BDVParameters",
+                self.bdv_configuration,
+            )
+            self.bdv_configuration = self.parent_controller.configuration["experiment"][
+                "BDVParameters"
+            ]
+
+        # Set the state of the dependent widgets
+        for widget in self.bdv_widgets.keys():
+            self.toggle_bdv_widgets(widget, self.bdv_widgets[widget])
+
+    def update_bdv_settings(self) -> None:
+        """Update the BDV settings."""
+        if self.bdv_configuration is not None:
+            # Set the widget variables according to the BDV configuration
+            # Shear Parameters
+            self.bdv_configuration["shear"]["shear_data"] = bool(
+                (
+                    update := self.acquire_pop.tab_frame.inputs[
+                        "shear_data"
+                    ].variable.get()
+                )
+            )
+
+            if update:
+                self.bdv_configuration["shear"]["shear_dimension"] = str(
+                    self.acquire_pop.tab_frame.inputs["shear_dimension"].variable.get()
+                )
+                self.bdv_configuration["shear"]["shear_angle"] = float(
+                    self.acquire_pop.tab_frame.inputs["shear_angle"].variable.get()
+                )
+
+            # Rotation Parameters
+            self.bdv_configuration["rotate"]["rotate_data"] = bool(
+                (
+                    update := self.acquire_pop.tab_frame.inputs[
+                        "rotate_data"
+                    ].variable.get()
+                )
+            )
+
+            if update:
+                self.bdv_configuration["rotate"]["X"] = float(
+                    self.acquire_pop.tab_frame.inputs["rotate_angle_x"].variable.get()
+                )
+                self.bdv_configuration["rotate"]["Y"] = float(
+                    self.acquire_pop.tab_frame.inputs["rotate_angle_y"].variable.get()
+                )
+                self.bdv_configuration["rotate"]["Z"] = float(
+                    self.acquire_pop.tab_frame.inputs["rotate_angle_z"].variable.get()
+                )
+
+            # Down Sample Parameters
+            self.bdv_configuration["down_sample"]["down_sample"] = bool(
+                (
+                    update := self.acquire_pop.tab_frame.inputs[
+                        "down_sample_data"
+                    ].variable.get()
+                )
+            )
+
+            if update:
+                self.bdv_configuration["down_sample"]["lateral_down_sample"] = int(
+                    self.acquire_pop.tab_frame.inputs[
+                        "lateral_down_sample"
+                    ].variable.get()[:-1]
+                )
+
+                self.bdv_configuration["down_sample"]["axial_down_sample"] = int(
+                    self.acquire_pop.tab_frame.inputs[
+                        "axial_down_sample"
+                    ].variable.get()[:-1]
+                )
+
+    def toggle_bdv_widgets(self, main_widget: str, dependent_widgets: list) -> None:
+        """Toggles the state of the dependent widgets.
+
+        Parameters
+        ----------
+        main_widget : str
+            The main widget that is being toggled.
+        dependent_widgets : list
+            A list of dependent widgets that will be toggled.
+        """
+        state = self.acquire_pop.tab_frame.inputs[main_widget].get_variable().get()
+        for widget in dependent_widgets:
+            self.acquire_pop.tab_frame.inputs[widget].widget.config(
+                state="readonly" if state else "disabled"
+            )
 
     def update_microscope_mode(self, *args: Iterable) -> None:
         """Gets the state of the pull-down menu and tells the central controller
@@ -385,15 +579,35 @@ class AcquireBarController(GUIController):
         the create_save_path function.
         This automatically removes spaces and replaces them with underscores.
         Then it makes the directory.
-        Thereafter, the experiment is ready to go.
 
         Parameters
         ----------
         popup_window : AcquirePopUp
             Instance of the popup save dialog.
         """
+        # Get the BDV Settings.
+
         # update saving settings according to user's input
         self.update_experiment_values(popup_window)
+        self.update_bdv_settings()
+
+        entry_names = [
+            "user",
+            "tissue",
+            "celltype",
+            "label",
+            "prefix",
+        ]
+
+        for name in entry_names:
+            if not self.is_valid_string(self.saving_settings[name]):
+                messagebox.showwarning(
+                    title="Invalid Entry",
+                    message="Only alphanumeric characters, hyphens, "
+                    "and underscores are allowed. \n",
+                    parent=popup_window.popup,
+                )
+                return
 
         # Verify user's input is non-zero.
         is_valid = (
@@ -404,12 +618,23 @@ class AcquireBarController(GUIController):
         )
 
         if is_valid:
+            # Verify that the path is valid.
+            try:
+                file_directory = create_save_path(self.saving_settings)
+            except Exception:
+                messagebox.showwarning(
+                    title="Directory Not Found.",
+                    message="The directory specified is invalid. \n"
+                    "This commonly occurs when the Root Directory is "
+                    "incorrect. Please double-check and try again.",
+                    parent=popup_window.popup,
+                )
+                return
+
             self.is_acquiring = True
             self.view.acquire_btn.configure(state="disabled")
-            # Close the window
             popup_window.popup.dismiss()
-            # tell central controller, save the image/data
-            self.parent_controller.execute("acquire_and_save")
+            self.parent_controller.execute("acquire_and_save", file_directory)
 
     def exit_program(self) -> None:
         """Exit Button to close the program."""
@@ -447,3 +672,23 @@ class AcquireBarController(GUIController):
         for name in popup_vals:
             # remove leading and tailing whitespaces
             self.saving_settings[name] = popup_vals[name].strip()
+        self.saving_settings["misc"] = self.acquire_pop.tab_frame.inputs["misc"].get(
+            "1.0", "end-1c"
+        )
+
+    @staticmethod
+    def is_valid_string(string: str) -> bool:
+        """Check if the string is valid.
+
+        Parameters
+        ----------
+        string : str
+            String to check.
+
+        Returns
+        -------
+        bool
+            True if the string is valid.
+        """
+        pattern = r"^[\w\-\ ]+$"
+        return bool(re.match(pattern, string))

@@ -127,9 +127,6 @@ class MainApp(ttk.Frame):
         self.root.resizable(True, True)
         self.root.geometry("")
 
-        tk.Grid.columnconfigure(root, "all", weight=1)
-        tk.Grid.rowconfigure(root, "all", weight=1)
-
         # Creating and linking menu to main window/app
         #: Menubar: The menu bar for the application
         self.menubar = Menubar(root)

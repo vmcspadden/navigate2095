@@ -9,13 +9,16 @@ def test_ome_metadata_valid(dummy_model):
     from navigate.model.metadata_sources.ome_tiff_metadata import OMETIFFMetadata
 
     # First, download OME-XML validation tools
+    # new_path = https://downloads.openmicroscopy.org/bio-formats/8.1.0/artifacts/bftools.zip
+    # old_path = https://downloads.openmicroscopy.org/bio-formats/6.0.1/artifacts/bftools.zip
+
     urllib.request.urlretrieve(
-        "https://downloads.openmicroscopy.org/bio-formats/6.0.1/artifacts/bftools.zip",
+        "https://downloads.openmicroscopy.org/bio-formats/8.1.0/artifacts/bftools.zip",
         "bftools.zip",
     )
 
     # Unzip
-    output = os.popen("tar -xzvf bftools.zip").read()
+    _ = os.popen("tar -xzvf bftools.zip").read()
 
     # Create metadata
     md = OMETIFFMetadata()

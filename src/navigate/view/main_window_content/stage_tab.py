@@ -32,9 +32,10 @@
 
 # Standard Imports
 import tkinter as tk
-from tkinter import ttk, Grid
+from tkinter import ttk
 import logging
 from pathlib import Path
+from typing import Iterable, Optional
 
 # Third Party Imports
 
@@ -43,7 +44,7 @@ from navigate.view.custom_widgets.hover import HoverTkButton
 from navigate.view.custom_widgets.LabelInputWidgetFactory import LabelInput
 from navigate.view.custom_widgets.validation import ValidatedSpinbox
 from navigate.view.custom_widgets.validation import ValidatedEntry
-
+import navigate
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -53,27 +54,26 @@ logger = logging.getLogger(p)
 class StageControlNotebook(ttk.Notebook):
     """Notebook for stage control tab."""
 
-    def __init__(self, frame_bot_right, *args, **kwargs):
+    def __init__(
+        self,
+        frame: "navigate.view.main_window_content."
+        "settings_notebook.SettingsNotebook",
+        *args: Iterable,
+        **kwargs: dict,
+    ) -> None:
         """Initialize the stage control notebook.
 
         Parameters
         ----------
-        frame_bot_right : tk.Frame
-            Frame to put notebook into.
-        *args
+        frame : SettingsNotebook
+            The frame to put notebook into.
+        *args : Iterable
             Arguments for ttk.Notebook
-        **kwargs
+        **kwargs : Iterable
             Keyword arguments for ttk.Notebook
         """
-        # Init notebook
-        ttk.Notebook.__init__(self, frame_bot_right, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-        # Putting notebook 3 into bottom right frame
-        self.grid(row=0, column=0)
+        super().__init__()
 
         #: StageControlTab: Stage control tab.
         self.stage_control_tab = StageControlTab(self)
@@ -82,138 +82,147 @@ class StageControlNotebook(ttk.Notebook):
         self.add(self.stage_control_tab, text="Stage Control", sticky=tk.NSEW)
 
 
-class GoToFrame(ttk.Frame):
-    """GoTo Frame for stage control tab."""
-
-    def __init__(self, stage_control_tab, *args, **kwargs):
-        """Initialize the goto frame.
-
-        Parameters
-        ----------
-        stage_control_tab : StageControlTab
-            Stage control tab.
-        *args
-            Arguments for ttk.Frame
-        **kwargs
-            Keyword arguments for ttk.Frame
-        """
-        # Init Frame
-        ttk.Frame.__init__(self, stage_control_tab, *args, **kwargs)
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-
 class StageControlTab(tk.Frame):
     """Stage Control Tab for stage control notebook."""
 
-    def __init__(self, note3, *args, **kwargs):
+    def __init__(
+        self, note3: StageControlNotebook, *args: Iterable, **kwargs: dict
+    ) -> None:
         """Initialize the stage control tab.
 
         Parameters
         ----------
-        note3 : ttk.Notebook
+        note3 : StageControlNotebook
             Stage control notebook.
-        *args
+        *args : Iterable
             Arguments for tk.Frame
-        **kwargs
+        **kwargs : dict
             Keyword arguments for tk.Frame
         """
-        # Init Frame
         tk.Frame.__init__(self, note3, *args, **kwargs)
 
         #: int: Index of the stage control tab.
         self.index = 2
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
+        #: tk.PhotoImage: Image for the up button.
+        self.up_1x_image = None
+
+        #: tk.PhotoImage: Image for the 5x up button.
+        self.up_5x_image = None
+
+        #: tk.PhotoImage: Image for the down button.
+        self.down_1x_image = None
+
+        #: tk.PhotoImage: Image for the 5x down button.
+        self.down_5x_image = None
+
+        #: tk.PhotoImage: Image for the left button.
+        self.left_1x_image = None
+
+        #: tk.PhotoImage: Image for the 5x left button.
+        self.left_5x_image = None
+
+        #: tk.PhotoImage: Image for the right button.
+        self.right_1x_image = None
+
+        #: tk.PhotoImage: Image for the 5x right button.
+        self.right_5x_image = None
+
+        #: tk.PhotoImage: Image for the disabled up button.
+        self.d_up_1x_image = None
+
+        #: tk.PhotoImage: Image for the disabled 5x button.
+        self.d_up_5x_image = None
+
+        #: tk.PhotoImage: Image for the disabled down button.
+        self.d_down_1x_image = None
+
+        #: tk.PhotoImage: Image for the disabled 5x down button.
+        self.d_down_5x_image = None
+
+        #: tk.PhotoImage: Image for the disabled left button.
+        self.d_left_1x_image = None
+
+        #: tk.PhotoImage: Image for the disabled 5x left button.
+        self.d_left_5x_image = None
+
+        #: tk.PhotoImage: Image for the disabled right button.
+        self.d_right_1x_image = None
+
+        #: tk.PhotoImage: Image for the disabled 5x right button.
+        self.d_right_5x_image = None
+
+        self.load_images()
 
         #: PositionFrame: Position frame.
         self.position_frame = PositionFrame(self)
+        self.position_frame.grid(row=0, column=0, rowspan=1, sticky=tk.NSEW, padx=3, pady=3)
+
+        #: StackShortcuts: Stack shortcuts.
+        self.stack_shortcuts = StackShortcuts(self)
+        self.stack_shortcuts.grid(row=1, column=0, rowspan=1, sticky=tk.NSEW)
 
         #: XYFrame: XY frame.
         self.xy_frame = XYFrame(self)
+        self.xy_frame.grid(row=0, column=1, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         #: OtherAxisFrame: Z frame.
-        self.z_frame = OtherAxisFrame(self, "Z")
+        self.z_frame = OtherAxisFrame(stage_control_tab=self, name="Z")
+        self.z_frame.grid(row=0, column=2, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         #: OtherAxisFrame: Theta frame.
-        self.theta_frame = OtherAxisFrame(self, "Theta")
+        self.theta_frame = OtherAxisFrame(stage_control_tab=self, name="Theta")
+        self.theta_frame.grid(row=2, column=2, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         # OtherAxisFrame: Focus frame.
-        self.f_frame = OtherAxisFrame(self, "Focus")
-
-        #: GoToFrame: GoTo frame.
-        self.goto_frame = GoToFrame(self)
-        self.goto_frame_label = ttk.Label(self.goto_frame, text="Goto Frame")
-        self.goto_frame_label.pack()  # For visual mockup purposes
+        self.f_frame = OtherAxisFrame(stage_control_tab=self, name="Focus")
+        self.f_frame.grid(row=2, column=0, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
         #: StopFrame: Stop frame.
-        self.stop_frame = StopFrame(self, "Stop")
+        self.stop_frame = StopFrame(
+            stage_control_tab=self, name="Stage Movement Interrupt"
+        )
+        self.stop_frame.grid(row=2, column=1, rowspan=2, sticky=tk.NSEW, padx=3, pady=3)
 
-        # Formatting
-        tk.Grid.columnconfigure(self.position_frame, "all", weight=1)
-        tk.Grid.rowconfigure(self.position_frame, "all", weight=1)
-        tk.Grid.columnconfigure(self.xy_frame, "all", weight=1)
-        tk.Grid.rowconfigure(self.xy_frame, "all", weight=1)
-        tk.Grid.columnconfigure(self.z_frame, "all", weight=1)
-        tk.Grid.rowconfigure(self.z_frame, "all", weight=1)
-        tk.Grid.columnconfigure(self.theta_frame, "all", weight=1)
-        tk.Grid.rowconfigure(self.theta_frame, "all", weight=1)
-        tk.Grid.columnconfigure(self.f_frame, "all", weight=1)
-        tk.Grid.rowconfigure(self.f_frame, "all", weight=1)
-        tk.Grid.columnconfigure(self.goto_frame, "all", weight=1)
-        tk.Grid.rowconfigure(self.goto_frame, "all", weight=1)
-        tk.Grid.columnconfigure(self.stop_frame, "all", weight=1)
-        tk.Grid.rowconfigure(self.stop_frame, "all", weight=1)
+    def load_images(self) -> None:
+        """Load images for the stage control tab."""
 
-        # Griding out frames
-        self.position_frame.grid(row=0, column=0, sticky=tk.NSEW, padx=3, pady=3)
-        self.xy_frame.grid(row=0, column=1, sticky=tk.NSEW, padx=3, pady=3)
-        self.z_frame.grid(row=0, column=2, sticky=tk.NSEW, padx=3, pady=3)
-        self.f_frame.grid(row=1, column=0, sticky=tk.NSEW, padx=3, pady=3)
-        self.theta_frame.grid(row=1, column=2, sticky=tk.NSEW, padx=3, pady=3)
-        # self.goto_frame.grid(row=0, column=4, sticky=tk.NSEW)
-        self.stop_frame.grid(row=1, column=1, sticky=tk.NSEW, padx=3, pady=3)
+        # Path to arrows
+        image_directory = Path(__file__).resolve().parent
+        image_names = [
+            "up_1x_image",
+            "up_5x_image",
+            "down_1x_image",
+            "down_5x_image",
+            "left_1x_image",
+            "left_5x_image",
+            "right_1x_image",
+            "right_5x_image",
+            "d_up_1x_image",
+            "d_up_5x_image",
+            "d_down_1x_image",
+            "d_down_5x_image",
+            "d_left_1x_image",
+            "d_left_5x_image",
+            "d_right_1x_image",
+            "d_right_5x_image",
+        ]
 
-        # example hover description
-        self.xy_frame.up_y_btn.hover.setdescription(
-            "Increases the Y value of the stage's position"
-        )
-        self.xy_frame.down_y_btn.hover.setdescription(
-            "Decreases the Y value of the stage's position"
-        )
-        self.xy_frame.down_x_btn.hover.setdescription(
-            "Decreases the X value of the stage's position"
-        )
-        self.xy_frame.up_x_btn.hover.setdescription(
-            "Increases the X value of the stage's position"
-        )
-        self.position_frame.inputs["y"].widget.hover.setdescription(
-            "Y position of the stage"
-        )
-        self.position_frame.inputs["x"].widget.hover.setdescription(
-            "X position of the stage"
-        )
-        self.position_frame.inputs["z"].widget.hover.setdescription(
-            "Z position of the stage"
-        )
-        self.position_frame.inputs["f"].widget.hover.setdescription("Focus")
-        self.stop_frame.joystick_btn.hover.setdescription(
-            "Enables/disables joystick mode"
-        )
+        for name in image_names:
+            setattr(
+                self,
+                f"{name}",
+                tk.PhotoImage(
+                    file=image_directory.joinpath("images", f"{name}.png")
+                ).subsample(2, 2),
+            )
 
-    def get_widgets(self):
+    def get_widgets(self) -> dict:
         """Get all widgets in the stage control tab.
-
-        This function will return all the input widgets as a dictionary
-        The reference name in the dictionary is the same as in the widget list file
 
         Returns
         -------
-        dict
+        widgets: dict
             Dictionary of widgets
         """
         temp = {**self.position_frame.get_widgets()}
@@ -221,27 +230,23 @@ class StageControlTab(tk.Frame):
             temp[axis + "_step"] = getattr(self, axis + "_frame").get_widget()
         return temp
 
-    def get_variables(self):
+    def get_variables(self) -> dict:
         """Get all variables in the stage control tab.
 
         Returns
         -------
-        dict
+        variables: dict
             Dictionary of variables
         """
         temp = self.get_widgets()
         return {k: temp[k].get_variable() for k in temp}
 
-    def get_buttons(self):
+    def get_buttons(self) -> dict:
         """Get all buttons in the stage control tab.
-
-        this function returns all the buttons in a dictionary
-
-        the reference name is the same as in widget list
 
         Returns
         -------
-        dict
+        buttons: dict
             Dictionary of buttons
         """
         result = {**self.xy_frame.get_buttons()}
@@ -251,20 +256,23 @@ class StageControlTab(tk.Frame):
         result.update(self.stop_frame.get_buttons())
         return result
 
-    def toggle_button_states(self, joystick_is_on=False, joystick_axes=[]):
+    def toggle_button_states(
+        self, joystick_is_on: bool = False, joystick_axes: Optional[list] = None
+    ):
         """Enables/disables buttons and entries in the stage control tab,
         according to joystick axes.
 
         Parameters
         ----------
-        joystick_is_on : bool
+        joystick_is_on: bool
             'True' indicates that joystick mode is on
-
             'False' indicates that joystick mode is off
-
-        joystick_axes : ListProxy
-            A ListProxy containing the axes controlled by the joystick, if any
+        joystick_axes: Optional[list]
+            A list containing the axes controlled by the joystick, if any
         """
+        if joystick_axes is None:
+            joystick_axes = []
+
         self.xy_frame.toggle_button_states(joystick_is_on, joystick_axes)
         self.z_frame.toggle_button_states(joystick_is_on, joystick_axes)
         self.f_frame.toggle_button_states(joystick_is_on, joystick_axes)
@@ -272,7 +280,7 @@ class StageControlTab(tk.Frame):
         self.position_frame.toggle_entry_states(joystick_is_on, joystick_axes)
         self.stop_frame.toggle_button_states(joystick_is_on, joystick_axes)
 
-    def force_enable_all_axes(self):
+    def force_enable_all_axes(self) -> None:
         """Enable all buttons and entries in the stage control tab."""
         self.xy_frame.toggle_button_states(False, ["x", "y"])
         self.z_frame.toggle_button_states(False, ["z"])
@@ -288,26 +296,32 @@ class OtherAxisFrame(ttk.Labelframe):
     This frame is used for the z, theta, and focus axis movement buttons.
     """
 
-    def __init__(self, stage_control_tab, name, *args, **kwargs):
+    def __init__(
+        self,
+        stage_control_tab: StageControlTab,
+        name: str,
+        *args: Iterable,
+        **kwargs: dict,
+    ) -> None:
         """Initialize the other axis frame.
 
         Parameters
         ----------
-        stage_control_tab : tk.Frame
+        stage_control_tab : StageControlTab
             The stage control tab that the other axis frame is in
         name : str
             The name of the axis that the frame is for
-        *args : tuple
+        *args : Iterable
             Positional arguments for the ttk.Labelframe
-        **kwargs : dict
+        **kwargs : Iterable
             Keyword arguments for the ttk.Labelframe
         """
-        # Init Frame
-        label = name
+
         ttk.Labelframe.__init__(
             self,
             stage_control_tab,
-            text=label + " Movement",
+            text=name + " Movement",
+            labelanchor="n",
             *args,
             **kwargs,
         )
@@ -315,164 +329,154 @@ class OtherAxisFrame(ttk.Labelframe):
         #: str: Name of the axis.
         self.name = name
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
-        image_directory = Path(__file__).resolve().parent
-
-        #: tk.PhotoImage: Image for the up button.
-        self.up_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyup.png")
-        )
-
-        #: tk.PhotoImage: Image for the down button.
-        self.down_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greydown.png")
-        )
-
-        #: tk.PhotoImage: Image for the disabled up button.
-        self.d_up_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyup_disabled.png")
-        )
-
-        #: tk.PhotoImage: Image for the disabled down button.
-        self.d_down_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greydown_disabled.png")
-        )
-
-        self.up_image = self.up_image.subsample(2, 2)
-        self.down_image = self.down_image.subsample(2, 2)
-
-        #: list: List of images for the normal state.
-        self.normal_images = [
-            self.up_image,
-            self.down_image,
-        ]
-
-        self.d_up_image = self.d_up_image.subsample(2, 2)
-        self.d_down_image = self.d_down_image.subsample(2, 2)
-
-        self.disabled_images = [
-            self.d_up_image,
-            self.d_down_image,
-        ]
-
-        # Setting up buttons for up, down, zero and increment spinbox
+        #: StageControlTab: Stage control tab.
+        self.stage_control_tab = stage_control_tab
 
         #: HoverTkButton: Up button.
-        self.up_btn = HoverTkButton(self, image=self.up_image, borderwidth=0)
-
-        #: HoverTkButton: Down button.
-        self.down_btn = HoverTkButton(self, image=self.down_image, borderwidth=0)
-
-        #: HoverTkButton: Zero button.
-        self.zero_btn = HoverTkButton(
-            self,
-            text="ZERO " + self.name,
+        self.up_btn = HoverTkButton(
+            self, image=self.stage_control_tab.d_up_1x_image, borderwidth=0
         )
 
-        #: LabelInput: Increment spinbox.
+        #: HoverTkButton: 5x Up button.
+        self.large_up_btn = HoverTkButton(
+            self, image=self.stage_control_tab.up_5x_image, borderwidth=0
+        )
+
+        #: HoverTkButton: Down button.
+        self.down_btn = HoverTkButton(
+            self, image=self.stage_control_tab.down_1x_image, borderwidth=0
+        )
+
+        #: HoverTkButton: 5x Down button.
+        self.large_down_btn = HoverTkButton(
+            self, image=self.stage_control_tab.down_5x_image, borderwidth=0
+        )
+
+        if self.name.lower() == "theta":
+            text = "Step Size (" + "\N{DEGREE SIGN}" + ")"
+        else:
+            text = "Step Size (" + "\N{GREEK SMALL LETTER MU}" + "m)"
+
+        # #: LabelInput: Increment spinbox.
         self.increment_box = LabelInput(
             parent=self,
             input_class=ValidatedSpinbox,
             input_var=tk.DoubleVar(),
             input_args={"width": 5},
+            label=text,
+            label_pos="top",
+            label_args={"font": tk.font.Font(size=10)},
         )
 
-        #: str: Text for the hover description.
-        self.hover_text_ending = ""
+        # Center the widgets laterally.
+        self.columnconfigure(index=0, weight=1)
+        self.columnconfigure(index=1, weight=1)
+        self.columnconfigure(index=2, weight=1)
 
-        if self.name == "Z":
-            self.hover_text_ending = f"the {self.name} \
-                value of the stage's position"
-        elif self.name == "Theta":
-            self.hover_text_ending = "the angle of sample rotation"
-        else:
-            self.hover_text_ending = f"the {self.name.lower()}"
-
-        # Set the Hover Descriptions
-        self.up_btn.hover.setdescription(f"Increases {self.hover_text_ending}")
-        self.down_btn.hover.setdescription(f"Decreases {self.hover_text_ending}")
-
-        #: list: List of hover texts for the normal state.
-        self.normal_hover_texts = [
-            self.up_btn.hover.getdescription(),
-            self.down_btn.hover.getdescription(),
-        ]
-
-        #: list: List of hover texts for the disabled state.
-        self.disabled_hover_texts = [
-            "Turn off Joystick Mode to enable",
-            "Turn off Joystick Mode to enable",
-        ]
+        # # Adding space between buttons
+        space_1 = ttk.Label(self, borderwidth=0)
+        space_2 = ttk.Label(self, borderwidth=0)
 
         # Griding out buttons
-        self.up_btn.grid(row=0, column=0, pady=2)  # UP
-        self.down_btn.grid(row=3, column=0, pady=2)  # DOWN
-        self.increment_box.grid(row=2, column=0, pady=2)
+        self.large_up_btn.grid(
+            row=(row := 0), column=1, rowspan=1, columnspan=1, padx=2, pady=2
+        )
+        self.up_btn.grid(
+            row=(row := row + 1), column=1, rowspan=1, columnspan=1, pady=(2, 0)
+        )
+        space_1.grid(
+            row=(row := row + 1), column=1, rowspan=1, columnspan=1, padx=2, pady=0
+        )
+        self.increment_box.grid(
+            row=(row := row + 1), column=1, rowspan=1, columnspan=1, padx=2, pady=0
+        )
+        space_2.grid(
+            row=(row := row + 1), column=1, rowspan=1, columnspan=1, padx=2, pady=0
+        )
+        self.down_btn.grid(
+            row=(row := row + 1), column=1, rowspan=1, columnspan=1, pady=(0, 2)
+        )
+        self.large_down_btn.grid(
+            row=(row + 1), column=1, rowspan=1, columnspan=1, padx=2, pady=2
+        )
 
-        # Increment spinbox
-        self.increment_box.widget.set_precision(-1)
-
-    def get_widget(self):
+    def get_widget(self) -> LabelInput:
         """Returns the frame widget
 
         Returns
         -------
-        tk.Frame
-            The frame widget
+        increment_box: LabelInput
+            The increment widget
         """
         return self.increment_box
 
-    def get_buttons(self):
+    def get_buttons(self) -> dict:
         """Returns the buttons in the frame
 
         Returns
         -------
-        dict
+        buttons: dict
             A dictionary of the buttons
         """
         return {
             "up": self.up_btn,
             "down": self.down_btn,
-            "zero": self.zero_btn,
+            "large_up": self.large_up_btn,
+            "large_down": self.large_down_btn,
         }
 
-    def toggle_button_states(self, joystick_is_on=False, joystick_axes=[]):
+    def toggle_button_states(
+        self, joystick_is_on: bool = False, joystick_axes: Optional[list] = None
+    ):
         """Switches the images used as buttons between two states
 
         Parameters
         ----------
-        self : OtherAxisFrame
-            The OtherAxisFrame object
-
         joystick_is_on : bool
             'True' indicates that joystick mode is on
-
             'False' indicates that joystick mode is off
-
-        joystick_axes : ListProxy
-            A ListProxy containing the axes controlled by the joystick, if any
+        joystick_axes : Optional[list]
+            A list containing the axes controlled by the joystick, if any
         """
 
-        buttons = [self.up_btn, self.down_btn]
+        normal_images = [
+            self.stage_control_tab.up_1x_image,
+            self.stage_control_tab.down_1x_image,
+            self.stage_control_tab.down_5x_image,
+            self.stage_control_tab.up_5x_image,
+        ]
+
+        disabled_images = [
+            self.stage_control_tab.d_up_1x_image,
+            self.stage_control_tab.d_down_1x_image,
+            self.stage_control_tab.d_down_5x_image,
+            self.stage_control_tab.d_up_5x_image,
+        ]
+
+        buttons = [
+            self.up_btn,
+            self.down_btn,
+            self.large_down_btn,
+            self.large_up_btn,
+        ]
+
+        if joystick_axes is None:
+            joystick_axes = []
+
+        # Default Button State
         button_state = "normal"
-        image_list = self.normal_images
-        hover_list = self.normal_hover_texts
+        image_list = normal_images
 
         if joystick_is_on:
             if (self.name.lower() in joystick_axes) or (
                 self.name.lower() == "focus" and "f" in joystick_axes
             ):
                 button_state = "disabled"
-                image_list = self.disabled_images
-                hover_list = self.disabled_hover_texts
+                image_list = disabled_images
 
         for k in range(len(buttons)):
             buttons[k]["state"] = button_state
             buttons[k].config(image=image_list[k])
-            buttons[k].hover.setdescription(hover_list[k])
 
 
 class PositionFrame(ttk.Labelframe):
@@ -481,27 +485,24 @@ class PositionFrame(ttk.Labelframe):
     This frame is used for the x, y, z, theta, and focus position entries.
     """
 
-    def __init__(self, stage_control_tab, *args, **kwargs):
+    def __init__(
+        self, stage_control_tab: StageControlTab, *args: Iterable, **kwargs: dict
+    ) -> None:
         """Initialize the position frame.
 
         Parameters
         ----------
-        stage_control_tab : tk.Frame
+        stage_control_tab : StageControlTab
             The stage control tab that the position frame is in
-        *args : tuple
+        *args : Iterable
             Positional arguments for the ttk.Labelframe
-        **kwargs : dict
+        **kwargs : Iterable
             Keyword arguments for the ttk.Labelframe
         """
 
-        # Init Frame
         ttk.Labelframe.__init__(
             self, stage_control_tab, text="Stage Positions", *args, **kwargs
         )
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
 
         #: dict: Dictionary of the label input widgets for the position entries.
         self.inputs = {}
@@ -534,23 +535,23 @@ class PositionFrame(ttk.Labelframe):
             self.inputs[entry_names[i]].grid(row=i, column=0)
             self.frame_back_list[i].lower()
 
-    def get_widgets(self):
+    def get_widgets(self) -> dict:
         """Get all widgets in the position frame
 
         Returns
         -------
-        dict
+        inputs: dict
             A dictionary of the label input widgets for the position entries
         """
 
         return self.inputs
 
-    def get_variables(self):
+    def get_variables(self) -> dict:
         """Get all variables in the position frame
 
         Returns
         -------
-        dict
+        variables: dict
             A dictionary of the variables for the position entries
         """
 
@@ -559,7 +560,9 @@ class PositionFrame(ttk.Labelframe):
             variables[name] = self.inputs[name].get_variable()
         return variables
 
-    def toggle_entry_states(self, joystick_is_on=False, joystick_axes=[]):
+    def toggle_entry_states(
+        self, joystick_is_on: bool = False, joystick_axes: Optional[list] = None
+    ) -> None:
         """Switches the images used as buttons between two states
 
         Parameters
@@ -567,9 +570,12 @@ class PositionFrame(ttk.Labelframe):
         joystick_is_on : bool
             'True' indicates that joystick mode is on
             'False' indicates that joystick mode is off
-        joystick_axes : ListProxy
-            A ListProxy containing the axes controlled by the joystick, if any
+        joystick_axes : Optional[list]
+            A list containing the axes controlled by the joystick, if any
         """
+
+        if joystick_axes is None:
+            joystick_axes = []
 
         frame_back_counter = 0
         if joystick_is_on:
@@ -590,131 +596,103 @@ class PositionFrame(ttk.Labelframe):
             frame_back_counter += 1
 
 
+class StackShortcuts(ttk.LabelFrame):
+    def __init__(self, position_frame: PositionFrame, *args: Iterable, **kwargs: dict) -> None:
+        """Initialize the stack shortcuts frame.
+
+        Parameters
+        ----------
+        position_frame : PositionFrame
+            The position frame that the stack shortcuts frame is in
+        *args : Iterable
+            Positional arguments for the ttk.Labelframe
+        **kwargs : Iterable
+            Keyword arguments for the ttk.Labelframe
+        """
+        ttk.Labelframe.__init__(
+            self, position_frame, text="Z-Stack Start/Stop", *args, **kwargs
+        )
+
+        # Add two buttons
+        self.set_start_button = HoverTkButton(self, text="Set Start Pos/Foc")
+        self.set_start_button.grid(row=0, column=0, sticky="ew")
+
+        self.set_end_button = HoverTkButton(self, text="Set End Pos/Foc")
+        self.set_end_button.grid(row=1, column=0, sticky="ew")
+
+
 class XYFrame(ttk.Labelframe):
     """Frame for the x and y movement buttons.
 
-    This frame is used for the up, down, left, right, zero, and increment buttons.
+    This frame is used for the up, down, left, right, and increment buttons.
     """
 
-    def __init__(self, stage_control_tab, *args, **kwargs):
+    def __init__(
+        self, stage_control_tab: StageControlTab, *args: Iterable, **kwargs: dict
+    ) -> None:
         """Initialize the XY frame.
 
         Parameters
         ----------
-        stage_control_tab : tk.Frame
+        stage_control_tab : StageControlTab
             The stage control tab that the XY frame is in
-        *args : tuple
+        *args : Iterable
             Positional arguments for the ttk.Labelframe
         **kwargs : dict
             Keyword arguments for the ttk.Labelframe
         """
 
-        # Init Frame
         ttk.Labelframe.__init__(
-            self, stage_control_tab, text="X Y Movement", *args, **kwargs
+            self,
+            stage_control_tab,
+            text="X Y Movement",
+            labelanchor="n",
+            *args,
+            **kwargs,
         )
 
-        # Formatting
-        Grid.columnconfigure(self, "all", weight=1)
-        Grid.rowconfigure(self, "all", weight=1)
-
-        # Setting up buttons for up, down, left, right, zero and increment spinbox
-        s = ttk.Style()
-        s.configure("arrow.TButton", font=(None, 20))
-
-        # Path to arrows
-        image_directory = Path(__file__).resolve().parent
-
-        #: tk.PhotoImage: Image for the up button.
-        self.up_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyup.png")
-        )
-
-        #: tk.PhotoImage: Image for the down button.
-        self.down_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greydown.png")
-        )
-
-        #: tk.PhotoImage: Image for the left button.
-        self.left_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyleft.png")
-        )
-
-        #: tk.PhotoImage: Image for the right button.
-        self.right_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyright.png")
-        )
-
-        #: tk.PhotoImage: Image for the disabled up button.
-        self.d_up_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyup_disabled.png")
-        )
-
-        #: tk.PhotoImage: Image for the disabled down button.
-        self.d_down_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greydown_disabled.png")
-        )
-
-        #: tk.PhotoImage: Image for the disabled left button.
-        self.d_left_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyleft_disabled.png")
-        )
-
-        #: tk.PhotoImage: Image for the disabled right button.
-        self.d_right_image = tk.PhotoImage(
-            file=image_directory.joinpath("images", "greyright_disabled.png")
-        )
-
-        self.right_image = self.right_image.subsample(2, 2)
-        self.left_image = self.left_image.subsample(2, 2)
-        self.up_image = self.up_image.subsample(2, 2)
-        self.down_image = self.down_image.subsample(2, 2)
-
-        #: list: List of images for the normal state.
-        self.normal_images = [
-            self.right_image,
-            self.left_image,
-            self.up_image,
-            self.down_image,
-        ]
-
-        #: list: List of hover texts for the normal state.
-        self.normal_hover_texts = [
-            "Decreases the X value of the stage's position",
-            "Increases the X value of the stage's position",
-            "Increases the Y value of the stage's position",
-            "Decreases the Y value of the stage's position",
-        ]
-
-        self.d_right_image = self.d_right_image.subsample(2, 2)
-        self.d_left_image = self.d_left_image.subsample(2, 2)
-        self.d_up_image = self.d_up_image.subsample(2, 2)
-        self.d_down_image = self.d_down_image.subsample(2, 2)
-
-        #: list: List of images for the disabled state.
-        self.disabled_images = [
-            self.d_right_image,
-            self.d_left_image,
-            self.d_up_image,
-            self.d_down_image,
-        ]
-
-        #: list: List of hover texts for the disabled state.
-        self.disabled_hover_texts = [
-            "Turn off Joystick Mode to enable" for i in range(4)
-        ]
+        #: StageControlTab: Stage control tab.
+        self.stage_control_tab = stage_control_tab
 
         #: HoverTkButton: Up button.
-        self.up_y_btn = HoverTkButton(self, image=self.up_image, borderwidth=0)
+        self.up_y_btn = HoverTkButton(
+            self, image=self.stage_control_tab.up_1x_image, borderwidth=0
+        )
+
+        #: HoverTkButton: Up button.
+        self.large_up_y_btn = HoverTkButton(
+            self, image=self.stage_control_tab.up_5x_image, borderwidth=0
+        )
 
         #: HoverTkButton: Down button.
-        self.down_y_btn = HoverTkButton(self, image=self.down_image, borderwidth=0)
+        self.down_y_btn = HoverTkButton(
+            self, image=self.stage_control_tab.down_1x_image, borderwidth=0
+        )
+
+        #: HoverTkButton: Down button.
+        self.large_down_y_btn = HoverTkButton(
+            self, image=self.stage_control_tab.down_5x_image, borderwidth=0
+        )
 
         #: HoverTkButton: Right button.
-        self.up_x_btn = HoverTkButton(self, image=self.right_image, borderwidth=0)
+        self.up_x_btn = HoverTkButton(
+            self, image=self.stage_control_tab.right_1x_image, borderwidth=0
+        )
+
+        #: HoverTkButton: Right 5x button.
+        self.large_up_x_btn = HoverTkButton(
+            self, image=self.stage_control_tab.right_5x_image, borderwidth=0
+        )
 
         #: HoverTkButton: Left button.
-        self.down_x_btn = HoverTkButton(self, image=self.left_image, borderwidth=0)
+        self.down_x_btn = HoverTkButton(
+            self, image=self.stage_control_tab.left_1x_image, borderwidth=0
+        )
+
+        #: HoverTkButton: Left 5x button.
+        self.large_down_x_btn = HoverTkButton(
+            self, image=self.stage_control_tab.left_5x_image, borderwidth=0
+        )
 
         #: LabelInput: Increment spinbox.
         self.increment_box = LabelInput(
@@ -722,90 +700,169 @@ class XYFrame(ttk.Labelframe):
             input_class=ValidatedSpinbox,
             input_var=tk.DoubleVar(),
             input_args={"width": 5},
+            label="Step Size (\N{GREEK SMALL LETTER MU}m)",
+            label_pos="top",
+            label_args={"font": tk.font.Font(size=10)},
         )
 
         #: dict: Dictionary of the buttons for the x and y movement buttons.
         self.button_axes_dict = {
-            "x": [self.up_x_btn, self.down_x_btn],
-            "y": [self.up_y_btn, self.down_y_btn],
+            "x": [
+                self.up_x_btn,
+                self.down_x_btn,
+                self.large_up_x_btn,
+                self.large_down_x_btn,
+            ],
+            "y": [
+                self.up_y_btn,
+                self.down_y_btn,
+                self.large_up_y_btn,
+                self.large_down_y_btn,
+            ],
         }
 
-        # Griding out buttons
-        self.up_y_btn.grid(
-            row=0, column=2, rowspan=2, columnspan=2, padx=2, pady=2
-        )  # UP
-        self.up_x_btn.grid(
-            row=2, column=4, rowspan=2, columnspan=2, padx=2, pady=2
-        )  # RIGHT
-        self.down_y_btn.grid(
-            row=4, column=2, rowspan=2, columnspan=2, padx=2, pady=2
-        )  # DOWN
-        self.down_x_btn.grid(
-            row=2, column=0, rowspan=2, columnspan=2, padx=2, pady=2
-        )  # LEFT
+        # Up
+        self.large_up_y_btn.grid(
+            row=0, column=4, rowspan=2, columnspan=2, padx=2, pady=2
+        )
+
+        self.up_y_btn.grid(row=2, column=4, rowspan=2, columnspan=2, padx=2, pady=2)
+
+        # Increment box.
         self.increment_box.grid(
-            row=3, column=2, rowspan=1, columnspan=2, padx=2, pady=2
+            row=4, column=4, rowspan=3, columnspan=2, padx=2, pady=2
+        )
+
+        # Down
+        self.down_y_btn.grid(row=7, column=4, rowspan=2, columnspan=2, padx=2, pady=2)
+
+        self.large_down_y_btn.grid(
+            row=9, column=4, rowspan=2, columnspan=2, padx=2, pady=2
+        )
+
+        # Left
+        self.large_down_x_btn.grid(
+            row=5, column=0, rowspan=2, columnspan=2, padx=2, pady=2
+        )
+
+        self.down_x_btn.grid(
+            row=5,
+            column=2,
+            rowspan=2,
+            columnspan=2,
+            padx=2,
+            pady=2,
+        )
+
+        # Right
+        self.up_x_btn.grid(row=5, column=6, rowspan=2, columnspan=2, padx=2, pady=2)
+        self.large_up_x_btn.grid(
+            row=5, column=8, rowspan=2, columnspan=2, padx=2, pady=2
         )
 
         # Increment spinbox
         self.increment_box.widget.set_precision(-1)
 
-    def get_widget(self):
+    def get_widget(self) -> LabelInput:
         """Returns the frame widget
 
         Returns
         -------
-        tk.Frame
+        increment_box: LabelInput
             The frame widget
         """
 
         return self.increment_box
 
-    def get_buttons(self):
+    def get_buttons(self) -> dict:
         """Returns the buttons in the frame
 
         Returns
         -------
-        dict
+        buttons: dict
             A dictionary of the buttons
         """
 
-        names = ["up_x_btn", "down_x_btn", "up_y_btn", "down_y_btn"]
+        names = [
+            "up_x_btn",
+            "down_x_btn",
+            "up_y_btn",
+            "down_y_btn",
+            "large_up_x_btn",
+            "large_down_x_btn",
+            "large_up_y_btn",
+            "large_down_y_btn",
+        ]
         return {k: getattr(self, k) for k in names}
 
-    def toggle_button_states(self, joystick_is_on=False, joystick_axes=[]):
+    def toggle_button_states(
+        self, joystick_is_on: bool = False, joystick_axes: Optional[list] = None
+    ) -> None:
         """Switches the images used as buttons between two states
 
         joystick_is_on : bool
             False if buttons are normal, True if buttons are disabled
-        joystick_axes : list
-            Contains strings representing joystick axes
+        joystick_axes : Optional[list]
+            A list of the joystick axes
         """
 
-        for axis in self.button_axes_dict.keys():
-            if axis in joystick_axes:
-                buttons = self.button_axes_dict[axis]
-                axis_ascii = ord(axis)
-                if joystick_is_on:
-                    button_state = "disabled"
-                    image_list = self.disabled_images
-                    hover_list = self.disabled_hover_texts
-                else:
-                    button_state = "normal"
-                    image_list = self.normal_images
-                    hover_list = self.normal_hover_texts
-                for k in range(len(buttons)):
-                    buttons[k]["state"] = button_state
-                    buttons[k].config(image=image_list[2 * (axis_ascii % 2) + k])
-                    buttons[k].hover.setdescription(
-                        hover_list[2 * (axis_ascii % 2) + k]
-                    )
+        if joystick_axes is None:
+            joystick_axes = []
+
+            # Default Button State
+        button_state = "normal"
+        image_list = {
+            "x": [
+                self.stage_control_tab.right_1x_image,
+                self.stage_control_tab.left_1x_image,
+                self.stage_control_tab.right_5x_image,
+                self.stage_control_tab.left_5x_image,
+            ],
+            "y": [
+                self.stage_control_tab.up_1x_image,
+                self.stage_control_tab.down_1x_image,
+                self.stage_control_tab.up_5x_image,
+                self.stage_control_tab.down_5x_image,
+            ],
+        }
+
+        if joystick_is_on:
+            if "x" in joystick_axes:
+                button_state = "disabled"
+                image_list["x"] = [
+                    self.stage_control_tab.d_right_1x_image,
+                    self.stage_control_tab.d_left_1x_image,
+                    self.stage_control_tab.d_right_5x_image,
+                    self.stage_control_tab.d_left_5x_image,
+                ]
+            if "y" in joystick_axes:
+                button_state = "disabled"
+                image_list["y"] = [
+                    self.stage_control_tab.d_up_1x_image,
+                    self.stage_control_tab.d_down_1x_image,
+                    self.stage_control_tab.d_up_5x_image,
+                    self.stage_control_tab.d_down_5x_image,
+                ]
+
+        for k, button in enumerate(self.button_axes_dict["x"]):
+            button["state"] = button_state
+            button.config(image=image_list["x"][k])
+
+        for k, button in enumerate(self.button_axes_dict["y"]):
+            button["state"] = button_state
+            button.config(image=image_list["y"][k])
 
 
-class StopFrame(ttk.Frame):
+class StopFrame(ttk.Labelframe):
     """Frame for the stop button."""
 
-    def __init__(self, stage_control_tab, name, *args, **kwargs):
+    def __init__(
+        self,
+        stage_control_tab: StageControlTab,
+        name: str,
+        *args: Iterable,
+        **kwargs: dict,
+    ) -> None:
         """Initialize the stop frame.
 
         Parameters
@@ -821,14 +878,9 @@ class StopFrame(ttk.Frame):
         """
 
         # Init Frame
-        ttk.Frame.__init__(self, stage_control_tab, *args, **kwargs)
-
-        #: str: Name of the frame.
-        self.name = name
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
+        ttk.Labelframe.__init__(
+            self, stage_control_tab, text=name, labelanchor="n", *args, **kwargs
+        )
 
         #: tk.Button: Stop button.
         self.stop_btn = tk.Button(
@@ -844,33 +896,30 @@ class StopFrame(ttk.Frame):
         self.stop_btn.grid(row=0, column=0, rowspan=2, pady=2)
         self.joystick_btn.grid(row=2, column=0, rowspan=2, pady=2)
 
-    def get_buttons(self):
+    def get_buttons(self) -> dict:
         """Returns the buttons in the frame
 
         Returns
         -------
-        dict
+        buttons: dict
             A dictionary of the buttons
         """
         return {"stop": self.stop_btn, "joystick": self.joystick_btn}
 
-    def toggle_button_states(stop_frame, joystick_is_on=False, joystick_axes=[]):
+    def toggle_button_states(
+        self, joystick_is_on: bool = False, joystick_axes: Optional[list] = None
+    ):
         """Switches the images used as buttons between two states
 
         Parameters
         ----------
-        stop_frame : StopFrame
-            The StopFrame object
-
         joystick_is_on : bool
             'True' indicates that joystick mode is on
-
             'False' indicates that joystick mode is off
-
-        joystick_axes : ListProxy
-            A ListProxy containing the axes controlled by the joystick, if any
+        joystick_axes : Optional[list]
+            A list containing the axes controlled by the joystick, if any
         """
         if joystick_is_on:
-            stop_frame.joystick_btn.config(text="Disable Joystick")
+            self.joystick_btn.config(text="Disable Joystick")
         else:
-            stop_frame.joystick_btn.config(text="Enable Joystick")
+            self.joystick_btn.config(text="Enable Joystick")

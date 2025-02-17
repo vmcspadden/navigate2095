@@ -29,9 +29,15 @@ def zarr_ds(fn, multiposition, per_stack, z_stack, stop_early, size):
     timepoints = np.random.randint(1, 3)
 
     x_size, y_size = size
-    microscope_name = model.configuration["experiment"]["MicroscopeState"]["microscope_name"]
-    model.configuration["experiment"]["CameraParameters"][microscope_name]["x_pixels"] = x_size
-    model.configuration["experiment"]["CameraParameters"][microscope_name]["y_pixels"] = y_size
+    microscope_name = model.configuration["experiment"]["MicroscopeState"][
+        "microscope_name"
+    ]
+    model.configuration["experiment"]["CameraParameters"][microscope_name][
+        "x_pixels"
+    ] = x_size
+    model.configuration["experiment"]["CameraParameters"][microscope_name][
+        "y_pixels"
+    ] = y_size
     model.img_width = x_size
     model.img_height = y_size
 
@@ -43,6 +49,26 @@ def zarr_ds(fn, multiposition, per_stack, z_stack, stop_early, size):
         "is_multiposition"
     ] = multiposition
     model.configuration["experiment"]["MicroscopeState"]["timepoints"] = timepoints
+
+    model.configuration["experiment"]["BDVParameters"] = {
+        "shear": {
+            "shear_data": True,
+            "shear_dimension": "YZ",
+            "shear_angle": 45,
+        },
+        "rotate": {
+            "rotate_data": False,
+            "X": 0,
+            "Y": 0,
+            "Z": 0,
+        },
+        "down_sample": {
+            "down_sample": False,
+            "axial_down_sample": 1,
+            "lateral_down_sample": 1,
+        },
+    }
+
     if per_stack:
         model.configuration["experiment"]["MicroscopeState"][
             "stack_cycling_mode"

@@ -435,7 +435,6 @@ class Microscope:
         self.central_focus = None
         self.get_available_channels()
 
-        self.report_camera_settings()
         if self.camera.is_acquiring:
             self.camera.close_image_series()
         self.set_camera_roi()
@@ -445,6 +444,8 @@ class Microscope:
                 "binning"
             ]
         )
+        logger.debug(f"Running microscope {self.microscope_name}")
+        self.report_camera_settings()
         # Initialize Image Series - Attaches camera buffer and start imaging
         self.camera.initialize_image_series(self.data_buffer, self.number_of_frames)
 

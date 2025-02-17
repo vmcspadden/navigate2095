@@ -33,7 +33,7 @@
 import importlib
 from threading import Lock
 
-from typing_extensions import Optional
+from typing import Optional
 
 
 def combine_funcs(*funclist):
