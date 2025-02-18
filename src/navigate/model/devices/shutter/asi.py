@@ -2,9 +2,8 @@
 # All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
-# modification, are permitted for academic and research use only
-# (subject to the limitations in the disclaimer below)
-# provided that the following conditions are met:
+# modification, are permitted for academic and research use only (subject to the
+# limitations in the disclaimer below) provided that the following conditions are met:
 
 #      * Redistributions of source code must retain the above copyright notice,
 #      this list of conditions and the following disclaimer.
@@ -29,16 +28,22 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+#
 
 # Standard Library Imports
 import logging
+import traceback
 from typing import Any, Dict
+
+
 
 # Third Party Imports
 
+
 # Local Imports
+from navigate.model.devices.shutter.base import ShutterBase
 from navigate.tools.decorators import log_initialization
-from navigate.model.devices.laser.base import LaserBase
+from navigate.model.devices.APIs.asi.asi_tiger_controller import TigerController
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -46,48 +51,76 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class SyntheticLaser(LaserBase):
-    """SyntheticLaser Class"""
-class SyntheticLaser(LaserBase):
-    """SyntheticLaser Class"""
+class ASIShutterTTL(ShutterBase):
+    """ShutterTTL Class
+
+    Triggering for shutters delivered from the TigerController.
+    Each output keeps their last digital state for as long the device is not
+    powered down.
+    """
 
     def __init__(
         self,
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
-        device_id: int,
+        address=None,
     ) -> None:
-        """Initialize the SyntheticLaser class.
-        """Initialize the SyntheticLaser class.
+        """Initialize the ASIShutterTTL.
 
         Parameters
         ----------
         microscope_name : str
-            The microscope name.
+            Name of microscope in configuration
         device_connection : Any
-            The device connection object.
+            Hardware device to connect to
         configuration : Dict[str, Any]
-            The device configuration.
-        device_id : int
-            The laser ID.
+            Global configuration of the microscope
         """
-        super().__init__(microscope_name, device_connection, configuration, device_id)
 
-    def close(self) -> None:
-        """Close the port before exit."""
-        pass
-    def close(self) -> None:
-        """Close the port before exit."""
-        pass
+        super().__init__(microscope_name, device_connection, configuration)
+        
+        shutter_channel = configuration["configuration"]["microscopes"][
+            microscope_name
+        ]["shutter"]["hardware"]["channel"]
 
-    def initialize_laser(self) -> None:
-        """
-        Initialize lasers.
-        """
-        pass
-    def initialize_laser(self) -> None:
-        """
-        Initialize lasers.
-        """
-        pass
+        self.address = address
+
+    def __del__(self):
+        if self.sutter_task:
+            try:
+                self.shutter_task.stop()
+                self.shutter_task.close()
+            except Exception:
+                logger.exception(f"Error stopping task: {traceback.format_exc()}")
+
+
+
+    def open_shutter(self):
+        self."joel_output" = 1
+        try:
+            response = self.send_command("joel_output")
+            logger.debug("ShutterTTL - Shutter opened")
+        except Exception as e:
+            print(
+                "Shutter not open"
+            )
+            logger.debug(e)
+
+    def close_shutter(self):
+        self."joel_output" = 0
+        try:
+            response = self.send_command("joel_output")
+            logger.debug("ShutterTTL - Shutter closed")
+        except Exception as e:
+            print(
+                "Shutter did not close"
+            )
+            logger.debug(e)
+        
+
+    @property
+    def state(self):
+        return self."joel_output"
+        
+

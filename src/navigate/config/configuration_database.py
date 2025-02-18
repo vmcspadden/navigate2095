@@ -605,6 +605,13 @@ laser_hardware_widgets = {
         None,
         "Example: PXI6733/ao0",
     ],
+    "power/hardware/axis": [
+        "Tiger Controller Axis",
+        "Input",
+        "string",
+        None,
+        "Example: A"
+    ],
     "power/hardware/min": [
         "Minimum Voltage",
         "Spinbox",
