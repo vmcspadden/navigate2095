@@ -933,3 +933,42 @@ class TigerController:
         """
         self.send_filter_wheel_command(f"MOVE {dichroic_id}={dichroic_position}")
         self.read_response()
+
+    def laser_analog(self, axis: str, min_voltage: float, max_voltage: float):
+        """Programs the analog waveform for the laser class
+
+        Parameters
+        ----------
+        axis: str
+            Laser axis
+        min_voltage: 
+            Minimum voltage of the laser
+        max_voltage:
+            Maximum voltage of the laser        
+        """
+
+        "Verify if this is for synchronous or asynchronous"
+        self.send_command(f"SAP {axis}={162}")
+        self.send_command(f"SAA {axis}={max_voltage-min_voltage}")
+        self.send_command(f"SAO {axis}={(max_voltage - min_voltage)/2 + min_voltage}")
+        self.read_response()
+
+    def sam(self, axis: str, mode: int):
+        """Sets the single-axis mode according to the integer code.
+
+        0: stops waveforms if they are running
+        1: starts generating the waveform pattern
+        2: waveform only runs for one cycle, then waits for another trigger
+        3: starts generating the waveform pattern, restarts the other waveform on the same card
+        4: starts generating the waveform, free running after the trigger
+
+        Parameters
+        ----------
+        axis: str
+            Laser axis
+        mode: 
+            Integer code     
+        """
+
+        self.send_command(f"SAP {axis}={mode}")
+        self.read_response()
