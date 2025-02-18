@@ -30,7 +30,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# Standard Library Imports
+'''# Standard Library Imports
 import logging
 from typing import Any, Dict
 import time
@@ -106,22 +106,22 @@ class ASILaser(LaserBase):
         super().__init__(microscope_name, device_connection, configuration, laser_id)
 
         #: TigerController: ASI Tiger Controller object.
-        self.laser = device_connection
+        #self.laser = device_connection
 
         #: str: The modulation type of the laser - Analog, Digital, or Mixed.
         self.modulation_type = modulation_type
 
-        '''#: float: The minimum digital modulation voltage.
-        self.laser_min_do = None
+        #: float: The minimum digital modulation voltage.
+        #self.laser_min_do = None
 
         #: float: The maximum digital modulation voltage.
-        self.laser_max_do = None
+        #self.laser_max_do = None
 
         #: float: The minimum analog modulation voltage.
-        self.laser_min_ao = None
+        #self.laser_min_ao = None
 
         #: float: The maximum analog modulation voltage.
-        self.laser_max_ao = None
+        #self.laser_max_ao = None
 
         #: float: Current laser intensity.
         self._current_intensity = 0
@@ -140,11 +140,12 @@ class ASILaser(LaserBase):
             self.initialize_digital_modulation()
             logger.info(f"{str(self)} initialized with digital modulation.")
     
+            
     def __str__(self):
         """String representation of the class."""
-        return "ASIFilterWheel"'''
+        return "ASILaser"
     
-    '''def initialize_analog_modulation(self) -> None:
+    def initialize_analog_modulation(self) -> None:
         """Initialize the analog modulation of the laser."""
 
         #: str: axis the laser input is connected to
@@ -162,10 +163,10 @@ class ASILaser(LaserBase):
 
         #: object: The laser analog modulation task.
         self.laser.laser_analog(self.axis, self.laser_min_ao, self.laser_max_ao)
-        self.laser.sam(self.axis, 1)'''
+        self.laser.sam(self.axis, 1)
 
 
-    '''def initialize_digital_modulation(self) -> None:
+    def initialize_digital_modulation(self) -> None:
         """Initialize the digital modulation of the laser."""
         laser_do_port = self.device_config["onoff"]["hardware"]["channel"]
 

@@ -569,7 +569,8 @@ mirror_hardware_widgets = {
     "n_modes": ["Number of Modes", "Input", "int", None, "Example: 32", 32],
 }
 
-laser_device_types = {"NI DAQ": "NI", "ASI TG-1000": "ASI", "Virtual Device": "synthetic"}
+laser_device_types = {"NI DAQ": "NI", "Virtual Device": "synthetic"}
+# Need to add back "ASI TG-1000": "ASI",
 
 laser_hardware_widgets = {
     "wavelength": ["Wavelength", "Input", "int", None, "Example: 488", 488],
