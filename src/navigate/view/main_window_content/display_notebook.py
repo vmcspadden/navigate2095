@@ -43,7 +43,7 @@ from matplotlib.figure import Figure
 # Local Imports
 from navigate.view.custom_widgets.DockableNotebook import DockableNotebook
 from navigate.view.custom_widgets.LabelInputWidgetFactory import LabelInput
-from navigate.view.custom_widgets.common import CommonMethods
+from navigate.view.custom_widgets.common import CommonMethods, uniform_grid
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -120,10 +120,6 @@ class MIPTab(tk.Frame):
         #: Bool: The docked flag.
         self.is_docked = True
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
         #: ttk.Frame: The frame that will hold the camera image.
         self.cam_image = ttk.Frame(self)
         self.cam_image.grid(row=0, column=0, rowspan=3, sticky=tk.NSEW)
@@ -147,7 +143,7 @@ class MIPTab(tk.Frame):
         self.canvas.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
 
         #: matplotlib.figure.Figure: The figure that will hold the camera image.
-        self.matplotlib_figure = Figure(figsize=[6, 6], tight_layout=True)
+        self.matplotlib_figure = Figure(figsize=(6.0, 6.0), tight_layout=True)
 
         #:  FigureCanvasTkAgg: The canvas that will hold the camera image.
         self.matplotlib_canvas = FigureCanvasTkAgg(self.matplotlib_figure, self.canvas)
@@ -159,6 +155,8 @@ class MIPTab(tk.Frame):
         #: RenderFrame: The frame that will hold the live display functionality.
         self.render = MipRenderFrame(self)
         self.render.grid(row=1, column=1, sticky=tk.NSEW, padx=5, pady=5)
+
+        uniform_grid(self)
 
 
 class CameraTab(tk.Frame):
@@ -305,10 +303,6 @@ class RenderFrame(ttk.Labelframe):
         text_label = "Image Display"
         ttk.Labelframe.__init__(self, camera_tab, text=text_label, *args, **kwargs)
 
-        # Formatting
-        Grid.columnconfigure(self, "all", weight=1)
-        Grid.rowconfigure(self, "all", weight=1)
-
         #: tk.StringVar: The variable that holds the live display functionality.
         self.live_var = tk.StringVar()
 
@@ -316,15 +310,17 @@ class RenderFrame(ttk.Labelframe):
         self.live = ttk.Combobox(self, textvariable=self.live_var, width=6)
         self.live["values"] = ("Live", "Slice")
         self.live.set("Live")
-        self.live.grid(row=0, column=0)
+        self.live.grid(row=0, column=0, sticky=tk.W)
         self.live.state(["!disabled", "readonly"])
 
         self.channel_var = tk.StringVar()
         self.channel = ttk.Combobox(self, textvariable=self.channel_var, width=6)
         self.channel["values"] = "CH1"
         self.channel.set("CH1")
-        self.channel.grid(row=1, column=0)
+        self.channel.grid(row=1, column=0, sticky=tk.W)
         self.channel.state(["disabled", "readonly"])
+
+        uniform_grid(self)
 
 
 class MipRenderFrame(ttk.Labelframe, CommonMethods):
@@ -347,10 +343,6 @@ class MipRenderFrame(ttk.Labelframe, CommonMethods):
         # Init Frame
         text_label = "Image Display"
         ttk.Labelframe.__init__(self, camera_tab, text=text_label, *args, **kwargs)
-
-        # Formatting
-        Grid.columnconfigure(self, "all", weight=1)
-        Grid.rowconfigure(self, "all", weight=1)
 
         # Label Strings
         perspective = f"{'Perspective':<11}"
@@ -378,6 +370,8 @@ class MipRenderFrame(ttk.Labelframe, CommonMethods):
         self.inputs["perspective"].grid(row=0, column=0, sticky=tk.EW, padx=3, pady=3)
         self.inputs["channel"].grid(row=1, column=0, sticky=tk.EW, padx=3, pady=3)
         self.columnconfigure(0, weight=1)
+
+        uniform_grid(self)
 
 
 class WaveformTab(tk.Frame):
@@ -407,10 +401,6 @@ class WaveformTab(tk.Frame):
         #: bool: The popup flag.
         self.is_docked = True
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
         #: ttk.Frame: The frame that will hold the waveform plots.
         self.waveform_plots = ttk.Frame(self)
         self.waveform_plots.grid(row=0, column=0, sticky=tk.NSEW)
@@ -425,6 +415,8 @@ class WaveformTab(tk.Frame):
         #: WaveformSettingsFrame: The frame that will hold the waveform settings.
         self.waveform_settings = WaveformSettingsFrame(self)
         self.waveform_settings.grid(row=1, column=0, sticky=tk.NSEW, padx=5, pady=5)
+
+        uniform_grid(self)
 
 
 class WaveformSettingsFrame(ttk.Labelframe, CommonMethods):
@@ -447,10 +439,6 @@ class WaveformSettingsFrame(ttk.Labelframe, CommonMethods):
         # Init Frame
         text_label = "Settings"
         ttk.Labelframe.__init__(self, waveform_tab, text=text_label, *args, **kwargs)
-
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
 
         #: dict: The dictionary that holds the widgets.
         self.inputs = {
@@ -476,6 +464,8 @@ class WaveformSettingsFrame(ttk.Labelframe, CommonMethods):
             row=0, column=1, sticky=tk.NSEW, padx=3, pady=3
         )
 
+        uniform_grid(self)
+
 
 class MetricsFrame(ttk.Labelframe, CommonMethods):
     """This class is the frame that holds the image metrics."""
@@ -496,8 +486,6 @@ class MetricsFrame(ttk.Labelframe, CommonMethods):
         """
         text_label = "Image Metrics"
         ttk.Labelframe.__init__(self, camera_tab, text=text_label, *args, **kwargs)
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
 
         #: dict: The dictionary that holds the widgets.
         self.inputs = {}
@@ -536,6 +524,8 @@ class MetricsFrame(ttk.Labelframe, CommonMethods):
                 )
                 self.inputs[self.names[i]].configure(width=5)
 
+        uniform_grid(self)
+
 
 class IntensityFrame(ttk.Labelframe, CommonMethods):
     """This class is the frame that holds the intensity controls."""
@@ -558,10 +548,6 @@ class IntensityFrame(ttk.Labelframe, CommonMethods):
         text_label = "LUT"
         ttk.Labelframe.__init__(self, camera_tab, text=text_label, *args, **kwargs)
 
-        # Formatting
-        tk.Grid.columnconfigure(self, "all", weight=1)
-        tk.Grid.rowconfigure(self, "all", weight=1)
-
         #: dict: The dictionary that holds the widgets.
         self.inputs = {}
 
@@ -582,6 +568,7 @@ class IntensityFrame(ttk.Labelframe, CommonMethods):
         ]
 
         #: tk.StringVar: The variable that holds the LUT.
+        row = 0
         self.color = tk.StringVar()
         for i in range(len(self.color_labels)):
             self.inputs[self.color_labels[i]] = LabelInput(
@@ -592,8 +579,9 @@ class IntensityFrame(ttk.Labelframe, CommonMethods):
                 input_args={"value": self.color_values[i]},
             )
             self.inputs[self.color_labels[i]].grid(
-                row=i, column=0, sticky=tk.NSEW, pady=3
+                row=row, column=0, sticky=tk.W, pady=3
             )
+            row += 1
 
         #: tk.BooleanVar: The variable that holds the flip xy flag.
         self.transpose = tk.BooleanVar()
@@ -607,8 +595,10 @@ class IntensityFrame(ttk.Labelframe, CommonMethods):
             input_var=self.transpose,
         )
         self.inputs[self.trans].grid(
-            row=len(self.color_labels), column=0, sticky=tk.NSEW, pady=3
+            row=row, column=0, sticky=tk.W, pady=3
         )
+        row += 1
+
 
         #: tk.BooleanVar: The variable that holds the autoscale flag.
         self.autoscale = tk.BooleanVar()
@@ -628,8 +618,9 @@ class IntensityFrame(ttk.Labelframe, CommonMethods):
             input_var=self.autoscale,
         )
         self.inputs[self.auto].grid(
-            row=len(self.color_labels) + 1, column=0, sticky=tk.NSEW, pady=3
+            row=row, column=0, sticky=tk.W, pady=3
         )
+        row += 1
 
         # Max and Min Counts
         for i in range(len(self.minmax)):
@@ -641,9 +632,12 @@ class IntensityFrame(ttk.Labelframe, CommonMethods):
                 input_args={"from_": 1, "to": 2**16 - 1, "increment": 1, "width": 5},
             )
             self.inputs[self.minmax_names[i]].grid(
-                row=i + len(self.color_labels) + 2,
+                row=row,
                 column=0,
-                sticky=tk.NSEW,
+                sticky=tk.W,
                 padx=3,
                 pady=3,
             )
+            row += 1
+
+        uniform_grid(self)

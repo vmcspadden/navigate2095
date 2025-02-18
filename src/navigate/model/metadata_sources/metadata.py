@@ -97,6 +97,9 @@ class Metadata:
         #: str: Active microscope
         self.active_microscope = None
 
+        #: str: misc notes
+        self.misc = ""
+
     @property
     def configuration(self) -> Optional[DictProxy]:
         """Return configuration dictionary
@@ -159,6 +162,7 @@ class Metadata:
                 ]["microscope_name"]
             self.set_shape_from_configuration_experiment()
             self.set_stack_order_from_configuration_experiment()
+            self.misc = self.configuration["experiment"]["Saving"].get("misc", "")
 
     def set_shape_from_configuration_experiment(self) -> None:
         """Set shape from configuration experiment"""

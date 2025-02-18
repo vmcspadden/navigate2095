@@ -46,7 +46,7 @@ logger = logging.getLogger(p)
 
 
 class DataSource:
-    def __init__(self, file_name: str = "", mode: str = "w") -> None:
+    def __init__(self, file_name: str = None, mode: str = "w") -> None:
         """Base class for data sources, which can be of arbitrary file type.
 
         This implements read and write methods for accessing each data source.
@@ -393,8 +393,15 @@ class DataSource:
         """
         logger.error("DataSource.read implemented in a derived class.")
         raise NotImplementedError("Implemented in a derived class.")
-    
-    def get_data(self, timepoint: int=0, position: int=0, channel: int=0, z: int=-1, resolution: int=1) -> npt.ArrayLike:
+
+    def get_data(
+        self,
+        timepoint: int = 0,
+        position: int = 0,
+        channel: int = 0,
+        z: int = -1,
+        resolution: int = 1,
+    ) -> npt.ArrayLike:
         """Get data according to timepoint, position, channel and z-axis id
 
         Parameters
@@ -406,7 +413,7 @@ class DataSource:
         channel : int
             The channel id
         z : int
-            The index of Z in a Z-stack. 
+            The index of Z in a Z-stack.
             Return all z if -1.
         resolution : int
             values from 1, 2, 4, 8
@@ -415,15 +422,16 @@ class DataSource:
         -------
         data : npt.ArrayLike
             Image data
-        
+
         Raises
         ------
         NotImplementedError
             If not implemented in a derived class.
         """
         logger.error("DataSource.get_data is not implemented in a derived class.")
-        raise NotImplementedError(f"get_data is not implemented in a derived class {self.__class__}.")
-
+        raise NotImplementedError(
+            f"get_data is not implemented in a derived class {self.__class__}."
+        )
 
     def close(self) -> None:
         """Clean up any leftover file pointers, etc."""
@@ -434,8 +442,8 @@ class DataSource:
         if not self._closed:
             self.close()
 
-class DataReader(metaclass=abc.ABCMeta):
 
+class DataReader(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def __init__(self, *args, **kwargs):
         pass

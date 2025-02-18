@@ -6,10 +6,7 @@ import unittest
 import pytest
 
 # Local Imports
-from navigate.model.devices.stages.tl_kcube_steppermotor import TLKSTStage
-from navigate.model.devices.stages.tl_kcube_steppermotor import (
-    build_TLKSTStage_connection,
-)
+from navigate.model.devices.stage.thorlabs import KST101Stage
 
 
 @pytest.mark.hardware
@@ -44,7 +41,7 @@ class TestStageClass(unittest.TestCase):
         }
 
         # Create the stage controller class
-        self.stage = TLKSTStage(
+        self.stage = KST101Stage(
             microscope_name=self.microscope_name,
             device_connection=None,
             configuration=self.config,
@@ -130,7 +127,7 @@ class TestKSTDeviceController(unittest.TestCase):
         self.dv_per_mm = dv_units / real_units
 
         # Open connection to stage
-        self.kcube_connection = build_TLKSTStage_connection(self.serial_number)
+        self.kcube_connection = KST101Stage.connect(self.serial_number)
         time.sleep(2)
 
         # Move the stage to middle of travel

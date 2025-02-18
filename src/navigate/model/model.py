@@ -48,7 +48,7 @@ from navigate.model.features.adaptive_optics import TonyWilson
 from navigate.model.features.image_writer import ImageWriter
 from navigate.model.features.auto_tile_scan import CalculateFocusRange  # noqa
 from navigate.model.features.common_features import (
-    Snap,
+    Snap,  # noqa
     ZStackAcquisition,
     FindTissueSimple2D,
     PrepareNextChannel,
@@ -123,9 +123,10 @@ class Model:
         self.plugin_acquisition_modes = plugin_acquisition_modes
 
         # Devices
-        devices_dict = load_devices(
-            configuration, args.synthetic_hardware, plugin_devices
-        )
+        # devices_dict = load_devices(
+        #     configuration, args.synthetic_hardware, plugin_devices
+        # )
+        devices_dict = {}
         devices_dict["__plugins__"] = plugin_devices
 
         #: dict: Dictionary of virtual microscopes.
@@ -571,16 +572,19 @@ class Model:
                 self.signal_thread = threading.Thread(target=self.run_acquisition)
 
             self.signal_thread.name = f"{self.imaging_mode} signal"
+
             if self.is_save and self.imaging_mode != "live":
                 saving_config = {}
                 plugin_obj = self.plugin_acquisition_modes.get(self.imaging_mode, None)
                 if plugin_obj and hasattr(plugin_obj, "update_saving_config"):
                     saving_config = getattr(plugin_obj, "update_saving_config")(self)
+
                 self.image_writer = ImageWriter(
-                    self,
+                    model=self,
                     saving_flags=self.data_buffer_saving_flags,
                     saving_config=saving_config,
                 )
+
                 self.data_thread = threading.Thread(
                     target=self.run_data_process,
                     kwargs={"data_func": self.image_writer.save_image},
@@ -1368,14 +1372,14 @@ class Model:
         )
         microscope.daq = SyntheticDAQ(self.configuration)
         microscope.laser_wavelength = self.microscopes[microscope_name].laser_wavelength
-        microscope.lasers = self.microscopes[microscope_name].lasers
+        microscope.laser = self.microscopes[microscope_name].laser
         microscope.camera = self.microscopes[microscope_name].camera
 
         # TODO: lasers
         temp = {
             "zoom": "SyntheticZoom",
             "shutter": "SyntheticShutter",
-            "remote_focus_device": "SyntheticRemoteFocus",
+            "remote_focus": "SyntheticRemoteFocus",
             "mirror": "SyntheticMirror",
         }
 

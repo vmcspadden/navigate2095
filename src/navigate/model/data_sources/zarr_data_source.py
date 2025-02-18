@@ -1,5 +1,6 @@
 # Copyright (c) 2021-2024  The University of Texas Southwestern Medical Center.
 # All rights reserved.
+from typing import Optional, Dict, Any
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted for academic and research use only
@@ -51,13 +52,22 @@ class OMEZarrDataSource(PyramidalDataSource):
     """
 
     def __init__(self, file_name: str = None, mode: str = "w") -> None:
+        """Initialize the OME-Zarr data source.
+
+        Parameters
+        ----------
+        file_name : str
+            Name of the file to open.
+        mode : str
+            Mode to open the file in.
+        """
 
         #: OMEZarrMetadata: Metadata object for the OME-Zarr data source.
         self.metadata = OMEZarrMetadata()
         self.__store = None
         self._current_position = -1
 
-        super().__init__(file_name, mode)
+        super().__init__(file_name=file_name, mode=mode)
 
     def get_slice(self, x, y, c, z=0, t=0, p=0, subdiv=0) -> npt.ArrayLike:
         """Get a 3D slice of the dataset for a single c, t, p, subdiv.
@@ -156,6 +166,7 @@ class OMEZarrDataSource(PyramidalDataSource):
             else:
                 self.new_position(p)
 
+        # TODO: Make sure this also functions.
         for ri, res in enumerate(self.resolutions):
             dx, dy, dz = res
             dataset_name = f"{GROUP_PREFIX}{p}_{ri}"

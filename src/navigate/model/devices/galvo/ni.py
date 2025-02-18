@@ -40,6 +40,7 @@ import nidaqmx
 
 # Local Imports
 from navigate.model.devices.galvo.base import GalvoBase
+from navigate.model.devices.device_types import NIDevice
 from navigate.tools.decorators import log_initialization
 
 # # Logger Setup
@@ -48,7 +49,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class GalvoNI(GalvoBase):
+class NIGalvo(GalvoBase, NIDevice):
     """GalvoNI Class - NI DAQ Control of Galvanometers"""
 
     def __init__(
@@ -56,7 +57,7 @@ class GalvoNI(GalvoBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
-        galvo_id: int = 0,
+        device_id: int = 0,
     ) -> None:
         """Initialize the GalvoNI class.
 
@@ -68,10 +69,10 @@ class GalvoNI(GalvoBase):
             Connection to the NI DAQ device.
         configuration : Dict[str, Any]
             Dictionary of configuration parameters.
-        galvo_id : int
+        device_id : int
             Galvo ID. Default is 0.
         """
-        super().__init__(microscope_name, device_connection, configuration, galvo_id)
+        super().__init__(microscope_name, device_connection, configuration, device_id)
 
         #: str: Name of the microscope.
         self.microscope_name = microscope_name
@@ -80,7 +81,7 @@ class GalvoNI(GalvoBase):
         self.configuration = configuration
 
         #: int: Galvo ID.
-        self.galvo_id = galvo_id
+        self.galvo_id = device_id
 
         #: str: Name of the NI port for galvo control.
         self.trigger_source = configuration["configuration"]["microscopes"][

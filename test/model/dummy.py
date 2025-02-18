@@ -90,6 +90,8 @@ class DummyController:
         #: dict: The custom events
         self.event_listeners = {}
 
+        self.manager = Manager()
+
         #: DummyView: The view to be controlled by this controller.
         self.view = view
 
@@ -120,7 +122,7 @@ class DummyController:
             configuration_directory, "waveform_constants.yml"
         )
 
-    def execute(self, str, sec=None, *args):
+    def execute(self, str, *args, sec=None):
         """Execute a command.
 
         Appends commands sent via execute,
@@ -139,6 +141,8 @@ class DummyController:
         """
 
         self.commands.append(str)
+        if str in ["move_stage_and_acquire_image", "move_stage_and_update_info"]:
+            self.commands.append(*args)
         if sec is not None:
             self.commands.append(sec)
 

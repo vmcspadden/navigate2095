@@ -200,6 +200,9 @@ class Configurator:
                         try:
                             if k in value_dict:
                                 v = value_dict[k][var.get()]
+                                # add more information such as file name of a device type
+                                if type(v) is tuple:
+                                    v = v[0]
                             else:
                                 v = var.get()
                         except tk._tkinter.TclError:
@@ -245,7 +248,7 @@ class Configurator:
                     for list_item in config_dict[k]:
                         f.write(f"{prefix}{list_prefix}-\n")
                         write_func(prefix + list_prefix * 2, list_item, f)
-                else:
+                elif k != "":
                     f.write(f"{prefix}{k}: {config_dict[k]}\n")
 
         with open(filename, "w") as f:

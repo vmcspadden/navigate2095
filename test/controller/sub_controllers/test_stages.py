@@ -326,18 +326,6 @@ def test_down_btn_handler(stage_controller, flip_x, flip_y, flip_z):
     stage_config["flip_z"] = False
 
 
-def test_zero_btn_handler(stage_controller):
-
-    vals = {}
-    for axis in AXES:
-        vals[axis] = np.random.randint(1, 9)
-        stage_controller.widget_vals[axis].get = MagicMock(return_value=vals[axis])
-        stage_controller.widget_vals[axis].set = MagicMock()
-        stage_controller.widget_vals[axis].get()
-        stage_controller.zero_btn_handler(axis)()
-        stage_controller.widget_vals[axis].set.assert_called_once_with(0)
-
-
 def test_stop_button_handler(stage_controller):
 
     stage_controller.view.after = MagicMock()

@@ -11,7 +11,7 @@ from .filter_wheel.synthetic import SyntheticFilterWheel  # noqa
 from .galvo.synthetic import SyntheticGalvo  # noqa
 from .remote_focus.synthetic import SyntheticRemoteFocus  # noqa
 from .shutter.synthetic import SyntheticShutter  # noqa
-from .stages.synthetic import SyntheticStage  # noqa
+from .stage.synthetic import SyntheticStage  # noqa
 from .zoom.synthetic import SyntheticZoom  # noqa
-from .lasers.synthetic import SyntheticLaser  # noqa
-from .mirrors.synthetic import SyntheticMirror  # noqa
+from .laser.synthetic import SyntheticLaser  # noqa
+from .mirror.synthetic import SyntheticMirror  # noqa

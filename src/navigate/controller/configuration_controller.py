@@ -154,7 +154,7 @@ class ConfigurationController:
 
         return [
             str(laser["wavelength"]) + "nm"
-            for laser in self.microscope_config["lasers"]
+            for laser in self.microscope_config["laser"]
         ]
 
     @property
@@ -309,7 +309,7 @@ class ConfigurationController:
             Dictionary with the remote focus percent delay and pulse percent.
         """
         if self.microscope_config is not None:
-            return self.microscope_config["remote_focus_device"]
+            return self.microscope_config["remote_focus"]
 
         return None
 

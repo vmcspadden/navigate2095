@@ -102,7 +102,6 @@ class MainApp(ttk.Frame):
             Arbitrary keyword arguments
         """
 
-        # Inits this class as a frame subclass with the root as its parent
         #: ScrolledFrame: The scrollable version of the main frame for the application
         self.scroll_frame = ScrolledFrame(root)
         self.scroll_frame.grid(row=0, column=0, sticky=tk.NSEW)
@@ -127,22 +126,15 @@ class MainApp(ttk.Frame):
         self.root.resizable(True, True)
         self.root.geometry("")
 
-        tk.Grid.columnconfigure(root, "all", weight=1)
-        tk.Grid.rowconfigure(root, "all", weight=1)
-
-        # Creating and linking menu to main window/app
         #: Menubar: The menu bar for the application
         self.menubar = Menubar(root)
 
-        # Top Frame Acquire Bar
         #: ttk.Frame: The top frame of the application
         self.top_frame = ttk.Frame(self)
 
-        # Left Frame Notebook 1 setup
         #: ttk.Frame: The left frame of the application
         self.left_frame = ttk.Frame(self)
 
-        # Top right Frame Notebook 2 setup
         #: ttk.Frame: The top right frame of the application
         self.right_frame = ttk.Frame(self)
 

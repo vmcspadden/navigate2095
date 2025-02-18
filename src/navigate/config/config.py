@@ -4,7 +4,6 @@
 # modification, are permitted for academic and research use only
 # (subject to the limitations in the disclaimer below)
 # provided that the following conditions are met:
-
 #      * Redistributions of source code must retain the above copyright notice,
 #      this list of conditions and the following disclaimer.
 
@@ -37,14 +36,17 @@ import shutil
 import platform
 from pathlib import Path
 from os.path import isfile
+import multiprocessing
 from multiprocessing.managers import ListProxy, DictProxy
 import logging
+from typing import Union
 
 # Third Party Imports
 import yaml
 
 # Local Imports
-from navigate.tools.common_functions import build_ref_name
+from navigate.tools.common_functions import build_ref_name, load_param_from_module
+from navigate.tools.file_functions import save_yaml_file
 
 # Logger Setup
 p = __name__.split(".")[1]
@@ -90,6 +92,8 @@ def get_configuration_paths():
         Path to file containing waveform templates
     gui_configuration_path : str
         Path to file containing GUI configuration
+    multi_positions_path : str
+        Path to file containing multi-positions
     """
     # Create the navigate home directory if it doesn't exist
     navigate_directory = get_navigate_path()
@@ -108,7 +112,7 @@ def get_configuration_paths():
         "rest_api_config.yml",
         "waveform_templates.yml",
         "gui_configuration.yml",
-        "multi_positions.yml"
+        "multi_positions.yml",
     ]
 
     base_directory = Path(__file__).resolve().parent
@@ -187,7 +191,12 @@ def build_nested_dict(manager, parent_dict, key_name, dict_data):
     parent_dict[key_name] = d
 
 
-def update_config_dict(manager, parent_dict, config_name, new_config) -> bool:
+def update_config_dict(
+    manager: multiprocessing.Manager,
+    parent_dict: dict,
+    config_name: str,
+    new_config: Union[dict, str],
+) -> bool:
     """Read a new file and update info of the configuration dict.
 
     Parameters
@@ -197,7 +206,7 @@ def update_config_dict(manager, parent_dict, config_name, new_config) -> bool:
     parent_dict : dict
         Dictionary we are adding to
     config_name : str
-        Name of subdictionary to replace
+        Name of dictionary to replace
     new_config : dict or str
         Dictionary values or
         yaml file name
@@ -237,17 +246,17 @@ def verify_experiment_config(manager, configuration):
     # verify/build autofocus parameter setting
     # get autofocus supported devices(stages, remote_focus) from configuration.yaml file
     device_dict = {}
-    # get devices: stages, NI remote_focus_device
+    # get devices: stages, NI remote_focus
     device_config = configuration["configuration"]["microscopes"]
     for microscope_name in device_config.keys():
         microscope_config = device_config[microscope_name]
         device_dict[microscope_name] = {}
         if (
-            "remote_focus_device" in microscope_config.keys()
-            and microscope_config["remote_focus_device"]["hardware"]["type"] == "NI"
+            "remote_focus" in microscope_config.keys()
+            and microscope_config["remote_focus"]["hardware"]["type"] == "NI"
         ):
             device_dict[microscope_name]["remote_focus"] = {}
-            device_ref = microscope_config["remote_focus_device"]["hardware"]["channel"]
+            device_ref = microscope_config["remote_focus"]["hardware"]["channel"]
             device_dict[microscope_name]["remote_focus"][device_ref] = True
         if "stage" in microscope_config.keys():
             stages = microscope_config["stage"]["hardware"]
@@ -345,7 +354,7 @@ def verify_experiment_config(manager, configuration):
         if k not in saving_setting_dict:
             saving_setting_dict[k] = saving_dict_sample[k]
 
-    # if root directory/saving direcotry doesn't exist
+    # if root directory/saving directory doesn't exist
     if not os.path.exists(saving_setting_dict["root_directory"]):
         saving_setting_dict["root_directory"] = saving_dict_sample["root_directory"]
     if not os.path.exists(saving_setting_dict["save_directory"]):
@@ -585,7 +594,7 @@ def verify_experiment_config(manager, configuration):
     laser_list = [
         f"{laser['wavelength']}nm"
         for laser in configuration["configuration"]["microscopes"][microscope_name][
-            "lasers"
+            "laser"
         ]
     ]
     number_of_filter_wheels = len(
@@ -653,6 +662,7 @@ def verify_experiment_config(manager, configuration):
             if channel_value[k] < 0:
                 channel_value[k] = temp[k]
 
+
 def verify_waveform_constants(manager, configuration):
     """Verifies and updates the waveform constants in the configuration dictionary.
 
@@ -701,9 +711,9 @@ def verify_waveform_constants(manager, configuration):
         ):
             update_config_dict(manager, waveform_dict, microscope_name, {})
 
-        # get lasers
+        # get laser
         lasers = []
-        for laser in config_dict["lasers"]:
+        for laser in config_dict["laser"]:
             laser_wavelength = f"{laser['wavelength']}nm"
             lasers.append(laser_wavelength)
 
@@ -728,7 +738,7 @@ def verify_waveform_constants(manager, configuration):
                             "amplitude": 0,
                             "offset": 0,
                             # "percent_smoothing": "0",
-                            # "delay": config_dict["remote_focus_device"][
+                            # "delay": config_dict["remote_focus"][
                             #     "delay"
                             # ],
                         },
@@ -743,14 +753,14 @@ def verify_waveform_constants(manager, configuration):
                         if k not in waveform_dict[microscope_name][zoom][laser].keys():
                             waveform_dict[microscope_name][zoom][laser][
                                 k
-                            ] = config_dict["remote_focus_device"].get(k, "0")
+                            ] = config_dict["remote_focus"].get(k, "0")
                         else:
                             try:
                                 float(waveform_dict[microscope_name][zoom][laser][k])
                             except ValueError:
                                 waveform_dict[microscope_name][zoom][laser][
                                     k
-                                ] = config_dict["remote_focus_device"].get(k, "0")
+                                ] = config_dict["remote_focus"].get(k, "0")
 
             # delete non-exist lasers
             for k in waveform_dict[microscope_name][zoom].keys():
@@ -885,8 +895,8 @@ def verify_configuration(manager, configuration):
 
     Supports old version of configurations.
     """
+    support_deceased_configuration(configuration)
     device_config = configuration["configuration"]["microscopes"]
-
     # get microscope inheritance sequence
     microscope_name_seq = []
     inherited_microscope_dict = {}
@@ -942,22 +952,18 @@ def verify_configuration(manager, configuration):
     # generate hardware header section
     hardware_dict = {}
     ref_list = {
-        "camera": [],
-        "stage": [],
         "filter_wheel": [],
-        "zoom": None,
-        "mirror": None,
     }
     required_devices = [
         "camera",
-        "daq",
         "filter_wheel",
         "shutter",
-        "remote_focus_device",
+        "remote_focus",
         "galvo",
         "stage",
-        "lasers",
+        "laser",
     ]
+    filter_wheel_seq = []
     for microscope_name in device_config.keys():
         # camera
         # delay_percent -> delay
@@ -972,53 +978,38 @@ def verify_configuration(manager, configuration):
                     f"{device_name} is not defined in configuration.yaml for "
                     f"microscope {microscope_name}"
                 )
-                raise Exception(f"No {device_name} defined for microscope {microscope_name}")
+                raise Exception(
+                    f"No {device_name} defined for microscope {microscope_name}"
+                )
         camera_config = device_config[microscope_name]["camera"]
         if "delay" not in camera_config.keys():
             camera_config["delay"] = camera_config.get("delay_percent", 2)
-        # remote focus
-        # ramp_falling_percent -> ramp_falling
-        remote_focus_config = device_config[microscope_name]["remote_focus_device"]
-        if "ramp_falling" not in remote_focus_config.keys():
-            remote_focus_config["ramp_falling"] = remote_focus_config.get(
-                "ramp_falling_percent", 5
-            )
-        if "delay" not in remote_focus_config.keys():
-            remote_focus_config["delay"] = remote_focus_config.get("delay_percent", 0)
-
-        # daq
-        daq_type = device_config[microscope_name]["daq"]["hardware"]["type"]
-        if not daq_type.lower().startswith("synthetic"):
-            hardware_dict["daq"] = {"type": daq_type}
-
-        # camera
-        if "camera" not in hardware_dict:
-            hardware_dict["camera"] = []
-        camera_idx = build_ref_name(
-            "-",
-            camera_config["hardware"]["type"],
-            camera_config["hardware"]["serial_number"],
-        )
-        if camera_idx not in ref_list["camera"]:
-            ref_list["camera"].append(camera_idx)
-            hardware_dict["camera"].append(camera_config["hardware"])
 
         try:
             channel_count = max(channel_count, camera_config.get("count", 5))
         except TypeError:
             channel_count = 5
 
-        # zoom (one zoom)
-        if "zoom" not in hardware_dict:
-            zoom_config = device_config[microscope_name]["zoom"]["hardware"]
-            # zoom_idx = build_ref_name("-", zoom_config["type"],
-            # zoom_config["servo_id"])
-            hardware_dict["zoom"] = zoom_config
+        # laser
+        for i, laser_config in enumerate(device_config[microscope_name]["laser"]):
+            update_config_dict(
+                manager,
+                laser_config,
+                "hardware",
+                {"type": "NI", "wavelength": laser_config["wavelength"]}
+            )
 
-        # filter wheel
-        if "filter_wheel" not in hardware_dict:
-            hardware_dict["filter_wheel"] = []
-            filter_wheel_seq = []
+        # zoom
+        zoom_config = device_config[microscope_name]["zoom"]
+        if "hardware" not in zoom_config:
+            update_config_dict(
+                manager,
+                zoom_config,
+                "hardware",
+                {"type": "Synthetic", "servo_id": 0}
+            )
+        elif "type" not in zoom_config["hardware"]:
+                zoom_config["hardware"]["type"] = "Synthetic"
 
         filter_wheel_config = device_config[microscope_name]["filter_wheel"]
         if type(filter_wheel_config) == DictProxy:
@@ -1031,6 +1022,7 @@ def verify_configuration(manager, configuration):
                 [filter_wheel_config],
             )
 
+
         temp_config = device_config[microscope_name]["filter_wheel"]
         for _, filter_wheel_config in enumerate(temp_config):
             filter_wheel_idx = build_ref_name(
@@ -1040,31 +1032,7 @@ def verify_configuration(manager, configuration):
             )
             if filter_wheel_idx not in ref_list["filter_wheel"]:
                 ref_list["filter_wheel"].append(filter_wheel_idx)
-                hardware_dict["filter_wheel"].append(filter_wheel_config["hardware"])
                 filter_wheel_seq.append(filter_wheel_config)
-
-        # stage
-        if "stage" not in hardware_dict:
-            hardware_dict["stage"] = []
-        stages = device_config[microscope_name]["stage"]["hardware"]
-        if type(stages) != ListProxy:
-            stages = [stages]
-        for i, stage in enumerate(stages):
-            stage_idx = build_ref_name("-", stage["type"], stage["serial_number"])
-            if stage_idx not in ref_list["stage"]:
-                hardware_dict["stage"].append(stage)
-
-        # mirror
-        if (
-            "mirror" in device_config[microscope_name].keys()
-            and "mirror" not in hardware_dict
-        ):
-            hardware_dict["mirror"] = device_config[microscope_name]["mirror"][
-                "hardware"
-            ]
-
-    if "daq" not in hardware_dict:
-        hardware_dict["daq"] = {"type": "synthetic"}
 
     # make sure all microscopes have the same filter wheel sequence
     if len(device_config.keys()) > 1:
@@ -1084,22 +1052,19 @@ def verify_configuration(manager, configuration):
                 temp_config.insert(i, filter_wheel_seq[i])
 
     update_config_dict(
-        manager, configuration["configuration"], "hardware", hardware_dict
-    )
-
-    update_config_dict(
         manager,
         configuration["configuration"],
         "gui",
         {"channels": {"count": channel_count}},
     )
 
+
 def verify_positions_config(positions):
     if positions is None or type(positions) not in (list, ListProxy):
         return []
     # MultiPositions
     position_num = len(positions)
-    for i in range(position_num-1, -1, -1):
+    for i in range(position_num - 1, -1, -1):
         position = positions[i]
         try:
             for j in range(5):
@@ -1108,3 +1073,40 @@ def verify_positions_config(positions):
             del positions[i]
 
     return positions
+
+def support_deceased_configuration(configuration):
+    """Support old version of configurations.
+
+    Parameters
+    ----------
+    configuration : dict
+        The configuration dictionary containing old version configurations.
+
+    Note
+    ----
+    This function updates the configuration dictionary to support old version
+    configurations by renaming keys and updating values as necessary.
+    """
+
+    device_config = configuration["configuration"]["microscopes"]
+    is_updated = False
+    for microscope_name in device_config.keys():
+        microscope_config = device_config[microscope_name]
+        if "remote_focus_device" in microscope_config.keys():
+            microscope_config["remote_focus"] = microscope_config.pop("remote_focus_device")
+            is_updated = True
+        if "lasers" in microscope_config.keys():
+            microscope_config["laser"] = microscope_config.pop("lasers")
+            is_updated = True
+        if "stage" in microscope_config.keys():
+            deceased_device_type_names = load_param_from_module(
+                "navigate.config.configuration_database", "deceased_device_type_names"
+            )
+            stage_config = microscope_config["stage"]["hardware"]
+            if type(stage_config) is not ListProxy:
+                stage_config = [stage_config]
+            for stage in stage_config:
+                if stage["type"] in deceased_device_type_names:
+                    stage["type"] = deceased_device_type_names[stage["type"]]
+                    is_updated = True
+

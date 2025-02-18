@@ -1,5 +1,6 @@
 # Copyright (c) 2021-2024  The University of Texas Southwestern Medical Center.
 # All rights reserved.
+import tkinter
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted for academic and research use only
@@ -32,6 +33,7 @@
 #
 
 # Standard library imports
+from unittest.mock import MagicMock
 
 # Third party imports
 import pytest
@@ -59,8 +61,12 @@ class TestAcquireBarController:
         c = dummy_controller
         v = dummy_controller.view
 
-        self.acquire_bar_controller = AcquireBarController(v.acquire_bar, c)
+        self.acquire_bar_controller = AcquireBarController(
+            view=v.acquire_bar, parent_controller=c
+        )
         self.acquire_bar_controller.populate_experiment_values()
+        c.channels_tab_controller.populate_experiment_values()
+        c.camera_setting_controller = MagicMock()
 
     def test_init(self):
         """Tests the initialization of the AcquireBarController class
@@ -502,7 +508,43 @@ class TestAcquireBarController:
                     widgets["label"].set("BCB")
                     widgets["solvent"].set("uDISCO")
                     widgets["file_type"].set("OME-TIFF")
-                    widgets["misc"].set("This is a test!")
+
+                    # Tab frame
+                    for i in range(100):
+                        self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                            "misc"
+                        ].insert(tkinter.END, f"L{i}")
+
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "shear_data"
+                    ].set(True)
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "shear_dimension"
+                    ].set("XZ")
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "shear_angle"
+                    ].set(45)
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "rotate_data"
+                    ].set(True)
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "rotate_angle_x"
+                    ].set(90)
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "rotate_angle_y"
+                    ].set(90)
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "rotate_angle_z"
+                    ].set(90)
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "down_sample_data"
+                    ].set(True)
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "lateral_down_sample"
+                    ].set("2x")
+                    self.acquire_bar_controller.acquire_pop.tab_frame.inputs[
+                        "axial_down_sample"
+                    ].set("2x")
 
                     # Launch acquisition start/test
                     buttons["Done"].invoke()  # Call to launch acquisition

@@ -109,6 +109,11 @@ html_logo = "../../src/navigate/view/icon/mic.png"
 
 pygments_style = "sphinx"
 
+# -- Linkcheck Options ---------------------------------------------
+linkcheck_ignore = [
+    r'http://proxy\.your_university\.edu:1234',
+    r'https://proxy\.your_university\.edu:1234'
+]
 # -- LaTeX output options ----------------------------------------------------
 
 latex_elements = {

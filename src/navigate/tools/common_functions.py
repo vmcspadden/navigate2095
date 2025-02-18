@@ -33,7 +33,7 @@
 import importlib
 from threading import Lock
 
-from typing_extensions import Optional
+from typing import Optional
 
 
 def combine_funcs(*funclist):
@@ -129,6 +129,28 @@ def load_module_from_file(module_name: str, file_path: str) -> Optional[any]:
     except ModuleNotFoundError:
         return None
     return module
+
+def load_param_from_module(module_name: str, param_name: str) -> Optional[any]:
+    """This function will load a parameter from a module
+
+    Parameters
+    ----------
+    module_name: str
+        the module name
+    param_name: str
+        the parameter name
+
+    Returns
+    -------
+    param: Optional[Any]
+        The parameter. None if the parameter is not found.
+    """
+    try:
+        module = importlib.import_module(module_name)
+        param = getattr(module, param_name)
+    except ModuleNotFoundError:
+        return None
+    return param
 
 
 class VariableWithLock:

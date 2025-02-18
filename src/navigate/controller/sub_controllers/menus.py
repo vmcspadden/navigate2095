@@ -244,13 +244,27 @@ class MenuController(GUIController):
                     None,
                 ],
                 "add_separator_1": [None, None, None, None, None],
-                "Open Log Files": ["standard", self.open_log_files, None, None, None],
+                "Open Log Files": [
+                    "standard",
+                    self.open_log_files,
+                    None,
+                    None,
+                    None
+                ],
                 "Open Configuration Files": [
                     "standard",
                     self.open_configuration_files,
                     None,
                     None,
                     None,
+                ],
+                "add_separator_2": [None, None, None, None, None],
+                "Quit": [
+                    "standard",
+                    lambda *args: self.parent_controller.acquire_bar_controller.exit_program(),
+                    "Control+q",
+                    "<Control-q>",
+                    "<Control_L-q>"
                 ],
             }
         }

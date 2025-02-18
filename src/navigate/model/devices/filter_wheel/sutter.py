@@ -40,6 +40,7 @@ import serial
 
 # Local Imports
 from navigate.model.devices.filter_wheel.base import FilterWheelBase
+from navigate.model.devices.device_types import SerialDevice
 from navigate.tools.decorators import log_initialization
 
 # Logger Setup
@@ -47,40 +48,8 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_filter_wheel_connection(comport, baudrate, timeout=0.25):
-    """Build SutterFilterWheel Serial Port connection
-
-    Attributes
-    ----------
-    comport : str
-        Comport for communicating with the filter wheel, e.g., COM1.
-    baudrate : int
-        Baud rate for communicating with the filter wheel, e.g., 9600.
-    timeout : float
-        Timeout for communicating with the filter wheel, e.g., 0.25.
-
-    Returns
-    -------
-    serial.Serial
-        The serial port connection to the filter wheel.
-
-    Raises
-    ------
-    UserWarning
-        Could not communicate with Sutter Lambda 10-B via COMPORT.
-    """
-    logging.debug(f"SutterFilterWheel - Opening Serial Port {comport}")
-    try:
-        return serial.Serial(comport, baudrate, timeout=timeout)
-    except serial.SerialException:
-        logger.error("SutterFilterWheel - Could not establish Serial Port Connection")
-        raise UserWarning(
-            "Could not communicate with Sutter Lambda 10-B via COMPORT", comport
-        )
-
-
 @log_initialization
-class SutterFilterWheel(FilterWheelBase):
+class SutterFilterWheel(FilterWheelBase, SerialDevice):
     """SutterFilterWheel - Class for controlling Sutter Lambda Filter Wheels
 
     Note
@@ -89,24 +58,21 @@ class SutterFilterWheel(FilterWheelBase):
         https://www.sutter.com/manuals/LB10-3_OpMan.pdf
     """
 
-    def __init__(self, device_connection, device_config):
+    def __init__(self, microscope_name, device_connection, configuration, device_id):
         """Initialize the SutterFilterWheel class.
 
         Parameters
         ----------
-        device_connection : serial.Serial
-            The communication instance with the filter wheel.
-        device_config : Dict[str, Any]
-            Dictionary of device configuration parameters.
+        microscope_name : str
+            Name of the microscope.
+        device_connection : Any
+            The communication instance with the device.
+        configuration : Dict[str, Any]
+            Global configuration dictionary.
+        device_id : int
+            The ID of the device. Default is 0.
         """
-        super().__init__(device_connection, device_config)
-
-        #: serial.Serial: Serial port connection to the filter wheel.
-        self.serial = device_connection
-
-        #: Dict[str, Any]: Dictionary of filter names and corresponding filter wheel
-        # positions.
-        self.device_config = device_config
+        super().__init__(microscope_name, device_connection, configuration)
 
         #: bool: Wait until filter wheel has completed movement.
         self.wait_until_done = True
@@ -134,7 +100,7 @@ class SutterFilterWheel(FilterWheelBase):
                 [0, 0.230, 0.440, 0.650, 0.860, 1.100],
             ]
         )
-
+        self.serial = device_connection
         self.serial.write(bytes.fromhex("ee"))
 
         if self.read_on_init:
@@ -150,6 +116,38 @@ class SutterFilterWheel(FilterWheelBase):
     def __str__(self) -> str:
         """String representation of the class."""
         return "SutterFilterWheel"
+
+    @classmethod
+    def connect(cls, comport, baudrate, timeout=0.25):
+        """Build SutterFilterWheel Serial Port connection
+
+        Attributes
+        ----------
+        comport : str
+            Comport for communicating with the filter wheel, e.g., COM1.
+        baudrate : int
+            Baud rate for communicating with the filter wheel, e.g., 9600.
+        timeout : float
+            Timeout for communicating with the filter wheel, e.g., 0.25.
+
+        Returns
+        -------
+        serial.Serial
+            The serial port connection to the filter wheel.
+
+        Raises
+        ------
+        UserWarning
+            Could not communicate with Sutter Lambda 10-B via COMPORT.
+        """
+        logging.debug(f"SutterFilterWheel - Opening Serial Port {comport}")
+        try:
+            return serial.Serial(comport, baudrate, timeout=timeout)
+        except serial.SerialException:
+            logger.error("SutterFilterWheel - Could not establish Serial Port Connection")
+            raise UserWarning(
+                "Could not communicate with Sutter Lambda 10-B via COMPORT", comport
+            )
 
     def filter_change_delay(self, filter_name: str) -> None:
         """Calculate duration of time necessary to change filter wheel positions.

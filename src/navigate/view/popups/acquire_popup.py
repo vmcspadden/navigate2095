@@ -42,7 +42,7 @@ import platform
 # Local Imports
 from navigate.view.custom_widgets.popup import PopUp
 from navigate.view.custom_widgets.LabelInputWidgetFactory import LabelInput
-from navigate.view.custom_widgets.validation import ValidatedCombobox
+from navigate.view.custom_widgets.validation import ValidatedCombobox, ValidatedSpinbox
 from navigate.model.data_sources import FILE_TYPES
 from navigate.view.custom_widgets.common import CommonMethods
 
@@ -51,54 +51,130 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
+SOLVENTS = ("BABB", "Water", "CUBIC", "CLARITY", "uDISCO", "eFLASH")
+
+
 class AcquirePopUp(CommonMethods):
     """Class creates the popup that is generated when the Acquire button is pressed and
     Save File checkbox is selected."""
 
-    def __init__(self, root, *args, **kwargs):
+    def __init__(self, root: tk.Tk) -> None:
         """Initialize the AcquirePopUp class
 
         Parameters
         ----------
         root : tk.Tk
             The root window
-        *args
-            Variable length argument list
-        **kwargs
-            Arbitrary keyword arguments
         """
-        # Creating popup window with this name and size/placement, PopUp is a Toplevel
-        # window
+        #: tk.Tk: The root window
+        self.tk = root
+
+        #: int: Width of the first column
+        self.column1_width = 20
+
+        #: int: Width of the second column
+        self.column2_width = 40
+
         #: PopUp: The popup window
         if platform.system() == "Windows":
+            self.global_width = 450
+            self.global_height = 710
             self.popup = PopUp(
-                root, "File Saving Dialog", "450x390+320+180", transient=True
+                root,
+                name="File Saving Dialog",
+                size=f"{self.global_width}x{self.global_height}+320+180",
+                transient=True,
             )
         else:
+            self.global_width = 580
+            self.global_height = 730
             self.popup = PopUp(
-                root, "File Saving Dialog", "600x430+320+180", transient=True
+                root,
+                name="File Saving Dialog",
+                size=f"{self.global_width}x{self.global_height}+320+180",
+                transient=True,
             )
 
-        # Storing the content frame of the popup, this will be the parent of the widgets
-        content_frame = self.popup.get_frame()
-
-        # Formatting
-        tk.Grid.columnconfigure(content_frame, "all", weight=1)
-        tk.Grid.rowconfigure(content_frame, "all", weight=1)
-
-        # Dictionary for all the variables
-        #: dict: Dictionary of all the variables
-        self.inputs = {}
-
-        #: dict: Dictionary of all the buttons
+        #: dict: Button dictionary.
         self.buttons = {}
 
-        # Label for entries
-        #: ttk.Label: Label for the entries
-        self.entries_label = ttk.Label(
-            content_frame, text="Please fill out the fields below"
+        #: dict: Input dictionary.
+        self.inputs = {}
+
+        content_frame = self.popup.get_frame()
+        content_frame.columnconfigure(index=0, weight=1)
+        content_frame.rowconfigure(index=0, weight=1)
+
+        path_entries = ttk.Frame(content_frame, padding=(5, 5, 5, 5))
+        tab_frame = ttk.Frame(content_frame, padding=(5, 5, 5, 5))
+        button_frame = ttk.Frame(content_frame, padding=(5, 5, 5, 5))
+        separator1 = ttk.Separator(content_frame, orient="horizontal")
+        separator2 = ttk.Separator(content_frame, orient="horizontal")
+
+        path_entries.grid(row=0, column=0, sticky=tk.NSEW, padx=0, pady=3)
+        path_entries.grid_columnconfigure(index=0, weight=1)
+        path_entries.grid_rowconfigure(index=1, weight=1)
+
+        separator1.grid(row=1, column=0, sticky=tk.NSEW, padx=0, pady=3)
+
+        tab_frame.grid(row=2, column=0, sticky=tk.NSEW, padx=0, pady=3)
+        tab_frame.grid_columnconfigure(index=0, weight=1)
+        tab_frame.grid_rowconfigure(index=1, weight=1)
+
+        separator2.grid(row=3, column=0, sticky=tk.NSEW, padx=0, pady=3)
+
+        button_frame.grid(row=4, column=0, sticky=tk.NSEW, padx=0, pady=3)
+        button_frame.grid_columnconfigure(index=0, weight=1)
+        button_frame.grid_rowconfigure(index=1, weight=1)
+
+        #: ButtonFrame: ButtonFrame object
+        self.button_frame = ButtonFrame(parent=self, frame=button_frame)
+
+        #: EntryFrame: EntryFrame object
+        self.path_frame = EntryFrame(parent=self, frame=path_entries)
+
+        #: TabFrame: TabFrame object
+        self.tab_frame = TabFrame(parent=self, frame=tab_frame)
+
+
+class ButtonFrame:
+    def __init__(self, parent: AcquirePopUp, frame: ttk.Frame) -> None:
+        """Initialize the ButtonFrame
+
+        Parameters
+        ----------
+        parent : AcquirePopUp
+            The AcquirePopup window.
+        frame : ttk.Frame
+            The AcquirePopup Window.
+        """
+
+        width = int((parent.column1_width + parent.column2_width - 10) / 2)
+        parent.buttons["Cancel"] = ttk.Button(
+            frame, text="Cancel Acquisition", width=width
         )
-        self.entries_label.grid(row=0, column=0, columnspan=2, sticky=tk.NSEW, pady=5)
+        parent.buttons["Done"] = ttk.Button(frame, text="Acquire Data", width=width)
+        parent.buttons["Cancel"].grid(row=0, column=0, padx=5, sticky=tk.NSEW)
+        parent.buttons["Done"].grid(row=0, column=1, padx=5, sticky=tk.NSEW)
+
+
+class EntryFrame:
+    def __init__(self, parent: AcquirePopUp, frame: ttk.Frame) -> None:
+        """Initialize the EntryFrame
+
+        Parameters
+        ----------
+        parent : AcquirePopUp
+            The AcquirePopup window.
+        frame : ttk.Frame
+            The EntryFrame Window.
+        """
+        row_index = 0
+        text = "Please Fill Out the Fields Below"
+
+        #: ttk.Label: Label for the entries
+        label = ttk.Label(frame, text=text)
+        label.grid(row=0, column=0, columnspan=2, sticky=tk.NSEW, pady=5, padx=0)
 
         # Creating Entry Widgets
         entry_names = [
@@ -110,7 +186,6 @@ class AcquirePopUp(CommonMethods):
             "prefix",
             "solvent",
             "file_type",
-            "misc",
         ]
 
         entry_labels = [
@@ -122,68 +197,364 @@ class AcquirePopUp(CommonMethods):
             "Prefix",
             "Solvent",
             "File Type",
-            "Notes",
         ]
 
         # Loop for each entry and label
+        row_index += 1
         for i in range(len(entry_names)):
-            if entry_names[i] == "misc":
-                self.inputs[entry_names[i]] = LabelInput(
-                    parent=content_frame,
-                    label=entry_labels[i],
-                    input_class=ScrolledText,
-                    input_args={"wrap": tk.WORD, "width": 40, "height": 10},
-                )
-            elif entry_names[i] == "file_type":
-                self.inputs[entry_names[i]] = LabelInput(
-                    parent=content_frame,
+            if entry_names[i] == "file_type":
+                parent.inputs[entry_names[i]] = LabelInput(
+                    parent=frame,
                     label=entry_labels[i],
                     input_class=ValidatedCombobox,
                     input_var=tk.StringVar(),
-                    label_args={"padding": [0, 0, 30, 0]},
                 )
-                self.inputs[entry_names[i]].widget.state(["!disabled", "readonly"])
-                self.inputs[entry_names[i]].set_values(tuple(FILE_TYPES))
-                self.inputs[entry_names[i]].set("TIFF")
+                parent.inputs[entry_names[i]].widget.state(["!disabled", "readonly"])
+                parent.inputs[entry_names[i]].set_values(tuple(FILE_TYPES))
+                parent.inputs[entry_names[i]].set("TIFF")
 
             elif entry_names[i] == "solvent":
-                self.inputs[entry_names[i]] = LabelInput(
-                    parent=content_frame,
+                parent.inputs[entry_names[i]] = LabelInput(
+                    parent=frame,
                     label=entry_labels[i],
                     input_class=ValidatedCombobox,
                     input_var=tk.StringVar(),
-                    label_args={"padding": [0, 0, 36, 0]},
                 )
-                self.inputs[entry_names[i]].widget.state(["!disabled", "readonly"])
-                self.inputs[entry_names[i]].set_values(
-                    ("BABB", "Water", "CUBIC", "CLARITY", "uDISCO", "eFLASH")
-                )
-                self.inputs[entry_names[i]].set("BABB")
+                parent.inputs[entry_names[i]].widget.state(["!disabled", "readonly"])
+                parent.inputs[entry_names[i]].set_values(SOLVENTS)
+                parent.inputs[entry_names[i]].set("BABB")
 
             else:
-                self.inputs[entry_names[i]] = LabelInput(
-                    parent=content_frame,
+                parent.inputs[entry_names[i]] = LabelInput(
+                    parent=frame,
                     label=entry_labels[i],
                     input_class=ttk.Entry,
                     input_var=tk.StringVar(),
-                    input_args={"width": 50},
+                    input_args={"width": parent.column2_width},
                 )
-            self.inputs[entry_names[i]].grid(
-                row=i + 1, column=0, columnspan=2, sticky=tk.NSEW, padx=5
+
+            # Widgets
+            parent.inputs[entry_names[i]].grid(
+                row=row_index,
+                column=0,
+                columnspan=1,
+                sticky=tk.NSEW,
+                padx=(0, 0),
+                pady=(1, 1),
             )
-            self.inputs[entry_names[i]].label.grid(padx=(0, 20))
 
-        # Formatting
-        self.inputs["user"].widget.grid(padx=(53, 0))
-        self.inputs["tissue"].widget.grid(padx=(16, 0))
-        self.inputs["celltype"].widget.grid(padx=(28, 0))
-        self.inputs["prefix"].widget.grid(padx=(46, 0))
-        self.inputs["label"].widget.grid(padx=(48, 0))
-        self.inputs["misc"].widget.grid(padx=(40, 0))
+            # Labels
+            parent.inputs[entry_names[i]].label.grid(padx=(5, 5))
+            parent.inputs[entry_names[i]].label.config(width=parent.column1_width)
+            parent.inputs[entry_names[i]].widget.grid(padx=(0, 0), pady=(1, 1))
+            row_index += 1
 
-        # Done and Cancel Buttons
-        self.buttons["Cancel"] = ttk.Button(content_frame, text="Cancel Acquisition")
-        self.buttons["Cancel"].grid(row=10, column=0, padx=5, sticky=tk.NSEW)
 
-        self.buttons["Done"] = ttk.Button(content_frame, text="Acquire Data")
-        self.buttons["Done"].grid(row=10, column=1, padx=(0, 5), sticky=tk.NSEW)
+class TabFrame:
+    def __init__(self, parent: AcquirePopUp, frame: ttk.Frame) -> None:
+        """Initialize the TabFrame
+
+        Parameters
+        ----------
+        parent : AcquirePopUp
+            The AcquirePopup window.
+        frame : ttk.Frame
+            The TabFrame Window.
+        """
+        notebook = ttk.Notebook(frame, padding=(5, 2, 5, 2))
+        notebook.grid(row=0, column=0, sticky=tk.NSEW)
+
+        tab1 = tk.Frame(notebook)
+        tab1.columnconfigure(index=0, weight=1)
+
+        tab2 = tk.Frame(notebook)
+        tab2.columnconfigure(index=0, weight=1)
+        tab2.columnconfigure(index=1, weight=1)
+        tab2.columnconfigure(index=2, weight=1)
+
+        notebook.add(tab1, text="Misc. Notes")
+        notebook.add(tab2, text="BDV Settings")
+
+        row_index = 0
+
+        text = "All notes are saved in to the header of the image file."
+
+        notes_label = tk.Label(
+            tab1,
+            text=text,
+            justify=tk.LEFT,
+            width=parent.global_width - 30,
+            wraplength=parent.global_width - 30,
+        )
+
+        notes_label.grid(
+            row=row_index,
+            column=0,
+            columnspan=3,
+            rowspan=2,
+            sticky=tk.NSEW,
+            pady=(5, 5),
+        )
+
+        row_index += 2
+        separator1 = ttk.Separator(tab1, orient="horizontal")
+
+        separator1.grid(
+            row=row_index, column=0, columnspan=3, sticky=tk.NSEW, padx=0, pady=3
+        )
+
+        row_index += 1
+        self.inputs = {
+            "misc": ScrolledText(
+                tab1,
+                wrap=tk.WORD,
+                height=20,
+                width=parent.column2_width + parent.column2_width - 35,
+            )
+        }
+
+        self.inputs["misc"].grid(row=row_index, column=0, columnspan=1, sticky=tk.NSEW)
+
+        row_index = 0
+        text = (
+            "HDF5, N5, and Zarr files are saved with BDV metadata, "
+            "enabling immediate visualization with BigDataViewer. "
+            "All angles are in degrees."
+        )
+
+        bdv_label = tk.Label(
+            tab2,
+            text=text,
+            justify=tk.LEFT,
+            width=parent.global_width - 40,
+            wraplength=parent.global_width - 40,
+        )
+
+        bdv_label.grid(
+            row=row_index,
+            column=0,
+            columnspan=3,
+            rowspan=2,
+            sticky=tk.NSEW,
+            pady=(5, 5),
+        )
+
+        row_index += 2
+        self.inputs["shear_data"] = LabelInput(
+            parent=tab2,
+            label_pos="left",
+            label="Shear",
+            input_class=ttk.Checkbutton,
+            input_var=tk.BooleanVar(),
+            input_args={"onvalue": True, "offvalue": False},
+        )
+        self.inputs["shear_data"].grid(
+            row=row_index,
+            column=0,
+            columnspan=1,
+            sticky=tk.NSEW,
+            padx=(5, 5),
+            pady=(1, 1),
+        )
+
+        values = ["XZ", "YZ", "XY"]
+        self.inputs["shear_dimension"] = LabelInput(
+            parent=tab2,
+            label_pos="top",
+            label="Dimension",
+            input_class=ttk.Combobox,
+            input_var=tk.StringVar(),
+            input_args={"values": values, "state": "readonly"},
+        )
+
+        self.inputs["shear_dimension"].grid(
+            row=row_index, column=1, columnspan=1, sticky=tk.W, padx=(5, 5), pady=(1, 1)
+        )
+
+        self.inputs["shear_angle"] = LabelInput(
+            parent=tab2,
+            label_pos="top",
+            label="Angle",
+            input_class=ValidatedSpinbox,
+            input_var=tk.StringVar(),
+            input_args={
+                "from_": 0,
+                "to": 360,
+                "increment": 1,
+            },
+        )
+        self.inputs["shear_angle"].grid(
+            row=row_index, column=2, columnspan=1, sticky=tk.W, padx=(5, 5), pady=(1, 1)
+        )
+
+        row_index += 1
+        separator1 = ttk.Separator(tab2, orient="horizontal")
+
+        separator1.grid(
+            row=row_index, column=0, columnspan=3, sticky=tk.NSEW, padx=0, pady=3
+        )
+
+        row_index += 1
+        self.inputs["rotate_data"] = LabelInput(
+            parent=tab2,
+            label_pos="left",
+            label="Rotate",
+            input_class=ttk.Checkbutton,
+            input_var=tk.BooleanVar(),
+            input_args={"onvalue": True, "offvalue": False},
+        )
+
+        self.inputs["rotate_data"].grid(
+            row=row_index,
+            column=0,
+            columnspan=1,
+            sticky=tk.NSEW,
+            padx=(5, 5),
+            pady=(1, 1),
+        )
+
+        # Insert a new frame here, and then add the widgets to that frame
+        rotate_notebook = ttk.Notebook(tab2, padding=(5, 2, 5, 2))
+        rotate_notebook.grid(row=row_index, column=1, columnspan=2, sticky=tk.NSEW)
+        for i in range(3):
+            rotate_notebook.columnconfigure(index=i, weight=1)
+
+        self.inputs["rotate_angle_x"] = LabelInput(
+            parent=rotate_notebook,
+            label_pos="top",
+            label="X Angle",
+            input_class=ValidatedSpinbox,
+            input_var=tk.StringVar(),
+            input_args={
+                "from_": 0,
+                "to": 360,
+                "increment": 1,
+            },
+        )
+
+        self.inputs["rotate_angle_x"].grid(
+            row=0, column=0, columnspan=1, sticky=tk.W, padx=(5, 5), pady=(1, 1)
+        )
+
+        self.inputs["rotate_angle_y"] = LabelInput(
+            parent=rotate_notebook,
+            label_pos="top",
+            label="Y Angle",
+            input_class=ValidatedSpinbox,
+            input_var=tk.StringVar(),
+            input_args={
+                "from_": 0,
+                "to": 360,
+                "increment": 1,
+            },
+        )
+        self.inputs["rotate_angle_y"].grid(
+            row=0, column=1, columnspan=1, sticky=tk.W, padx=(5, 5), pady=(1, 1)
+        )
+
+        self.inputs["rotate_angle_z"] = LabelInput(
+            parent=rotate_notebook,
+            label_pos="top",
+            label="Y Angle",
+            input_class=ValidatedSpinbox,
+            input_var=tk.StringVar(),
+            input_args={
+                "from_": 0,
+                "to": 360,
+                "increment": 1,
+            },
+        )
+        self.inputs["rotate_angle_z"].grid(
+            row=0, column=2, columnspan=1, sticky=tk.W, padx=(5, 5), pady=(1, 1)
+        )
+
+        row_index += 1
+        separator1 = ttk.Separator(tab2, orient="horizontal")
+
+        separator1.grid(
+            row=row_index, column=0, columnspan=3, sticky=tk.NSEW, padx=0, pady=3
+        )
+
+        row_index += 1
+        separator2 = ttk.Separator(tab2, orient="horizontal")
+        separator2.grid(
+            row=row_index, column=0, columnspan=3, sticky=tk.NSEW, padx=0, pady=3
+        )
+
+        row_index += 1
+        self.inputs["down_sample_data"] = LabelInput(
+            parent=tab2,
+            label_pos="left",
+            label="Downsample",
+            input_class=ttk.Checkbutton,
+            input_var=tk.BooleanVar(),
+            input_args={"onvalue": True, "offvalue": False},
+        )
+
+        self.inputs["down_sample_data"].grid(
+            row=row_index,
+            column=0,
+            columnspan=1,
+            sticky=tk.NSEW,
+            padx=(5, 5),
+            pady=(1, 1),
+        )
+
+        values = ["1x", "2x", "4x", "8x", "16x", "32x", "64x", "128x"]
+        self.inputs["lateral_down_sample"] = LabelInput(
+            parent=tab2,
+            label_pos="top",
+            label="Lateral Downsample",
+            input_class=ttk.Combobox,
+            input_var=tk.StringVar(),
+            input_args={"values": values, "state": "readonly"},
+        )
+
+        self.inputs["lateral_down_sample"].grid(
+            row=row_index, column=1, columnspan=1, sticky=tk.W, padx=(5, 5), pady=(1, 1)
+        )
+
+        values = ["1x", "2x", "4x", "8x", "16x", "32x", "64x", "128x"]
+        self.inputs["axial_down_sample"] = LabelInput(
+            parent=tab2,
+            label_pos="top",
+            label="Axial Downsample",
+            input_class=ttk.Combobox,
+            input_var=tk.StringVar(),
+            input_args={"values": values, "state": "readonly"},
+        )
+
+        self.inputs["axial_down_sample"].grid(
+            row=row_index, column=2, columnspan=1, sticky=tk.W, padx=(5, 5), pady=(1, 1)
+        )
+
+        row_index += 1
+        separator3 = ttk.Separator(tab2, orient="horizontal")
+        separator3.grid(
+            row=row_index, column=0, columnspan=3, sticky=tk.NSEW, padx=0, pady=3
+        )
+
+        row_index += 1
+        text = (
+            "Down-sampling is accompanied with additional computational overhead "
+            "and slows data saving operations. Use with caution. The specified "
+            "down-sampling is the maximum value, and intermediate values will "
+            "automatically be calculated. "
+        )
+
+        bdv_label2 = tk.Label(
+            tab2,
+            text=text,
+            justify=tk.LEFT,
+            width=parent.global_width - 40,
+            wraplength=parent.global_width - 40,
+        )
+
+        bdv_label2.grid(
+            row=row_index,
+            column=0,
+            columnspan=3,
+            rowspan=2,
+            sticky=tk.NSEW,
+            pady=(5, 5),
+        )

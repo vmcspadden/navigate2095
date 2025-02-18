@@ -37,7 +37,7 @@ import random
 # Third Party Imports
 
 # Local Imports
-from navigate.model.devices.stages.sutter import SutterStage
+from navigate.model.devices.stage.sutter import MP285Stage
 from navigate.model.devices.APIs.sutter.MP285 import MP285
 
 
@@ -152,7 +152,7 @@ class TestStageSutter:
         return mp285
 
     def test_stage_attributes(self):
-        stage = SutterStage(
+        stage = MP285Stage(
             self.microscope_name, self.build_device_connection(), self.configuration
         )
 
@@ -186,7 +186,7 @@ class TestStageSutter:
     def test_initialize_stage(self, axes, axes_mapping):
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = SutterStage(
+        stage = MP285Stage(
             self.microscope_name, self.build_device_connection(), self.configuration
         )
 
@@ -236,7 +236,7 @@ class TestStageSutter:
         mp285_stage = self.build_device_connection()
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = SutterStage(self.microscope_name, mp285_stage, self.configuration)
+        stage = MP285Stage(self.microscope_name, mp285_stage, self.configuration)
         for _ in range(10):
             pos_dict = {}
             for axis in axes:
@@ -268,7 +268,7 @@ class TestStageSutter:
         mp285_stage = self.build_device_connection()
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = SutterStage(self.microscope_name, mp285_stage, self.configuration)
+        stage = MP285Stage(self.microscope_name, mp285_stage, self.configuration)
         self.random_single_axis_test(stage)
         stage.stage_limits = False
         self.random_single_axis_test(stage)
@@ -292,7 +292,7 @@ class TestStageSutter:
         mp285_stage = self.build_device_connection()
         self.stage_configuration["stage"]["hardware"]["axes"] = axes
         self.stage_configuration["stage"]["hardware"]["axes_mapping"] = axes_mapping
-        stage = SutterStage(self.microscope_name, mp285_stage, self.configuration)
+        stage = MP285Stage(self.microscope_name, mp285_stage, self.configuration)
         self.random_multiple_axes_test(stage)
         stage.stage_limits = False
         self.random_multiple_axes_test(stage)

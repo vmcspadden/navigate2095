@@ -47,7 +47,7 @@ logger = logging.getLogger(p)
 class ZoomBase:
     """ZoomBase parent class."""
 
-    def __init__(self, microscope_name, device_controller, configuration):
+    def __init__(self, microscope_name, device_controller, configuration, *args, **kwargs):
         """Initialize the parent zoom class.
 
         Parameters

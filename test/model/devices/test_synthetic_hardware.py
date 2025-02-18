@@ -59,7 +59,7 @@ class TestSyntheticHardware(unittest.TestCase):
         SyntheticCamera(self.microscope_name, scc, self.dummy_model.configuration)
 
     def test_synthetic_stage(self):
-        from navigate.model.devices.stages.synthetic import SyntheticStage
+        from navigate.model.devices.stage.synthetic import SyntheticStage
 
         SyntheticStage(self.microscope_name, None, self.dummy_model.configuration)
 
@@ -74,6 +74,6 @@ class TestSyntheticHardware(unittest.TestCase):
         SyntheticShutter(self.microscope_name, None, self.dummy_model.configuration)
 
     def test_synthetic_laser(self):
-        from navigate.model.devices.lasers.synthetic import SyntheticLaser
+        from navigate.model.devices.laser.synthetic import SyntheticLaser
 
         SyntheticLaser(self.microscope_name, None, self.dummy_model.configuration, 0)

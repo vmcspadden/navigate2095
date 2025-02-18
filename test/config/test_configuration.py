@@ -118,10 +118,10 @@ class TestConfiguration(unittest.TestCase):
         expected_hardware = [
             "daq",
             "camera",
-            "remote_focus_device",
+            "remote_focus",
             "galvo",
             "shutter",
-            "lasers",
+            "laser",
             "filter_wheel",
             "stage",
             "zoom",
@@ -141,7 +141,7 @@ class TestConfiguration(unittest.TestCase):
                         microscope=microscope, hardware_type=hardware_type
                     )
 
-                elif hardware_type == "remote_focus_device":
+                elif hardware_type == "remote_focus":
                     self.remote_focus_section(
                         microscope=microscope, hardware_type=hardware_type
                     )
@@ -170,7 +170,7 @@ class TestConfiguration(unittest.TestCase):
                         microscope=microscope, hardware_type=hardware_type
                     )
 
-                elif hardware_type == "lasers":
+                elif hardware_type == "laser":
                     self.laser_section(
                         microscope=microscope, hardware_type=hardware_type
                     )

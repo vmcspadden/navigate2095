@@ -75,7 +75,7 @@ class TestGalvoSynthetic(unittest.TestCase):
             microscope_name=self.microscope_name,
             device_connection=self.device_connection,
             configuration=self.configuration,
-            galvo_id=galvo_id,
+            device_id=galvo_id,
         )
 
     def tearDown(self) -> None:

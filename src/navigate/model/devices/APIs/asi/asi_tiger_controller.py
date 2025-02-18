@@ -50,25 +50,25 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-class TigerException(Exception):
+class ASIException(Exception):
     """
-    Exception raised when error code from Tiger Console is received.
+    Exception raised when error code from ASI Console is received.
 
     Attributes:
-        - command: error code received from Tiger Console
+        - command: error code received from ASI Console
     """
 
     def __init__(self, code: str):
-        """Initialize the TigerException class
+        """Initialize the ASIException class
         Parameters
         ----------
         code : str
-            Error code received from Tiger Console
+            Error code received from ASI Console
         """
 
         #: dict: Dictionary of error codes and their corresponding error messages
         self.error_codes = {
-            ":N-1": "Unknown Command (Not Issued in TG-1000)",
+            ":N-1": "Unknown Command (Not Issued in ASI stage(TG-1000/MS2000/MFC2000))",
             ":N-2": "Unrecognized Axis Parameter (valid axes are dependent on the "
             "controller)",
             ":N-3": "Missing parameters (command received requires an axis parameter "
@@ -80,11 +80,15 @@ class TigerException(Exception):
             ":N-7": "Invalid Card Address",
             ":N-21": "Serial Command halted by the HALT command",
         }
-        #: str: Error code received from Tiger Console
+        #: str: Error code received from ASI Console
         self.code = code
 
         #: str: Error message
-        self.message = self.error_codes[code]
+        try:
+            self.message = self.error_codes[code]
+        except KeyError:
+            # if the exception is not a standard ASI Error Code:
+            self.message = code
 
         # Gets the proper message based on error code received.
         super().__init__(self.message)
@@ -235,10 +239,10 @@ class TigerController:
                 axis_types = line.split("Axis Types:")[1].split()
 
         if len(motor_axes) == 0 or len(axis_types) == 0:
-            raise TigerException(":N-5")
+            raise ASIException(":N-5")
 
         if len(motor_axes) != len(axis_types):
-            raise TigerException(":N-5")
+            raise ASIException(":N-5")
 
         for i in range(len(axis_types) - 1, -1, -1):
             if axis_types[i] not in ["x", "z", "t"]:
@@ -420,10 +424,11 @@ class TigerController:
             return ""
 
         # Remove leading and trailing empty spaces
-        self.report_to_console(f"Received Response: {response.strip()}")
+        response = response.strip()
+        self.report_to_console(f"Received Response: {response}")
         if response.startswith(":N"):
             logger.error(f"{str(self)}, Error code received: {response}")
-            raise TigerException(response)
+            raise ASIException(response)
         return response  # in case we want to read the response
 
     def moverel(self, x: int = 0, y: int = 0, z: int = 0) -> None:
@@ -624,7 +629,7 @@ class TigerController:
         waiting_time = 0.0
 
         while busy:
-            waiting_time += 0.005
+            waiting_time += 0.001
             if waiting_time >= timeout:
                 break
             time.sleep(0.001)
@@ -664,7 +669,7 @@ class TigerController:
         if self.default_axes_sequence is None:
             logger.error(f"{str(self)}, Default axes sequence is not set. "
             f"Cannot set speed.")
-            raise TigerException(
+            raise ASIException(
                 "Unable to query system for axis sequence. Cannot set speed."
             )
         if self._max_speeds is None:

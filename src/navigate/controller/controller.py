@@ -75,6 +75,7 @@ from navigate.model.model import Model
 from navigate.model.concurrency.concurrency_tools import ObjectInSubprocess
 
 # Misc. Local Imports
+from navigate._commit import get_git_revision_hash, get_version_from_file
 from navigate.config.config import (
     load_configs,
     update_config_dict,
@@ -85,7 +86,6 @@ from navigate.config.config import (
     get_navigate_path,
 )
 from navigate.tools.file_functions import (
-    create_save_path,
     load_yaml_file,
     save_yaml_file,
     get_ram_info,
@@ -147,6 +147,9 @@ class Controller:
             Command line input arguments for non-default
             file paths or using synthetic hardware modes.
         """
+        logger.info(f"Navigate GIT Hash: {get_git_revision_hash()}")
+        logger.info(f"Navigate Version: {get_version_from_file()}")
+
         #: Tk top-level widget: Tk.tk GUI instance.
         self.root = root
 
@@ -406,6 +409,7 @@ class Controller:
             # update widgets
             self.stage_controller.initialize()
             self.channels_tab_controller.initialize()
+            self.channels_tab_controller.populate_experiment_values()
             self.camera_setting_controller.update_camera_device_related_setting()
             self.camera_setting_controller.populate_experiment_values()
             self.camera_setting_controller.calculate_physical_dimensions()
@@ -502,7 +506,6 @@ class Controller:
             Warning info if any
 
         """
-        warning_message = self.camera_setting_controller.update_experiment_values()
         microscope_name = self.configuration["experiment"]["MicroscopeState"][
             "microscope_name"
         ]
@@ -516,6 +519,9 @@ class Controller:
                 "microscope_name"
             ] = microscope_name
             self.configuration["experiment"]["MicroscopeState"]["zoom"] = zoom_value
+            self.execute("resolution", resolution_value)
+
+        warning_message = self.camera_setting_controller.update_experiment_values()
 
         # set waveform template
         if self.acquire_bar_controller.mode in ["live", "single", "z-stack"]:
@@ -657,12 +663,7 @@ class Controller:
             Function-specific passes
         """
 
-        if command == "joystick_toggle":
-            """Toggles the joystick mode on/off."""
-            if self.stage_controller.joystick_is_on:
-                self.execute("stop_stage")
-
-        elif command == "stage":
+        if command == "stage":
             """Creates a thread and uses it to call the model to move stage
 
             Parameters
@@ -849,8 +850,8 @@ class Controller:
             if not self.prepare_acquire_data():
                 self.acquire_bar_controller.stop_acquire()
                 return
-            saving_settings = self.configuration["experiment"]["Saving"]
-            file_directory = create_save_path(saving_settings)
+            # get saving file directory
+            file_directory = args[0]
 
             # Save the experiment.yaml file.
             save_yaml_file(
@@ -967,24 +968,22 @@ class Controller:
         elif command == "exit":
             """Exit the program.
 
-            Saves the current GUI settings to .navigate/config/experiment.yml file.
+            Saves the current settings to .navigate/config/*.yml files.
             """
             self.sloppy_stop()
             self.update_experiment_setting()
             file_directory = os.path.join(get_navigate_path(), "config")
-            save_yaml_file(
-                file_directory=file_directory,
-                content_dict=self.configuration["experiment"],
-                filename="experiment.yml",
-            )
-            save_yaml_file(
-                file_directory=file_directory,
-                content_dict=self.configuration["multi_positions"],
-                filename="multi_positions.yml",
-            )
-
-            if hasattr(self, "waveform_popup_controller"):
-                self.waveform_popup_controller.save_waveform_constants()
+            for config_name, filename in [("experiment", "experiment.yml"),
+                                          ("multi_positions", "multi_positions.yml"),
+                                          ("gui", "gui_configuration.yml"),
+                                          ("waveform_constants", "waveform_constants.yml"),
+                                          ("rest_api_config", "rest_api_config.yml"),
+                                          ("waveform_templates", "waveform_templates.yml")]:
+                save_yaml_file(
+                    file_directory=file_directory,
+                    content_dict=self.configuration[config_name],
+                    filename=filename,
+                )
 
             self.model.run_command("terminate")
             self.model = None
@@ -1250,7 +1249,10 @@ class Controller:
             if microscope_name not in self.additional_microscopes:
                 self.additional_microscopes[microscope_name] = {}
 
-            if "camera_view_controller" not in self.additional_microscopes[microscope_name]:
+            if (
+                "camera_view_controller"
+                not in self.additional_microscopes[microscope_name]
+            ):
                 popup_window = CameraViewPopupWindow(self.view, microscope_name)
                 camera_view_controller = CameraViewController(
                     popup_window.camera_view, self

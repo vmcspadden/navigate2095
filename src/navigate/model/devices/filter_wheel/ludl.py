@@ -40,52 +40,14 @@ import serial
 
 # Local Imports
 from navigate.model.devices.filter_wheel.base import FilterWheelBase
+from navigate.model.devices.device_types import SerialDevice
 
 # Logger Setup
 p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-def build_filter_wheel_connection(comport, baudrate, timeout=0.25):
-    """Build LUDLFilterWheel Serial Port connection
-
-    Attributes
-    ----------
-    comport : str
-        Comport for communicating with the filter wheel, e.g., COM1.
-    baudrate : int
-        Baud rate for communicating with the filter wheel, e.g., 9600.
-    timeout : float
-        Timeout for communicating with the filter wheel, e.g., 0.25.
-
-    Returns
-    -------
-    serial.Serial
-        Serial port connection to the filter wheel.
-
-    Raises
-    ------
-    UserWarning
-        Could not communicate with LUDL MAC6000 via COMPORT.
-    """
-    logging.debug(f"LUDLFilterWheel - Opening Serial Port {comport}")
-    try:
-        return serial.Serial(
-            comport,
-            baudrate,
-            parity=serial.PARITY_NONE,
-            timeout=timeout,
-            xonxoff=False,
-            stopbits=serial.STOPBITS_TWO,
-        )
-    except serial.SerialException:
-        logger.error("LUDLFilterWheel - Could not establish Serial Port Connection")
-        raise UserWarning(
-            "Could not communicate with LUDL MAC6000 via COMPORT", comport
-        )
-
-
-class LUDLFilterWheel(FilterWheelBase):
+class LUDLFilterWheel(FilterWheelBase, SerialDevice):
 
     """LUDLFilterWheel - Class for controlling LUDL Electronic Products Filter Wheels
 
@@ -99,34 +61,71 @@ class LUDLFilterWheel(FilterWheelBase):
 
     """
 
-    def __init__(self, device_connection, device_config):
+    def __init__(self, microscope_name, device_connection, configuration, device_id=0):
         """Initialize the LUDLFilterWheel class.
 
         Parameters
         ----------
-        device_connection : serial.Serial
-            Serial port connection to the filter wheel.
-        device_config : dict
-            Dictionary of device configuration parameters.
+        microscope_name : str
+            Name of the microscope.
+        device_connection : Any
+            The communication instance with the device.
+        configuration : Dict[str, Any]
+            Global configuration dictionary.
+        device_id : int
+            The ID of the device. Default is 0.
         """
 
-        super().__init__(device_connection, device_config)
-
-        #: obj: Serial port connection to the filter wheel.
-        self.serial = device_connection
-
-        #: dict: Configuration dictionary.
-        self.device_config = device_config
+        super().__init__(microscope_name, device_connection, configuration)
 
         #: io.TextIOWrapper: Text I/O wrapper for the serial port.
         self.sio = io.TextIOWrapper(io.BufferedRWPair(self.serial, self.serial))
 
         #: float: Delay for filter wheel to change positions.
-        self.wait_until_done_delay = device_config["filter_wheel_delay"]
+        self.wait_until_done_delay = self.device_config["filter_wheel_delay"]
 
     def __str__(self):
         """String representation of the class."""
         return "LUDLFilterWheel"
+
+    @classmethod
+    def connect(cls, comport, baudrate, timeout=0.25):
+        """Build LUDLFilterWheel Serial Port connection
+
+        Attributes
+        ----------
+        comport : str
+            Comport for communicating with the filter wheel, e.g., COM1.
+        baudrate : int
+            Baud rate for communicating with the filter wheel, e.g., 9600.
+        timeout : float
+            Timeout for communicating with the filter wheel, e.g., 0.25.
+
+        Returns
+        -------
+        serial.Serial
+            Serial port connection to the filter wheel.
+
+        Raises
+        ------
+        UserWarning
+            Could not communicate with LUDL MAC6000 via COMPORT.
+        """
+        logging.debug(f"LUDLFilterWheel - Opening Serial Port {comport}")
+        try:
+            return serial.Serial(
+                comport,
+                baudrate,
+                parity=serial.PARITY_NONE,
+                timeout=timeout,
+                xonxoff=False,
+                stopbits=serial.STOPBITS_TWO,
+            )
+        except serial.SerialException:
+            logger.error("LUDLFilterWheel - Could not establish Serial Port Connection")
+            raise UserWarning(
+                "Could not communicate with LUDL MAC6000 via COMPORT", comport
+            )
 
     def set_filter(self, filter_name, wait_until_done=True):
         """Set the filter wheel to a specific filter position.

@@ -38,6 +38,7 @@ from typing import Any, Dict
 
 # Local Imports
 from navigate.model.devices.remote_focus.base import RemoteFocusBase
+from navigate.model.devices.device_types import NIDevice
 from navigate.tools.decorators import log_initialization
 
 # # Logger Setup
@@ -46,7 +47,7 @@ logger = logging.getLogger(p)
 
 
 @log_initialization
-class RemoteFocusNI(RemoteFocusBase):
+class NIRemoteFocus(RemoteFocusBase, NIDevice):
     """RemoteFocusNI Class - Analog control of the remote focus device."""
 
     def __init__(
@@ -54,6 +55,8 @@ class RemoteFocusNI(RemoteFocusBase):
         microscope_name: str,
         device_connection: Any,
         configuration: Dict[str, Any],
+        *args,
+        **kwargs,
     ) -> None:
         """Initialize the RemoteFocusNI class.
 

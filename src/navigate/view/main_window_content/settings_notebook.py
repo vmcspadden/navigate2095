@@ -33,6 +33,7 @@
 # Standard Imports
 import tkinter as tk
 import logging
+from tkinter import ttk
 
 # Third Party Imports
 
@@ -57,15 +58,19 @@ class SettingsNotebook(DockableNotebook):
     - Channels
     - Camera Settings
     - Stage Control
-    - Multiposition
+    - Multi-position Table
     """
 
-    def __init__(self, frame_left, root, *args, **kwargs):
+    def __init__(self,
+                 frame_left: ttk.Frame,
+                 root: tk.Tk,
+                 *args: list,
+                 **kwargs: dict) -> None:
         """Initialize the settings notebook
 
         Parameters
         ----------
-        frame_left : tk.Frame
+        frame_left : ttk.Frame
             Left frame of the main window
         root : tk.Tk
             Root window of the main window
@@ -76,7 +81,7 @@ class SettingsNotebook(DockableNotebook):
         """
 
         # Init notebook
-        DockableNotebook.__init__(self, frame_left, root, *args, **kwargs)
+        super().__init__(frame_left, root, *args, **kwargs)
 
         # Putting notebook 1 into left frame
         self.grid(row=0, column=0)
@@ -90,7 +95,7 @@ class SettingsNotebook(DockableNotebook):
         #: StageControlTab: Stage control tab
         self.stage_control_tab = StageControlTab(self)
 
-        # MultipositionTab: Multiposition tab
+        # MultiPositionTab: MultiPositionTab tab
         self.multiposition_tab = MultiPositionTab(self)
 
         # Tab list
