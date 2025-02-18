@@ -50,25 +50,25 @@ p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
 
-class ASIException(Exception):
+class TigerException(Exception):
     """
-    Exception raised when error code from ASI Console is received.
+    Exception raised when error code from Tiger Console is received.
 
     Attributes:
-        - command: error code received from ASI Console
+        - command: error code received from Tiger Console
     """
 
     def __init__(self, code: str):
-        """Initialize the ASIException class
+        """Initialize the TigerException class
         Parameters
         ----------
         code : str
-            Error code received from ASI Console
+            Error code received from Tiger Console
         """
 
         #: dict: Dictionary of error codes and their corresponding error messages
         self.error_codes = {
-            ":N-1": "Unknown Command (Not Issued in ASI stage(TG-1000/MS2000/MFC2000))",
+            ":N-1": "Unknown Command (Not Issued in TG-1000)",
             ":N-2": "Unrecognized Axis Parameter (valid axes are dependent on the "
             "controller)",
             ":N-3": "Missing parameters (command received requires an axis parameter "
@@ -80,15 +80,11 @@ class ASIException(Exception):
             ":N-7": "Invalid Card Address",
             ":N-21": "Serial Command halted by the HALT command",
         }
-        #: str: Error code received from ASI Console
+        #: str: Error code received from Tiger Console
         self.code = code
 
         #: str: Error message
-        try:
-            self.message = self.error_codes[code]
-        except KeyError:
-            # if the exception is not a standard ASI Error Code:
-            self.message = code
+        self.message = self.error_codes[code]
 
         # Gets the proper message based on error code received.
         super().__init__(self.message)
@@ -239,10 +235,10 @@ class TigerController:
                 axis_types = line.split("Axis Types:")[1].split()
 
         if len(motor_axes) == 0 or len(axis_types) == 0:
-            raise ASIException(":N-5")
+            raise TigerException(":N-5")
 
         if len(motor_axes) != len(axis_types):
-            raise ASIException(":N-5")
+            raise TigerException(":N-5")
 
         for i in range(len(axis_types) - 1, -1, -1):
             if axis_types[i] not in ["x", "z", "t"]:
@@ -424,11 +420,10 @@ class TigerController:
             return ""
 
         # Remove leading and trailing empty spaces
-        response = response.strip()
-        self.report_to_console(f"Received Response: {response}")
+        self.report_to_console(f"Received Response: {response.strip()}")
         if response.startswith(":N"):
             logger.error(f"{str(self)}, Error code received: {response}")
-            raise ASIException(response)
+            raise TigerException(response)
         return response  # in case we want to read the response
 
     def moverel(self, x: int = 0, y: int = 0, z: int = 0) -> None:
@@ -629,7 +624,7 @@ class TigerController:
         waiting_time = 0.0
 
         while busy:
-            waiting_time += 0.001
+            waiting_time += 0.005
             if waiting_time >= timeout:
                 break
             time.sleep(0.001)
@@ -669,7 +664,7 @@ class TigerController:
         if self.default_axes_sequence is None:
             logger.error(f"{str(self)}, Default axes sequence is not set. "
             f"Cannot set speed.")
-            raise ASIException(
+            raise TigerException(
                 "Unable to query system for axis sequence. Cannot set speed."
             )
         if self._max_speeds is None:
@@ -939,7 +934,7 @@ class TigerController:
         self.send_filter_wheel_command(f"MOVE {dichroic_id}={dichroic_position}")
         self.read_response()
 
-    def laser_analog(self, axis: str, min_voltage: float, max_voltage: float):
+    '''def laser_analog(self, axis: str, min_voltage: float, max_voltage: float):
         """Programs the analog waveform for the laser class
 
         Parameters
@@ -977,3 +972,4 @@ class TigerController:
 
         self.send_command(f"SAP {axis}={mode}")
         self.read_response()
+'''
