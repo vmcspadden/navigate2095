@@ -48,8 +48,6 @@ logger = logging.getLogger(p)
 @log_initialization
 class SyntheticLaser(LaserBase):
     """SyntheticLaser Class"""
-class SyntheticLaser(LaserBase):
-    """SyntheticLaser Class"""
 
     def __init__(
         self,
@@ -58,7 +56,6 @@ class SyntheticLaser(LaserBase):
         configuration: Dict[str, Any],
         device_id: int,
     ) -> None:
-        """Initialize the SyntheticLaser class.
         """Initialize the SyntheticLaser class.
 
         Parameters
