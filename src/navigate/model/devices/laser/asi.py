@@ -30,13 +30,13 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-'''# Standard Library Imports
+# Standard Library Imports
 import logging
 from typing import Any, Dict
 import time
 
 # Local Imports
-from navigate.model.devices.lasers.base import LaserBase
+from navigate.model.devices.laser.base import LaserBase
 from navigate.model.devices.APIs.asi.asi_tiger_controller import TigerController
 from navigate.tools.decorators import log_initialization
 
@@ -165,7 +165,7 @@ class ASILaser(LaserBase):
         self.laser.laser_analog(self.axis, self.laser_min_ao, self.laser_max_ao)
         self.laser.sam(self.axis, 1)
 
-
+    '''
     def initialize_digital_modulation(self) -> None:
         """Initialize the digital modulation of the laser."""
         laser_do_port = self.device_config["onoff"]["hardware"]["channel"]
@@ -192,7 +192,7 @@ class ASILaser(LaserBase):
                 laser_do_port, line_grouping=LineGrouping.CHAN_FOR_ALL_LINES
             )
             self.digital_port_type = "digital"
-        """  
+            '''
 
     def set_power(self, laser_intensity: float) -> None:
         """Sets the analog laser power.
@@ -254,5 +254,4 @@ class ASILaser(LaserBase):
     def __del__(self):
         """Destructor for the ASILaser class."""
         self.close()
-        
-'''
+
