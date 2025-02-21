@@ -344,7 +344,7 @@ def test_execute_autofocus(controller):
     controller.acquire_bar_controller.is_acquiring = False
     controller.execute("autofocus")
     controller.threads_pool.createThread.assert_called_with(
-        "camera", controller.capture_image, args=("autofocus", "live")
+        resourceName="camera", target=controller.capture_image, args=("autofocus", "live")
     )
 
     # Test the acquiring case
@@ -353,12 +353,12 @@ def test_execute_autofocus(controller):
     controller.threads_pool.createThread.reset_mock()
     controller.execute("autofocus")
     controller.threads_pool.createThread.assert_called_once()
-    controller.threads_pool.createThread.assert_any_call("model", ANY)
+    controller.threads_pool.createThread.assert_any_call(resourceName="model", target=ANY)
     args, kwargs = controller.threads_pool.createThread.call_args
-    assert args[0] == "model"
+    assert kwargs["resourceName"] == "model"
 
     # Confirm that the lambda is callable.
-    assert callable(args[1])
+    assert callable(kwargs["target"])
 
     assert True
 

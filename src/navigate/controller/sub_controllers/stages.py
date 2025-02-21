@@ -438,7 +438,7 @@ class StageController(GUIController):
                     float(position_val.get())
                     + step_val.get() * stage_direction * step_multiple
                 )
-            except tk.TclError:
+            except (tk.TclError, ValueError):
                 return
             if self.stage_limits is True:
                 if temp > self.position_max[axis]:
@@ -487,7 +487,7 @@ class StageController(GUIController):
                     float(position_val.get())
                     - step_val.get() * stage_direction * step_multiple
                 )
-            except tk.TclError:
+            except (tk.TclError, ValueError):
                 return
             if self.stage_limits is True:
                 if temp < self.position_min[axis]:

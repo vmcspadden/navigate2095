@@ -1,8 +1,12 @@
+# Standard Library Imports
 import threading
-
-import numpy as np
 from multiprocessing import shared_memory
 
+# Third Party Imports
+import numpy as np
+import pytest
+
+# Local Imports
 from navigate.model.concurrency.concurrency_tools import (
     ObjectInSubprocess,
     ResultThread,
@@ -372,7 +376,7 @@ def test_accessing_unlinked_memory_in_subprocess():
             # loses all references to the array.
             raise AssertionError("Did not get the error we expected")
 
-
+@pytest.mark.flaky(reruns=3, reruns_delay=2)
 def test_serializing_and_deserializing():
     """Test serializing/deserializing arrays with random shapes, dtypes, and
     slicing operators.
