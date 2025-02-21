@@ -97,7 +97,7 @@ class ABaseViewController(metaclass=abc.ABCMeta):
 class BaseViewController(GUIController, ABaseViewController):
     """Base View Controller Class."""
 
-    def __init__(self, view, parent_controller=None):
+    def __init__(self, view, parent_controller=None) -> None:
         """Initialize the Camera View Controller Class.
 
         Parameters
@@ -297,7 +297,7 @@ class BaseViewController(GUIController, ABaseViewController):
         self.menu.add_command(label="Move Here", command=self.move_stage)
         self.menu.add_command(label="Mark Position", command=self.mark_position)
 
-    def initialize(self, name, data):
+    def initialize(self, name, data) -> None:
         """Sets widgets based on data given from main controller/config.
 
         Parameters
@@ -310,12 +310,12 @@ class BaseViewController(GUIController, ABaseViewController):
 
         pass
 
-    def update_snr(self):
+    def update_snr(self) -> None:
         """Updates the signal-to-noise ratio."""
 
         pass
 
-    def set_mode(self, mode=""):
+    def set_mode(self, mode: str="") -> None:
         """Sets mode of camera_view_controller.
 
         Parameters
@@ -325,12 +325,12 @@ class BaseViewController(GUIController, ABaseViewController):
         """
         self.mode = mode
 
-    def flip_image(self, image):
+    def flip_image(self, image: np.ndarray) -> np.ndarray:
         """Flip the image according to the flip flags.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
 
         Returns
@@ -347,24 +347,24 @@ class BaseViewController(GUIController, ABaseViewController):
 
         return image
 
-    def transpose_image(self, image):
+    def transpose_image(self, image: np.ndarray) -> np.ndarray:
         """Transpose the image according to the flip flags.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
 
         Returns
         -------
-        image : numpy.ndarray
+        image : np.ndarray
             Flipped and/or transposed image data.
         """
         if self.transpose:
             image = image.T
         return image
 
-    def update_lut(self, target):
+    def update_lut(self, target) -> None:
         """Update the LUT in the Camera View.
 
         When the LUT is changed in the GUI, this function is called.
@@ -379,7 +379,7 @@ class BaseViewController(GUIController, ABaseViewController):
             self.process_image()
             logger.debug(f"Updating the LUT, {cmap_name}")
 
-    def update_transpose_state(self, display=False):
+    def update_transpose_state(self, display: bool=False) -> None:
         """Get Flip XY widget value from the View.
 
         If True, transpose the image.
@@ -389,7 +389,7 @@ class BaseViewController(GUIController, ABaseViewController):
             self.image = self.flip_image(self.image)
             self.process_image()
 
-    def toggle_min_max_buttons(self, display=False):
+    def toggle_min_max_buttons(self, display: bool=False) -> None:
         """Checks the value of the autoscale widget.
 
         If enabled, the min and max widgets are disabled and the image intensity is
@@ -411,7 +411,7 @@ class BaseViewController(GUIController, ABaseViewController):
             logger.info("Autoscale Disabled")
             self.update_min_max_counts(display=display)
 
-    def try_to_display_image(self, image):
+    def try_to_display_image(self, image: np.ndarray) -> None:
         """Try to display an image.
 
         Note
@@ -423,7 +423,7 @@ class BaseViewController(GUIController, ABaseViewController):
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         """
         with self.is_displaying_image as is_displaying_image:
@@ -434,17 +434,17 @@ class BaseViewController(GUIController, ABaseViewController):
         display_thread = threading.Thread(target=self.display_image, args=(image,))
         display_thread.start()
 
-    def display_image(self, image):
+    def display_image(self, image: np.ndarray) -> None:
         """Display an image.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         """
         pass
 
-    def apply_lut(self, image):
+    def apply_lut(self, image: np.ndarray) -> np.ndarray:
         """Applies a LUT to an image.
 
         Red is reserved for saturated pixels.
@@ -452,8 +452,13 @@ class BaseViewController(GUIController, ABaseViewController):
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
+
+        Returns
+        -------
+        image : np.ndarray
+            Image data with LUT applied.
         """
         image = self.colormap(image)
 
@@ -476,7 +481,7 @@ class BaseViewController(GUIController, ABaseViewController):
         image = image * (2**self.bit_depth - 1)
         return image
 
-    def identify_channel_index_and_slice(self):
+    def identify_channel_index_and_slice(self) -> tuple:
         """As images arrive, identify channel index and slice.
 
         Returns
@@ -511,7 +516,9 @@ class BaseViewController(GUIController, ABaseViewController):
         self.image_count += 1
         return channel_idx, slice_idx
 
-    def initialize_non_live_display(self, microscope_state, camera_parameters):
+    def initialize_non_live_display(self,
+                                    microscope_state: dict,
+                                    camera_parameters: dict) -> None:
         """Initialize the non-live display.
 
         Parameters
@@ -568,7 +575,9 @@ class BaseViewController(GUIController, ABaseViewController):
                 channel_idx = channel_name.split("_")[-1]
                 self.selected_channels.append(f"CH{channel_idx}")
 
-    def reset_display(self, display_flag=True, reset_crosshair=True):
+    def reset_display(self,
+                      display_flag: bool=True,
+                      reset_crosshair: bool=True) -> None:
         """Set the display back to the original digital zoom.
 
         Parameters
@@ -591,7 +600,7 @@ class BaseViewController(GUIController, ABaseViewController):
         if display_flag:
             self.process_image()
 
-    def move_crosshair(self):
+    def move_crosshair(self) -> None:
         """Move the crosshair to a non-default position."""
         self.offset_crosshair = True
         width = (self.zoom_rect[0][1] - self.zoom_rect[0][0]) / self.zoom_scale
@@ -600,9 +609,12 @@ class BaseViewController(GUIController, ABaseViewController):
         self.crosshair_y = self.move_to_y / height
         self.process_image()
 
-    def mark_position(self):
+    def mark_position(self) -> None:
         """Marks the current position of the microscope in
         the multi-position acquisition table."""
+
+        self.parent_controller.execute("query_stages")
+
         offset_x, offset_y = self.calculate_offset()
         stage_position = self.parent_controller.execute("get_stage_position")
         if stage_position is not None:
@@ -619,12 +631,12 @@ class BaseViewController(GUIController, ABaseViewController):
             # Place the stage position in the multi-position table.
             self.parent_controller.execute("mark_position", stage_position)
 
-    def popup_menu(self, event):
+    def popup_menu(self, event: tk.Event) -> None:
         """Right-Click Popup Menu
 
         Parameters
         ----------
-        event : tkinter.Event
+        event : tk.Event
             x, y location.  0,0 is top left corner.
         """
         try:
@@ -638,7 +650,7 @@ class BaseViewController(GUIController, ABaseViewController):
         finally:
             self.menu.grab_release()
 
-    def calculate_offset(self):
+    def calculate_offset(self) -> tuple:
         """Calculates the offset of the image.
 
         Returns
@@ -676,7 +688,7 @@ class BaseViewController(GUIController, ABaseViewController):
 
         return offset_x, offset_y
 
-    def move_stage(self):
+    def move_stage(self) -> None:
         """Move the stage according to the position the user clicked."""
         offset_x, offset_y = self.calculate_offset()
 
@@ -705,7 +717,7 @@ class BaseViewController(GUIController, ABaseViewController):
                 title="Warning", message="Can't move to there! Invalid stage position!"
             )
 
-    def update_canvas_size(self):
+    def update_canvas_size(self) -> None:
         """Update the canvas size."""
         r_canvas_width = int(self.view.canvas["width"])
         r_canvas_height = int(self.view.canvas["height"])
@@ -724,7 +736,7 @@ class BaseViewController(GUIController, ABaseViewController):
             self.original_image_height / self.canvas_height
         )
 
-    def digital_zoom(self):
+    def digital_zoom(self) -> np.ndarray:
         """Apply digital zoom.
 
         The x and y positions are between 0 and the canvas width and height
@@ -760,7 +772,7 @@ class BaseViewController(GUIController, ABaseViewController):
 
         return zoom_image
 
-    def detect_saturation(self, image):
+    def detect_saturation(self, image: np.ndarray) -> None:
         """Look for any pixels at the maximum intensity allowable for the camera.
 
         Note
@@ -771,47 +783,42 @@ class BaseViewController(GUIController, ABaseViewController):
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
-
-        Returns
-        -------
-        saturated_pixels : numpy.ndarray
-            Saturated pixels in the image.
         """
         saturation_value = 2**16 - 1
         self.saturated_pixels = image[image > saturation_value]
 
-    def down_sample_image(self, image):
+    def down_sample_image(self, image: np.ndarray) -> np.ndarray:
         """Down-sample the data for image display according to widget size.
 
         Interpolation type is cv2.INTER_LINEAR by default.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
 
         Returns
         -------
-        down_sampled_image : numpy.ndarray
+        down_sampled_image : np.ndarray
             Down-sampled image data.
         """
         sx, sy = self.canvas_width, self.canvas_height
         down_sampled_image = cv2.resize(image, (sx, sy))
         return down_sampled_image
 
-    def scale_image_intensity(self, image):
+    def scale_image_intensity(self, image: np.ndarray) -> np.ndarray:
         """Scale the data to the min/max counts, and adjust bit-depth.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
 
         Returns
         -------
-        image : numpy.ndarray
+        image : np.ndarray
             Scaled image data.
         """
         if self.autoscale is True:
@@ -826,17 +833,17 @@ class BaseViewController(GUIController, ABaseViewController):
             image[image > 1] = 1
         return image
 
-    def add_crosshair(self, image):
+    def add_crosshair(self, image: np.ndarray) -> np.ndarray:
         """Adds a cross-hair to the image.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
 
         Returns
         -------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data with cross-hair.
         """
         if self.apply_cross_hair:
@@ -862,7 +869,7 @@ class BaseViewController(GUIController, ABaseViewController):
 
         return image
 
-    def get_absolute_position(self):
+    def get_absolute_position(self) -> tuple:
         """Gets the absolute position of the computer mouse.
 
         Returns
@@ -876,7 +883,7 @@ class BaseViewController(GUIController, ABaseViewController):
         y = self.parent_controller.view.winfo_pointery()
         return x, y
 
-    def array_to_image(self, image):
+    def array_to_image(self, image: np.ndarray) -> Image:
         """Convert a numpy array to a PIL Image
 
         Parameters
@@ -891,7 +898,7 @@ class BaseViewController(GUIController, ABaseViewController):
         """
         return Image.fromarray(image.astype(np.uint8))
 
-    def populate_image(self, image):
+    def populate_image(self, image: np.ndarray) -> None:
         """Converts image to an ImageTk.PhotoImage and populates the Tk Canvas
 
         Note
@@ -902,7 +909,7 @@ class BaseViewController(GUIController, ABaseViewController):
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         """
         temp_img = self.array_to_image(image)
@@ -917,7 +924,7 @@ class BaseViewController(GUIController, ABaseViewController):
             return
         self.image_cache_flag = not self.image_cache_flag
 
-    def process_image(self):
+    def process_image(self) -> None:
         """Process the image to be displayed.
 
         Applies digital zoom, detects saturation, down-samples the image, scales the
@@ -935,18 +942,18 @@ class BaseViewController(GUIController, ABaseViewController):
         image = self.apply_lut(image)
         self.populate_image(image)
 
-    def left_click(self, *_):
+    def left_click(self, *_) -> None:
         """Toggles cross-hair on image upon left click event."""
         if self.image is not None:
             self.apply_cross_hair = not self.apply_cross_hair
             self.process_image()
 
-    def resize(self, event):
+    def resize(self, event: tk.Event) -> None:
         """Resize the window.
 
         Parameters
         ----------
-        event : tkinter.Event
+        event : tk.Event
             Tkinter event.
         """
         if self.view.is_popup is False and event.widget != self.view:
@@ -959,7 +966,7 @@ class BaseViewController(GUIController, ABaseViewController):
             1000, lambda: self.refresh(event.width, event.height)
         )
 
-    def refresh(self, width, height):
+    def refresh(self, width: int, height: int) -> None:
         """Refresh the window.
 
         Parameters
@@ -985,7 +992,7 @@ class BaseViewController(GUIController, ABaseViewController):
         self.update_canvas_size()
         self.reset_display(False)
 
-    def update_min_max_counts(self, display=False):
+    def update_min_max_counts(self, display: bool=False):
         """Get min and max count values from the View.
 
         When the min and max counts are toggled in the GUI, this function is called.
@@ -1006,14 +1013,14 @@ class BaseViewController(GUIController, ABaseViewController):
             f"Min and Max counts scaled to, {self.min_counts}, {self.max_counts}"
         )
 
-    def mouse_wheel(self, event):
+    def mouse_wheel(self, event: tk.Event) -> None:
         """Digitally zooms in or out on the image upon scroll wheel event.
 
         Sets the self.zoom_value between 0.05 and 1 in .05 unit steps.
 
         Parameters
         ----------
-        event : tkinter.Event
+        event : tk.Event
             num = 4 is zoom out.
             num = 5 is zoom in.
             x, y location.  0,0 is top left corner.
@@ -1045,7 +1052,7 @@ class BaseViewController(GUIController, ABaseViewController):
 class CameraViewController(BaseViewController):
     """Camera View Controller Class."""
 
-    def __init__(self, view, parent_controller=None):
+    def __init__(self, view, parent_controller=None) -> None:
         """Initialize the Camera View Controller Class.
 
         Parameters
@@ -1100,7 +1107,7 @@ class CameraViewController(BaseViewController):
         #: numpy.ndarray: The ilastik mask.
         self.ilastik_seg_mask = None
 
-    def try_to_display_image(self, image):
+    def try_to_display_image(self, image: np.ndarray) -> None:
         """Try to display an image.
 
         In the live mode, images are automatically passed to the display function.
@@ -1111,7 +1118,7 @@ class CameraViewController(BaseViewController):
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         """
         # Identify the channel index and slice index, update GUI.
@@ -1135,7 +1142,9 @@ class CameraViewController(BaseViewController):
             if slice_idx == requested_slice and channel_idx == requested_channel:
                 super().try_to_display_image(image)
 
-    def initialize_non_live_display(self, microscope_state, camera_parameters):
+    def initialize_non_live_display(self,
+                                    microscope_state: dict,
+                                    camera_parameters: dict) -> None:
         """Initialize the non-live display.
 
         Parameters
@@ -1155,7 +1164,7 @@ class CameraViewController(BaseViewController):
             size_x=self.original_image_width,
         )
 
-    def update_snr(self):
+    def update_snr(self) -> None:
         """Updates the signal-to-noise ratio."""
         off, var = self.parent_controller.model.get_offset_variance_maps()
         if off is None:
@@ -1164,7 +1173,7 @@ class CameraViewController(BaseViewController):
             self._offset, self._variance = copy.deepcopy(off), copy.deepcopy(var)
             self.image_palette["SNR"].grid(row=3, column=0, sticky=tk.NSEW, pady=3)
 
-    def slider_update(self, *_):
+    def slider_update(self, *_) -> None:
         """Updates the image when the slider is moved."""
 
         slider_index = self.view.slider.get()
@@ -1184,7 +1193,7 @@ class CameraViewController(BaseViewController):
         with self.is_displaying_image as is_displaying_image:
             is_displaying_image.value = False
 
-    def update_display_state(self, *_):
+    def update_display_state(self, *_) -> None:
         """Image Display Combobox Called.
 
         Sets self.display_state to desired display format. Toggles state of slider
@@ -1246,7 +1255,7 @@ class CameraViewController(BaseViewController):
             # Populating defaults
             self.image_metrics["Frames"].set(frames)
 
-    def set_mode(self, mode=""):
+    def set_mode(self, mode: str=""):
         """Sets mode of camera_view_controller.
 
         Parameters
@@ -1260,7 +1269,7 @@ class CameraViewController(BaseViewController):
         else:
             self.menu.entryconfig("Move Here", state="disabled")
 
-    def update_max_counts(self):
+    def update_max_counts(self) -> None:
         """Update the max counts in the camera view.
 
         Function gets the number of frames to average from the VIEW.
@@ -1294,14 +1303,14 @@ class CameraViewController(BaseViewController):
             )
             self.image_metrics["Image"].set(f"{rolling_average:.0f}")
 
-    def array_to_image(self, image):
+    def array_to_image(self, image: np.ndarray) -> Image:
         """Convert a numpy array to a PIL Image.
 
         If a color mask is present, it will apply the mask to the image.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
 
         Returns
@@ -1321,7 +1330,7 @@ class CameraViewController(BaseViewController):
             temp_img = Image.fromarray(image.astype(np.uint8))
         return temp_img
 
-    def display_image(self, image):
+    def display_image(self, image: np.ndarray) -> None:
         """Display an image using the LUT specified in the View.
 
         If Autoscale is selected, automatically calculates
@@ -1332,7 +1341,7 @@ class CameraViewController(BaseViewController):
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         """
         start_time = time.time()
@@ -1348,7 +1357,7 @@ class CameraViewController(BaseViewController):
             is_displaying_image.value = False
         logger.info(f"Displaying image took {time.time() - start_time:.4f} seconds")
 
-    def set_mask_color_table(self, colors: list):
+    def set_mask_color_table(self, colors: list) -> None:
         """Set up segmentation mask color table
 
         Parameters
@@ -1368,7 +1377,7 @@ class CameraViewController(BaseViewController):
         if not self.ilastik_mask_ready_lock.locked():
             self.ilastik_mask_ready_lock.acquire()
 
-    def display_mask(self, mask):
+    def display_mask(self, mask: np.ndarray) -> None:
         """Display segmentation mask
 
         Parameters
@@ -1388,7 +1397,7 @@ class CameraViewController(BaseViewController):
 class MIPViewController(BaseViewController):
     """MIP View Controller Class."""
 
-    def __init__(self, view, parent_controller=None):
+    def __init__(self, view, parent_controller=None) -> None:
         """Initialize the MIP View Controller Class.
 
         Parameters
@@ -1467,7 +1476,7 @@ class MIPViewController(BaseViewController):
         """Update the experiment.yaml file"""
         self.parent_controller.configuration["gui"]["mip_display"]["enabled"] = self.display_enabled.get()
 
-    def initialize(self, name: str, data: list):
+    def initialize(self, name: str, data: list) -> None:
         """Initialize the MIP view.
 
         Sets the min and max intensity values for the image.Disables the min and max
@@ -1508,7 +1517,7 @@ class MIPViewController(BaseViewController):
             "write", self.display_mip_image
         )
 
-    def prepare_mip_view(self):
+    def prepare_mip_view(self) -> None:
         """Prepare the MIP view.
 
         Set the number of channels, number of slices, and the selected channels.
@@ -1517,7 +1526,7 @@ class MIPViewController(BaseViewController):
         self.render_widgets["channel"].widget["values"] = self.selected_channels
         self.preallocate_matrices()
 
-    def preallocate_matrices(self):
+    def preallocate_matrices(self) -> None:
         """Preallocate the matrices for the MIP.
 
         Pre-allocated matrix is shape (number_of_channels, number_of_slices, width)
@@ -1550,12 +1559,12 @@ class MIPViewController(BaseViewController):
             dtype=np.uint16,
         )
 
-    def get_mip_image(self):
+    def get_mip_image(self) -> np.ndarray or None:
         """Get MIP image according to perspective and channel id
 
         Returns
         -------
-        image : numpy.ndarray
+        image : np.ndarray or None
             Image data
         """
         views = [self.xy_mip, self.zy_mip, self.zx_mip]
@@ -1581,7 +1590,9 @@ class MIPViewController(BaseViewController):
         image = self.down_sample_image(image, True)
         return image
 
-    def initialize_non_live_display(self, microscope_state, camera_parameters):
+    def initialize_non_live_display(self,
+                                    microscope_state: dict,
+                                    camera_parameters: dict) -> None:
         """Initialize the non-live display.
 
         Parameters
@@ -1609,12 +1620,12 @@ class MIPViewController(BaseViewController):
         self.prepare_mip_view()
         self.update_perspective()
 
-    def try_to_display_image(self, image):
+    def try_to_display_image(self, image: np.ndarray) -> None:
         """Display the image.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         """
         channel_idx, slice_idx = self.identify_channel_index_and_slice()
@@ -1636,7 +1647,7 @@ class MIPViewController(BaseViewController):
 
         super().try_to_display_image(image)
 
-    def display_image(self, image):
+    def display_image(self, image: np.ndarray) -> None:
         """Display an image using the LUT specified in the View.
 
         If Autoscale is selected, automatically calculates
@@ -1647,7 +1658,7 @@ class MIPViewController(BaseViewController):
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         """
         self.image = self.get_mip_image()
@@ -1655,7 +1666,7 @@ class MIPViewController(BaseViewController):
         with self.is_displaying_image as is_displaying_image:
             is_displaying_image.value = False
 
-    def display_mip_image(self, *_):
+    def display_mip_image(self, *_) -> None:
         """Display MIP image in non-live view."""
 
         if self.perspective != self.render_widgets["perspective"].get():
@@ -1666,7 +1677,7 @@ class MIPViewController(BaseViewController):
         if self.image is not None:
             self.process_image()
 
-    def update_perspective(self):
+    def update_perspective(self) -> None:
         """Update the perspective of the image."""
         attribute_list = [
             "XY_image_width",
@@ -1694,15 +1705,22 @@ class MIPViewController(BaseViewController):
         self.update_canvas_size()
         self.reset_display(False)
 
-    def down_sample_image(self, image, reset_original=False):
+    def down_sample_image(self,
+                          image: np.ndarray,
+                          reset_original: bool=False) -> np.ndarray:
         """Down-sample the data for image display according to widget size.
 
         Parameters
         ----------
-        image : numpy.ndarray
+        image : np.ndarray
             Image data.
         reset_original : bool
             Flag to reset the original image size.
+
+        Returns
+        -------
+        down_sampled_image : np.ndarray
+            Down-sampled image data.
         """
         sx, sy = self.canvas_width, self.canvas_height
         down_sampled_image = cv2.resize(image, (sx, sy))
@@ -1717,7 +1735,7 @@ class MIPViewController(BaseViewController):
 class SpooledImageLoader:
     """A class to lazily load images from disk using a spooled temporary file."""
 
-    def __init__(self, channels: int, size_y: int, size_x: int):
+    def __init__(self, channels: int, size_y: int, size_x: int) -> None:
         """Initialize the SpooledImageLoader.
 
         Parameters
@@ -1749,7 +1767,7 @@ class SpooledImageLoader:
                 dir=default_directory,
             )
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Delete the temporary files."""
         if self.temp_files is not None:
             for temp_file in self.temp_files.values():
@@ -1783,7 +1801,7 @@ class SpooledImageLoader:
         os.makedirs(temp_path, exist_ok=True)
         return temp_path
 
-    def save_image(self, image: np.ndarray, channel: int, slice_index: int):
+    def save_image(self, image: np.ndarray, channel: int, slice_index: int) -> None:
         """Save an image to a temporary file.
 
         Parameters
@@ -1805,7 +1823,7 @@ class SpooledImageLoader:
         self.temp_files[channel].seek(start_idx)
         self.temp_files[channel].write(image)
 
-    def load_image(self, channel: int, slice_index: int):
+    def load_image(self, channel: int, slice_index: int) -> np.ndarray or None:
         """Load an image from a temporary file.
 
         Parameters
@@ -1832,7 +1850,7 @@ class SpooledImageLoader:
             return None
         return image
 
-    def get_indices(self, slice_index: int):
+    def get_indices(self, slice_index: int) -> tuple:
         """Get the indices of the images stored in the spooled files.
 
         Parameters
@@ -1842,7 +1860,7 @@ class SpooledImageLoader:
 
         Returns
         -------
-        Tuple[int, int]
+        tuple[int, int]
             The start and end indices of the images.
         """
 

@@ -672,12 +672,26 @@ class Controller:
                 dict = {'x': value, 'y': value, 'z': value, 'theta': value, 'f': value}
             """
             self.threads_pool.createThread(
-                "model", self.move_stage, args=({args[1] + "_abs": args[0]},)
+                resourceName="model",
+                target=self.move_stage,
+                args=({args[1] + "_abs": args[0]},)
             )
 
         elif command == "stop_stage":
             """Creates a thread and uses it to call the model to stop stage"""
-            self.threads_pool.createThread("stop_stage", self.stop_stage)
+            self.threads_pool.createThread(
+                resourceName="stop_stage",
+                target=self.stop_stage)
+
+        elif command == "query_stages":
+            """Query the stages for their current position in a thread-blocking format.
+            """
+            query_thread = self.threads_pool.createThread(
+                resourceName="model",
+                target=self.stop_stage)
+
+            while query_thread.is_alive():
+                time.sleep(0.01)
 
         elif command == "move_stage_and_update_info":
             """update stage view to show the position
@@ -704,7 +718,10 @@ class Controller:
             self.execute("acquire")
 
         elif command == "get_stage_position":
-            """Returns the current stage position
+            """Returns the current stage position from the widgets. 
+            
+            Does not communicate with the stages, but rather takes the last known 
+            position.
 
             Returns
             -------
@@ -754,8 +771,8 @@ class Controller:
                 return
             self.change_microscope(temp[0], temp[1])
             work_thread = self.threads_pool.createThread(
-                "model", lambda: self.model.run_command("update_setting", "resolution")
-            )
+                resourceName="model",
+                target=lambda: self.model.run_command("update_setting", "resolution"))
             work_thread.join()
 
         elif command == "set_save":
@@ -785,26 +802,29 @@ class Controller:
                 }
             """
             self.threads_pool.createThread(
-                "model", lambda: self.model.run_command("update_setting", *args)
+                resourceName="model",
+                target=lambda: self.model.run_command("update_setting", *args)
             )
 
         elif command == "stage_limits":
             self.stage_controller.stage_limits = args[0]
             self.threads_pool.createThread(
-                "model", lambda: self.model.run_command("stage_limits", *args)
+                resourceName="model",
+                target=lambda: self.model.run_command("stage_limits", *args)
             )
 
         elif command == "autofocus":
             """Execute autofocus routine."""
             if not self.acquire_bar_controller.is_acquiring:
                 self.threads_pool.createThread(
-                    "camera",
-                    self.capture_image,
+                    resourceName="camera",
+                    target=self.capture_image,
                     args=("autofocus", "live", *args),
                 )
             elif self.acquire_bar_controller.mode == "live":
                 self.threads_pool.createThread(
-                    "model", lambda: self.model.run_command("autofocus", *args)
+                    resourceName="model",
+                    target=lambda: self.model.run_command("autofocus", *args)
                 )
 
         elif command == "eliminate_tiles":
@@ -829,7 +849,8 @@ class Controller:
             """Tell model to load/unload features."""
 
             work_thread = self.threads_pool.createThread(
-                "model", lambda: self.model.run_command("load_feature", *args)
+                resourceName="model",
+                target=lambda: self.model.run_command("load_feature", *args)
             )
             work_thread.join()
 
