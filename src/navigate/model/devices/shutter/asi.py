@@ -35,11 +35,6 @@ import logging
 import traceback
 from typing import Any, Dict
 
-
-
-# Third Party Imports
-
-
 # Local Imports
 from navigate.model.devices.shutter.base import ShutterBase
 from navigate.tools.decorators import log_initialization
@@ -49,9 +44,8 @@ from navigate.model.devices.APIs.asi.asi_tiger_controller import TigerController
 p = __name__.split(".")[1]
 logger = logging.getLogger(p)
 
-
 @log_initialization
-class ASIShutterTTL(ShutterBase):
+class ASIShutterTTL(ShutterBase, TigerController):
     """ShutterTTL Class
 
     Triggering for shutters delivered from the TigerController.
@@ -77,50 +71,37 @@ class ASIShutterTTL(ShutterBase):
         configuration : Dict[str, Any]
             Global configuration of the microscope
         """
-
         super().__init__(microscope_name, device_connection, configuration)
-        
-        shutter_channel = configuration["configuration"]["microscopes"][
-            microscope_name
-        ]["shutter"]["hardware"]["channel"]
-
+       
         self.address = address
+        self.tiger_controller = TigerController(
+            com_port=configuration["configuration"]["microscopes"][microscope_name]["shutter"]["hardware"]["com_port"],
+            baud_rate=115200  # Default baud rate, modify as needed
+        )
 
     def __del__(self):
-        if self.sutter_task:
-            try:
-                self.shutter_task.stop()
-                self.shutter_task.close()
-            except Exception:
-                logger.exception(f"Error stopping task: {traceback.format_exc()}")
-
-
+        try:
+            if self.tiger_controller:
+                self.tiger_controller.disconnect_from_serial()
+                logger.debug("TigerController disconnected successfully.")
+        except Exception as e:
+            logger.exception(f"Error during cleanup: {traceback.format_exc()}")
 
     def open_shutter(self):
-        self."joel_output" = 1
         try:
-            response = self.send_command("joel_output")
+            self.tiger_controller.PLCon(self.address)
             logger.debug("ShutterTTL - Shutter opened")
         except Exception as e:
-            print(
-                "Shutter not open"
-            )
-            logger.debug(e)
+            logger.exception(f"Shutter not open: {traceback.format_exc()}")
 
     def close_shutter(self):
-        self."joel_output" = 0
         try:
-            response = self.send_command("joel_output")
+            self.tiger_controller.PLCoff(self.address)
             logger.debug("ShutterTTL - Shutter closed")
         except Exception as e:
-            print(
-                "Shutter did not close"
-            )
-            logger.debug(e)
-        
+            logger.exception(f"Shutter did not close: {traceback.format_exc()}")
 
     @property
     def state(self):
-        return self."joel_output"
-        
+        return self.tiger_controller.get_axis_position(self.address)
 
